@@ -1,0 +1,4 @@
+name: M-RPG
+version: '${project.version}'
+main: pl.majkus522.mrpg.Main
+api-version: 1.20
