@@ -1,4 +1,4 @@
-package pl.majkus522.mrpg.common;
+package pl.majkus522.mrpg.common.api;
 
 public class RequestResult
 {

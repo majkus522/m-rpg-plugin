@@ -2,3 +2,8 @@ name: M-RPG
 version: '${project.version}'
 main: pl.majkus522.mrpg.Main
 api-version: 1.20
+
+commands:
+  login:
+    description: Login
+    usage: /<command> <password>
