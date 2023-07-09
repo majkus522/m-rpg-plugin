@@ -24,7 +24,7 @@ public class CommandLogin implements CommandExecutor
             return true;
         }
         Player player = (Player) sender;
-        if(!Main.unloggedPlayers.contains(player.getName()))
+        if(Main.playersSessions.containsKey(player.getName()))
         {
             player.sendMessage("You are already logged in");
             return true;
@@ -36,14 +36,16 @@ public class CommandLogin implements CommandExecutor
         }
         HashMap<String, String> headers = new HashMap<>();
         headers.put("Password", Base64.getEncoder().encodeToString(args[0].getBytes()));
+        headers.put("Session-Type", "game");
         RequestResult request = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/players/" + player.getName() + "/logged", headers);
         if(!request.isOk())
         {
             Gson gson = new Gson();
             player.sendMessage(gson.fromJson(request.content, RequestErrorResult.class).message);
+            return true;
         }
         player.sendMessage("Logged in");
-        Main.unloggedPlayers.remove(player.getName());
+        Main.playersSessions.put(player.getName(), request.content);
         return true;
     }
 }

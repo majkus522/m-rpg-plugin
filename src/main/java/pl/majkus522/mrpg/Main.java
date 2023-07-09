@@ -6,18 +6,18 @@ import org.bukkit.plugin.java.JavaPlugin;
 import pl.majkus522.mrpg.commands.CommandLogin;
 import pl.majkus522.mrpg.events.OnPlayerJoin;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public final class Main extends JavaPlugin
 {
-    public static ArrayList<String> unloggedPlayers;
+    public static HashMap<String, String> playersSessions;
     public static String mainUrl = "http://127.0.0.1/m-rpg/api/";
 
     @Override
     public void onLoad()
     {
         System.out.println("M-RPG loaded");
-        unloggedPlayers = new ArrayList<>();
+        playersSessions = new HashMap<String, String>();
     }
 
     @Override

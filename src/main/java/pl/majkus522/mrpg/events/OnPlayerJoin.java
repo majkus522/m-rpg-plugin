@@ -17,10 +17,6 @@ public class OnPlayerJoin implements Listener
         Player player = event.getPlayer();
         RequestResult request = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/players/" + player.getName());
         if(!request.isOk())
-        {
             player.kickPlayer("Please first register on our webstie \n\n" + ChatColor.BLUE + "M-RPG.COM");
-            return;
-        }
-        Main.unloggedPlayers.add(player.getName());
     }
 }
