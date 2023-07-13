@@ -1,6 +1,9 @@
 package pl.majkus522.mrpg.common;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import pl.majkus522.mrpg.Main;
 import pl.majkus522.mrpg.common.api.RequestResult;
 
@@ -46,5 +49,14 @@ public class ExtensionMethods
     public static boolean isPlayerLogged(Player player)
     {
         return Main.playersSessions.containsKey(player.getName());
+    }
+
+    public static ItemStack emptySlot()
+    {
+        ItemStack item = new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(" ");
+        item.setItemMeta(meta);
+        return item;
     }
 }

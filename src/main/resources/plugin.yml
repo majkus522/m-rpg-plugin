@@ -7,3 +7,7 @@ commands:
   login:
     description: Login
     usage: /<command> <password>
+
+  skills:
+    description: Check your skills
+    usage: /<command>
