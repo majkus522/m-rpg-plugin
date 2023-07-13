@@ -24,7 +24,7 @@ public class CommandLogin implements CommandExecutor
             return true;
         }
         Player player = (Player) sender;
-        if(Main.playersSessions.containsKey(player.getName()))
+        if(ExtensionMethods.isPlayerLogged(player))
         {
             player.sendMessage("You are already logged in");
             return true;

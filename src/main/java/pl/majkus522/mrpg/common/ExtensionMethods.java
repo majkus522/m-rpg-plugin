@@ -1,5 +1,7 @@
 package pl.majkus522.mrpg.common;
 
+import org.bukkit.entity.Player;
+import pl.majkus522.mrpg.Main;
 import pl.majkus522.mrpg.common.api.RequestResult;
 
 import java.io.BufferedReader;
@@ -39,5 +41,10 @@ public class ExtensionMethods
             e.printStackTrace();
         }
         return new RequestResult(600, "");
+    }
+
+    public static boolean isPlayerLogged(Player player)
+    {
+        return Main.playersSessions.containsKey(player.getName());
     }
 }
