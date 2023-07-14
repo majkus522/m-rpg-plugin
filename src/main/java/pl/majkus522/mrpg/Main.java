@@ -5,6 +5,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.majkus522.mrpg.commands.CommandLogin;
 import pl.majkus522.mrpg.commands.CommandSkills;
+import pl.majkus522.mrpg.events.OnItemTake;
 import pl.majkus522.mrpg.events.OnPlayerJoin;
 
 import java.util.HashMap;
@@ -26,6 +27,7 @@ public final class Main extends JavaPlugin
     {
         System.out.println("M-RPG enabled");
         registerEvent(new OnPlayerJoin());
+        registerEvent(new OnItemTake());
 
         registerCommand("login", new CommandLogin());
         registerCommand("skills", new CommandSkills());
