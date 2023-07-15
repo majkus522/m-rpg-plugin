@@ -11,7 +11,12 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ExtensionMethods
 {
@@ -37,13 +42,18 @@ public class ExtensionMethods
             while ((inputLine = reader.readLine()) != null)
                 response.append(inputLine);
             reader.close();
-            return new RequestResult(connection.getResponseCode(), response.toString());
+            HashMap<String, String> outputHeaders = new HashMap<>();
+            for(Map.Entry<String, List<String>> line : connection.getHeaderFields().entrySet())
+            {
+                outputHeaders.put(line.getKey(), line.getValue().get(0));
+            }
+            return new RequestResult(connection.getResponseCode(), response.toString(), outputHeaders);
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
-        return new RequestResult(600, "");
+        return new RequestResult(600, "", new HashMap<>());
     }
 
     public static boolean isPlayerLogged(Player player)
@@ -58,5 +68,18 @@ public class ExtensionMethods
         meta.setDisplayName(" ");
         item.setItemMeta(meta);
         return item;
+    }
+
+    public static String readJsonFile(String url)
+    {
+        try
+        {
+            return new String(Files.readAllBytes(Paths.get(url)), StandardCharsets.UTF_8);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return "";
     }
 }
