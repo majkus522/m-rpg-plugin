@@ -9,6 +9,7 @@ import pl.majkus522.mrpg.Main;
 import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.api.RequestErrorResult;
 import pl.majkus522.mrpg.common.api.RequestResult;
+import pl.majkus522.mrpg.controllers.ScoreboardController;
 
 import java.util.Base64;
 import java.util.HashMap;
@@ -46,6 +47,7 @@ public class CommandLogin implements CommandExecutor
         }
         player.sendMessage("Logged in");
         Main.playersSessions.put(player.getName(), request.content);
+        player.setScoreboard(ScoreboardController.createScoreboard(player));
         return true;
     }
 }
