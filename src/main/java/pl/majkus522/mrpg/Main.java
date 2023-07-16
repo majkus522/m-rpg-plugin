@@ -7,6 +7,7 @@ import pl.majkus522.mrpg.commands.CommandLogin;
 import pl.majkus522.mrpg.commands.CommandSkills;
 import pl.majkus522.mrpg.events.OnItemTake;
 import pl.majkus522.mrpg.events.OnPlayerJoin;
+import pl.majkus522.mrpg.events.OnPlayerLeave;
 
 import java.util.HashMap;
 
@@ -27,6 +28,7 @@ public final class Main extends JavaPlugin
     {
         System.out.println("M-RPG enabled");
         registerEvent(new OnPlayerJoin());
+        registerEvent(new OnPlayerLeave());
         registerEvent(new OnItemTake());
 
         registerCommand("login", new CommandLogin());
