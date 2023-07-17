@@ -32,16 +32,19 @@ public class ExtensionMethods
             HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
             connection.setRequestMethod(method);
             headers.forEach((key, value) -> connection.setRequestProperty(key, value));
-            BufferedReader reader;
-            if(connection.getResponseCode() < 300)
-                reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            else
-                reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
-            String inputLine;
             StringBuilder response = new StringBuilder();
-            while ((inputLine = reader.readLine()) != null)
-                response.append(inputLine);
-            reader.close();
+            if(method != "HEAD")
+            {
+                BufferedReader reader;
+                if(connection.getResponseCode() < 300)
+                    reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                else
+                    reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+                String inputLine;
+                while ((inputLine = reader.readLine()) != null)
+                    response.append(inputLine);
+                reader.close();
+            }
             HashMap<String, String> outputHeaders = new HashMap<>();
             for(Map.Entry<String, List<String>> line : connection.getHeaderFields().entrySet())
             {
