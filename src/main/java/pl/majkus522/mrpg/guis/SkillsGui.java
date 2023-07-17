@@ -74,7 +74,7 @@ public class SkillsGui implements InventoryHolder
             headers.put("Session-Key", Main.playersSessions.get(player.getName()));
             headers.put("Session-Type", "game");
             headers.put("Items", ((page + 1) * 45) + "-45");
-            request = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/skills/" + player.getName() + "?rarity[]=" + rarity.toString(), headers);
+            request = ExtensionMethods.httpRequest("HEAD", Main.mainUrl + "endpoints/skills/" + player.getName() + "?rarity[]=" + rarity.toString(), headers);
             if(request.isOk())
             {
                 ItemStack item = new ItemStack(Material.ARROW, 1);
