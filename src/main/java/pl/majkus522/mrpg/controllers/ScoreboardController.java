@@ -10,8 +10,8 @@ import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import pl.majkus522.mrpg.Main;
 import pl.majkus522.mrpg.common.ExtensionMethods;
-import pl.majkus522.mrpg.common.api.RequestPlayer;
-import pl.majkus522.mrpg.common.api.RequestResult;
+import pl.majkus522.mrpg.common.classes.api.RequestPlayer;
+import pl.majkus522.mrpg.common.classes.api.RequestResult;
 
 import java.util.ArrayList;
 import java.util.Collections;

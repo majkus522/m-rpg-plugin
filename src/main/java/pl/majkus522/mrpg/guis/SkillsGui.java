@@ -15,9 +15,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.ChatPaginator;
 import pl.majkus522.mrpg.Main;
 import pl.majkus522.mrpg.common.ExtensionMethods;
-import pl.majkus522.mrpg.common.SkillData;
-import pl.majkus522.mrpg.common.api.RequestResult;
-import pl.majkus522.mrpg.common.api.RequestSkills;
+import pl.majkus522.mrpg.common.classes.SkillData;
+import pl.majkus522.mrpg.common.classes.api.RequestResult;
+import pl.majkus522.mrpg.common.classes.api.RequestSkills;
 import pl.majkus522.mrpg.common.enums.SkillRarity;
 
 import java.util.ArrayList;

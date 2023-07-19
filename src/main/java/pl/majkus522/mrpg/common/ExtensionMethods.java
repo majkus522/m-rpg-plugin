@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import pl.majkus522.mrpg.Main;
-import pl.majkus522.mrpg.common.api.RequestResult;
+import pl.majkus522.mrpg.common.classes.api.RequestResult;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

@@ -7,7 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import pl.majkus522.mrpg.Main;
 import pl.majkus522.mrpg.common.ExtensionMethods;
-import pl.majkus522.mrpg.common.api.RequestResult;
+import pl.majkus522.mrpg.common.classes.api.RequestResult;
 
 public class OnPlayerJoin implements Listener
 {

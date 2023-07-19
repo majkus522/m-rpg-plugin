@@ -1,4 +1,4 @@
-package pl.majkus522.mrpg.common.api;
+package pl.majkus522.mrpg.common.classes.api;
 
 public class RequestErrorResult
 {

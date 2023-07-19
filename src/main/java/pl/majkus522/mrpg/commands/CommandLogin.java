@@ -7,8 +7,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import pl.majkus522.mrpg.Main;
 import pl.majkus522.mrpg.common.ExtensionMethods;
-import pl.majkus522.mrpg.common.api.RequestErrorResult;
-import pl.majkus522.mrpg.common.api.RequestResult;
+import pl.majkus522.mrpg.common.classes.api.RequestErrorResult;
+import pl.majkus522.mrpg.common.classes.api.RequestResult;
 import pl.majkus522.mrpg.controllers.ScoreboardController;
 
 import java.util.Base64;
