@@ -11,3 +11,7 @@ commands:
   skills:
     description: Check your skills
     usage: /<command>
+
+  status:
+    description: Check your status
+    usage: /<command>

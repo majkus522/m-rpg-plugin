@@ -10,9 +10,14 @@ public class RequestPlayer
     public int exp;
     public int energy;
     public String world;
+    public int strength;
+    public int agility;
+    public int charisma;
+    public int intelligence;
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "RequestPlayer{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
@@ -22,6 +27,10 @@ public class RequestPlayer
                 ", exp=" + exp +
                 ", energy=" + energy +
                 ", world='" + world + '\'' +
+                ", strength=" + strength +
+                ", agility=" + agility +
+                ", charisma=" + charisma +
+                ", intelligence=" + intelligence +
                 '}';
     }
 }
