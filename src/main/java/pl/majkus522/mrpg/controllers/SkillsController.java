@@ -70,4 +70,13 @@ public class SkillsController
             System.out.println("");
         }
     }
+
+    public static boolean playerHasSkill(Player player, String skill)
+    {
+        HashMap<String, String> headers = new HashMap<>();
+        headers.put("Session-Key", Main.playersSessions.get(player.getName()));
+        headers.put("Session-Type", "game");
+        RequestResult request = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/skills/" + player.getName() + "/" + skill, headers);
+        return request.isOk();
+    }
 }
