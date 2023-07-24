@@ -27,10 +27,7 @@ public class ScoreboardController
         objective.setDisplayName(ChatColor.AQUA + "M-RPG");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-        HashMap<String, String> headers = new HashMap<>();
-        headers.put("Session-Key", Main.playersSessions.get(player.getName()));
-        headers.put("Session-Type", "game");
-        RequestResult request = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/players/" + player.getName(), headers);
+        RequestResult request = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/players/" + player.getName(), ExtensionMethods.getSessionHeaders(player));
         RequestPlayer playerData = new Gson().fromJson(request.content, RequestPlayer.class);
 
         ArrayList<String> elements = new ArrayList<String>();

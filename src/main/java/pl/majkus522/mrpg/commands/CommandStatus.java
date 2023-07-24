@@ -30,10 +30,7 @@ public class CommandStatus implements CommandExecutor
             player.sendMessage("You must be logged in");
             return true;
         }
-        HashMap<String, String> headers = new HashMap<>();
-        headers.put("Session-Key", Main.playersSessions.get(player.getName()));
-        headers.put("Session-Type", "game");
-        RequestResult request = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/players/" + player.getName(), headers);
+        RequestResult request = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/players/" + player.getName(), ExtensionMethods.getSessionHeaders(player));
         Gson gson = new Gson();
         if(request.isOk())
         {

@@ -113,6 +113,14 @@ public class ExtensionMethods
         return new RequestResult(600, "", new HashMap<>());
     }
 
+    public static HashMap<String, String> getSessionHeaders(Player player)
+    {
+        HashMap<String, String> headers = new HashMap<>();
+        headers.put("Session-Key", Main.playersSessions.get(player.getName()));
+        headers.put("Session-Type", "game");
+        return headers;
+    }
+
     public static boolean isPlayerLogged(Player player)
     {
         return Main.playersSessions.containsKey(player.getName());

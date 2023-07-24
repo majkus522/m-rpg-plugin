@@ -18,10 +18,7 @@ public class SkillsController
     public static void playerObtainSkill(Player player, String skill)
     {
         String body = "{\"player\": \"" + player.getName() + "\", \"skill\": \"" + skill + "\"}";
-        HashMap<String, String> headers = new HashMap<>();
-        headers.put("Session-Key", Main.playersSessions.get(player.getName()));
-        headers.put("Session-Type", "game");
-        RequestResult request = ExtensionMethods.httpRequest("POST", Main.mainUrl + "endpoints/skills", body, headers);
+        RequestResult request = ExtensionMethods.httpRequest("POST", Main.mainUrl + "endpoints/skills", body, ExtensionMethods.getSessionHeaders(player));
         Gson gson = new Gson();
         if(request.isOk())
         {
@@ -73,10 +70,7 @@ public class SkillsController
 
     public static boolean playerHasSkill(Player player, String skill)
     {
-        HashMap<String, String> headers = new HashMap<>();
-        headers.put("Session-Key", Main.playersSessions.get(player.getName()));
-        headers.put("Session-Type", "game");
-        RequestResult request = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/skills/" + player.getName() + "/" + skill, headers);
+        RequestResult request = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/skills/" + player.getName() + "/" + skill, ExtensionMethods.getSessionHeaders(player));
         return request.isOk();
     }
 }

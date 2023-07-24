@@ -55,9 +55,7 @@ public class SkillsGui implements InventoryHolder
         ItemStack empty = ExtensionMethods.emptySlot();
         for(int index = 0; index < inventory.getSize(); index++)
             inventory.setItem(index, empty);
-        HashMap<String, String> headers = new HashMap<>();
-        headers.put("Session-Key", Main.playersSessions.get(player.getName()));
-        headers.put("Session-Type", "game");
+        HashMap<String, String> headers = ExtensionMethods.getSessionHeaders(player);
         headers.put("Items", (page * 45) + "-45");
         RequestResult request = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/skills/" + player.getName() + "?rarity[]=" + rarity.toString(), headers);
         Gson gson = new Gson();
@@ -70,9 +68,7 @@ public class SkillsGui implements InventoryHolder
         }
         if(Integer.parseInt(request.headers.get("Items-Count")) == 45)
         {
-            headers = new HashMap<>();
-            headers.put("Session-Key", Main.playersSessions.get(player.getName()));
-            headers.put("Session-Type", "game");
+            headers = ExtensionMethods.getSessionHeaders(player);
             headers.put("Items", ((page + 1) * 45) + "-45");
             request = ExtensionMethods.httpRequest("HEAD", Main.mainUrl + "endpoints/skills/" + player.getName() + "?rarity[]=" + rarity.toString(), headers);
             if(request.isOk())
