@@ -6,10 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import pl.majkus522.mrpg.commands.CommandLogin;
 import pl.majkus522.mrpg.commands.CommandSkills;
 import pl.majkus522.mrpg.commands.CommandStatus;
-import pl.majkus522.mrpg.events.OnItemTake;
-import pl.majkus522.mrpg.events.OnPlayerDeath;
-import pl.majkus522.mrpg.events.OnPlayerJoin;
-import pl.majkus522.mrpg.events.OnPlayerLeave;
+import pl.majkus522.mrpg.events.*;
 
 import java.util.HashMap;
 
@@ -33,6 +30,7 @@ public final class Main extends JavaPlugin
         registerEvent(new OnPlayerLeave());
         registerEvent(new OnItemTake());
         registerEvent(new OnPlayerDeath());
+        registerEvent(new OnPlayerRightClickEntity());
 
         registerCommand("login", new CommandLogin());
         registerCommand("skills", new CommandSkills());
