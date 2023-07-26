@@ -20,7 +20,7 @@ public class OnPlayerRightClickEntity implements Listener
         if(event.getRightClicked() instanceof Player && event.getHand() == EquipmentSlot.HAND)
         {
             Player player = (Player)event.getRightClicked();
-            RequestResult request = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/players/" + player.getName(), ExtensionMethods.getSessionHeaders(player));
+            RequestResult request = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/players/" + player.getName(), player);
             RequestPlayer playerData = new Gson().fromJson(request.content, RequestPlayer.class);
             player = event.getPlayer();
             player.sendMessage(ChatColor.BLUE + "=-=-=-=-= " + ChatColor.GREEN + "Status: " + playerData.username + ChatColor.BLUE + " =-=-=-=-=");

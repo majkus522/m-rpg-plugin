@@ -11,14 +11,13 @@ import pl.majkus522.mrpg.common.classes.api.RequestErrorResult;
 import pl.majkus522.mrpg.common.classes.api.RequestResult;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class SkillsController
 {
     public static void playerObtainSkill(Player player, String skill)
     {
         String body = "{\"player\": \"" + player.getName() + "\", \"skill\": \"" + skill + "\"}";
-        RequestResult request = ExtensionMethods.httpRequest("POST", Main.mainUrl + "endpoints/skills", body, ExtensionMethods.getSessionHeaders(player));
+        RequestResult request = ExtensionMethods.httpRequest("POST", Main.mainUrl + "endpoints/skills", body, player);
         Gson gson = new Gson();
         if(request.isOk())
         {
@@ -58,19 +57,12 @@ public class SkillsController
                     break;
             }
         }
-        else
-        {
-            System.out.println("");
-            System.out.println("\t\t" + gson.fromJson(request.content, RequestErrorResult.class).message);
-            System.out.println("\t\tPlayer: " + player.getName());
-            System.out.println("\t\tSkill: " + skill);
-            System.out.println("");
-        }
+        new Exception(request.code + "   " + gson.fromJson(request.content, RequestErrorResult.class).message).printStackTrace();
     }
 
     public static boolean playerHasSkill(Player player, String skill)
     {
-        RequestResult request = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/skills/" + player.getName() + "/" + skill, ExtensionMethods.getSessionHeaders(player));
+        RequestResult request = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/skills/" + player.getName() + "/" + skill, player);
         return request.isOk();
     }
 }

@@ -15,7 +15,6 @@ import pl.majkus522.mrpg.common.classes.api.RequestResult;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 
 public class ScoreboardController
 {
@@ -27,7 +26,7 @@ public class ScoreboardController
         objective.setDisplayName(ChatColor.AQUA + "M-RPG");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-        RequestResult request = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/players/" + player.getName(), ExtensionMethods.getSessionHeaders(player));
+        RequestResult request = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/players/" + player.getName(), player);
         RequestPlayer playerData = new Gson().fromJson(request.content, RequestPlayer.class);
 
         ArrayList<String> elements = new ArrayList<String>();

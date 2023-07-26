@@ -26,49 +26,27 @@ public class ExtensionMethods
 {
     public static RequestResult httpRequest(String method, String url)
     {
-        return httpRequest(method, url, new HashMap<>());
+        return httpRequest(method, url, "", new HashMap<>());
     }
 
     public static RequestResult httpRequest(String method, String url, HashMap<String, String> headers)
     {
-        try
-        {
-            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-            connection.setRequestMethod(method);
+        return httpRequest(method, url, "", headers);
+    }
 
-            headers.forEach((key, value) -> connection.setRequestProperty(key, value));
-
-            StringBuilder response = new StringBuilder();
-            if(method != "HEAD")
-            {
-                BufferedReader reader;
-                if(connection.getResponseCode() < 300)
-                    reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                else
-                    reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
-                String inputLine;
-                while ((inputLine = reader.readLine()) != null)
-                    response.append(inputLine);
-                reader.close();
-            }
-
-            HashMap<String, String> outputHeaders = new HashMap<>();
-            for(Map.Entry<String, List<String>> line : connection.getHeaderFields().entrySet())
-            {
-                outputHeaders.put(line.getKey(), line.getValue().get(0));
-            }
-            return new RequestResult(connection.getResponseCode(), response.toString(), outputHeaders);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return new RequestResult(600, "", new HashMap<>());
+    public static RequestResult httpRequest(String method, String url, Player player)
+    {
+        return httpRequest(method, url, "", getSessionHeaders(player));
     }
 
     public static RequestResult httpRequest(String method, String url, String body)
     {
         return httpRequest(method, url, body, new HashMap<>());
+    }
+
+    public static RequestResult httpRequest(String method, String url, String body, Player player)
+    {
+        return httpRequest(method, url, body, getSessionHeaders(player));
     }
 
     public static RequestResult httpRequest(String method, String url, String body, HashMap<String, String> headers)
@@ -81,9 +59,12 @@ public class ExtensionMethods
 
             headers.forEach((key, value) -> connection.setRequestProperty(key, value));
 
-            OutputStream writter = connection.getOutputStream();
-            byte[] input = body.getBytes("utf-8");
-            writter.write(input, 0, input.length);
+            if (method == "POST" || method == "PUT" || method == "PATCH")
+            {
+                OutputStream writter = connection.getOutputStream();
+                byte[] input = body.getBytes("utf-8");
+                writter.write(input, 0, input.length);
+            }
 
             StringBuilder response = new StringBuilder();
             if(method != "HEAD")
