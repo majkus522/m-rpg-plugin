@@ -12,6 +12,7 @@ import pl.majkus522.mrpg.common.classes.api.RequestResult;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -142,5 +143,17 @@ public class ExtensionMethods
     {
         for (Player player : players)
             player.sendMessage(message);
+    }
+
+    public static double round(double value, int decimalPlace)
+    {
+        BigDecimal bd = new BigDecimal(Double.toString(value));
+        bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+        return bd.doubleValue();
+    }
+
+    public static int roundInt(double value, int decimalPlace)
+    {
+        return (int) Math.round(round(value, decimalPlace));
     }
 }

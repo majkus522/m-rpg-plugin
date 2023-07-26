@@ -1,5 +1,7 @@
 package pl.majkus522.mrpg.common.classes.api;
 
+import com.google.gson.Gson;
+
 import java.util.HashMap;
 
 public class RequestResult
@@ -18,6 +20,12 @@ public class RequestResult
     public boolean isOk()
     {
         return code >= 200 && code < 300;
+    }
+
+    public void printError()
+    {
+        if(!isOk())
+            new Exception(code + "   " + new Gson().fromJson(content, RequestErrorResult.class).message).printStackTrace();
     }
 
     @Override

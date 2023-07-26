@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import pl.majkus522.mrpg.Main;
 import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.SkillData;
-import pl.majkus522.mrpg.common.classes.api.RequestErrorResult;
 import pl.majkus522.mrpg.common.classes.api.RequestResult;
 
 import java.util.ArrayList;
@@ -57,7 +56,7 @@ public class SkillsController
                     break;
             }
         }
-        new Exception(request.code + "   " + gson.fromJson(request.content, RequestErrorResult.class).message).printStackTrace();
+        request.printError();
     }
 
     public static boolean playerHasSkill(Player player, String skill)
