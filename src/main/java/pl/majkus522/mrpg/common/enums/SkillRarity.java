@@ -1,10 +1,24 @@
 package pl.majkus522.mrpg.common.enums;
 
+import com.google.gson.annotations.SerializedName;
 import org.bukkit.ChatColor;
 
 public enum SkillRarity
 {
-    common, extra, unique, ultimate;
+    @SerializedName("common")
+    common,
+
+    @SerializedName("extra")
+    extra,
+
+    @SerializedName("unique")
+    unique,
+
+    @SerializedName("ultimate")
+    ultimate,
+
+    @SerializedName("unknown")
+    unknown;
 
     @Override
     public String toString()

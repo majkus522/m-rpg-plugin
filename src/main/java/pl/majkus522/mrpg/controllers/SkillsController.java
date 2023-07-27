@@ -23,32 +23,32 @@ public class SkillsController
             SkillData data = gson.fromJson(ExtensionMethods.readJsonFile("data/skills/" + skill + ".json"), SkillData.class);
             switch (data.rarity)
             {
-                case "common":
+                case common:
                     player.sendMessage("You obtained " + data.label + " skill");
                     break;
 
-                case "extra":
+                case extra:
                     ArrayList<Player> players = ExtensionMethods.getPlayersInRange(player.getLocation(), 25);
                     players.remove(player);
                     player.sendMessage("You obtained " + ChatColor.GREEN + data.label + ChatColor.RESET + " skill");
                     ExtensionMethods.sendMessageToPlayers(players, player.getName() + " obtained " + ChatColor.GREEN + data.label + ChatColor.RESET + " skill");
                     break;
 
-                case "unique":
+                case unique:
                     players = ExtensionMethods.getPlayersInRange(player.getLocation(), 150);
                     players.remove(player);
                     player.sendMessage("You obtained " + ChatColor.BLUE + data.label + ChatColor.RESET + " skill");
                     ExtensionMethods.sendMessageToPlayers(players, player.getName() + " obtained " + ChatColor.BLUE + data.label + ChatColor.RESET + " skill");
                     break;
 
-                case "ultimate":
+                case ultimate:
                     players = (ArrayList<Player>) player.getWorld().getPlayers();
                     players.remove(player);
                     player.sendMessage("You obtained " + ChatColor.LIGHT_PURPLE + data.label + ChatColor.RESET + " skill");
                     ExtensionMethods.sendMessageToPlayers(players, player.getName() + " obtained " + ChatColor.LIGHT_PURPLE + data.label + ChatColor.RESET + " skill");
                     break;
 
-                case "unknown":
+                case unknown:
                     players = (ArrayList<Player>) Bukkit.getOnlinePlayers();
                     players.remove(player);
                     player.sendMessage("You obtained " + ChatColor.BLACK + data.label + ChatColor.RESET + " skill");
