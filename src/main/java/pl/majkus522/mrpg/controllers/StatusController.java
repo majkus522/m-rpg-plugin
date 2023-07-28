@@ -15,8 +15,6 @@ public class StatusController
     {
         if (!ExtensionMethods.isPlayerLogged(player))
             return;
-        if(!(SkillsController.playerHasSkill(player, "statusPreview") || SkillsController.playerHasSkill(player, "statusVision")))
-            return;
 
         RequestResult request = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/players/" + player.getName(), player);
         Gson gson = new Gson();
@@ -39,8 +37,6 @@ public class StatusController
     public static void sendOtherPlayerStatus(Player sender, Player whose)
     {
         if (!(ExtensionMethods.isPlayerLogged(sender) || ExtensionMethods.isPlayerLogged(whose)))
-            return;
-        if(!(SkillsController.playerHasSkill(sender, "statusPreview") || SkillsController.playerHasSkill(sender, "statusVision")))
             return;
 
         RequestResult senderRequest = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/players/" + sender.getName(), sender);
@@ -67,7 +63,7 @@ public class StatusController
             round = 0;
         sender.sendMessage(ChatColor.BLUE + "=-=-=-=-= " + ChatColor.GREEN + "Status: " + whose.getName() + ChatColor.BLUE + " =-=-=-=-=");
         sender.sendMessage("Level: " + round(playerData.level, round));
-        sender.sendMessage("Money: " + round(playerData.money, round * 3));
+        sender.sendMessage("Money: " + (round == 0 ? playerData.money : round(playerData.money, round)));
         sender.sendMessage("Strength: " + round(playerData.strength, round));
         sender.sendMessage("Agility: " + round(playerData.agility, round));
         sender.sendMessage("Charisma: " + round(playerData.charisma, round));
@@ -77,6 +73,6 @@ public class StatusController
 
     static String round(double value, int decimalPlace)
     {
-        return (decimalPlace != 0 ? "~" : "") + ExtensionMethods.roundInt(value, decimalPlace);
+        return (decimalPlace < 0 ? "~" : "") + ExtensionMethods.roundInt(value, decimalPlace);
     }
 }
