@@ -8,6 +8,7 @@ import pl.majkus522.mrpg.Main;
 import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.SkillData;
 import pl.majkus522.mrpg.common.classes.api.RequestResult;
+import pl.majkus522.mrpg.common.classes.api.RequestSkills;
 
 import java.util.ArrayList;
 
@@ -63,5 +64,19 @@ public class SkillsController
     {
         RequestResult request = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/skills/" + player.getName() + "/" + skill, player);
         return request.isOk();
+    }
+
+    public static boolean playerHasSkillEnabled(Player player, String skill)
+    {
+        RequestResult request = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/skills/" + player.getName() + "?toggle=true", player);
+        if(!request.isOk())
+            return false;
+        RequestSkills[] skills = new Gson().fromJson(request.content, RequestSkills[].class);
+        for (RequestSkills element : skills)
+        {
+            if(element.skill.equals(skill))
+                return true;
+        }
+        return false;
     }
 }

@@ -39,6 +39,12 @@ public class StatusController
         if (!(ExtensionMethods.isPlayerLogged(sender) || ExtensionMethods.isPlayerLogged(whose)))
             return;
 
+        if(SkillsController.playerHasSkillEnabled(whose, "statusHide") && !SkillsController.playerHasSkill(sender, "statusVision"))
+        {
+            sender.sendMessage("You can't see this player status");
+            return;
+        }
+
         RequestResult senderRequest = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/players/" + sender.getName(), sender);
         if(!senderRequest.isOk())
         {
