@@ -5,7 +5,7 @@ import pl.majkus522.mrpg.common.enums.SkillRarity;
 public class SkillData
 {
     public String label;
-    public boolean active;
+    public boolean toggle;
     public String description;
     public SkillRarity rarity;
 
@@ -14,7 +14,7 @@ public class SkillData
     {
         return "SkillData{" +
                 "label='" + label + '\'' +
-                ", active=" + active +
+                ", active=" + toggle +
                 ", description='" + description + '\'' +
                 ", rarity='" + rarity.toString() + '\'' +
                 '}';
