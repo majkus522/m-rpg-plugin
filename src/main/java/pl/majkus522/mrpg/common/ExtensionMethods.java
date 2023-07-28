@@ -60,7 +60,7 @@ public class ExtensionMethods
 
             headers.forEach((key, value) -> connection.setRequestProperty(key, value));
 
-            if (method == "POST" || method == "PUT" || method == "PATCH")
+            if (method.equals("POST") || method.equals("PUT") || method.equals("PATCH"))
             {
                 OutputStream writter = connection.getOutputStream();
                 byte[] input = body.getBytes("utf-8");
