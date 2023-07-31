@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import pl.majkus522.mrpg.commands.CommandLogin;
 import pl.majkus522.mrpg.commands.CommandSkills;
 import pl.majkus522.mrpg.commands.CommandStatus;
+import pl.majkus522.mrpg.common.MySQL;
 import pl.majkus522.mrpg.events.*;
 
 import java.util.HashMap;
@@ -20,6 +21,7 @@ public final class Main extends JavaPlugin
     {
         System.out.println("M-RPG loaded");
         playersSessions = new HashMap<String, String>();
+        MySQL.connect();
     }
 
     @Override
@@ -41,6 +43,7 @@ public final class Main extends JavaPlugin
     public void onDisable()
     {
         System.out.println("M-RPG disabled");
+        MySQL.disconnect();
     }
 
     void registerEvent(Listener event)
