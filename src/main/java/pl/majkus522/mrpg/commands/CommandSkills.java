@@ -23,7 +23,7 @@ public class CommandSkills implements CommandExecutor
             player.sendMessage("You must be logged in");
             return true;
         }
-        player.openInventory(new SkillsGui().getInventory());
+        player.openInventory(new SkillsGui(player).getInventory());
         return true;
     }
 }

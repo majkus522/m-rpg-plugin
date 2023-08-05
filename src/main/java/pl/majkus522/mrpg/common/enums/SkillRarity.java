@@ -32,6 +32,30 @@ public enum SkillRarity
         return string.substring(0, 1).toUpperCase() + string.substring(1);
     }
 
+    public String toColoredString()
+    {
+        ChatColor color = ChatColor.WHITE;
+        switch (this)
+        {
+            case extra:
+                color = ChatColor.DARK_GREEN;
+                break;
+
+            case unique:
+                color = ChatColor.BLUE;
+                break;
+
+            case ultimate:
+                color = ChatColor.DARK_PURPLE;
+                break;
+
+            case unknown:
+                color = ChatColor.BLACK;
+                break;
+        }
+        return color + toPrettyString();
+    }
+
     public static SkillRarity fromString(String input)
     {
         switch (ChatColor.stripColor(input.toLowerCase()))
@@ -47,6 +71,9 @@ public enum SkillRarity
 
             case "ultimate":
                 return SkillRarity.ultimate;
+
+            case "unknown":
+                return SkillRarity.unknown;
         }
         return null;
     }

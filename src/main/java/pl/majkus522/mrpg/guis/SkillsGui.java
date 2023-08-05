@@ -19,6 +19,8 @@ import pl.majkus522.mrpg.common.classes.SkillData;
 import pl.majkus522.mrpg.common.classes.api.RequestResult;
 import pl.majkus522.mrpg.common.classes.api.RequestSkills;
 import pl.majkus522.mrpg.common.enums.SkillRarity;
+import pl.majkus522.mrpg.controllers.NBTController;
+import pl.majkus522.mrpg.controllers.SkillsController;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,16 +32,23 @@ public class SkillsGui implements InventoryHolder
     public int page;
     public SkillRarity rarity;
 
-    public SkillsGui()
+    public SkillsGui(Player player)
     {
-        inventory = Bukkit.createInventory(this, 3 * 9, "Skills");
+        boolean unknownRarity = SkillsController.playerHasSkill(player, SkillRarity.unknown);
+        inventory = Bukkit.createInventory(this, unknownRarity ? 45 : 27, "Skills");
         ItemStack empty = ExtensionMethods.emptySlot();
         for(int index = 0; index < inventory.getSize(); index++)
             inventory.setItem(index, empty);
-        inventory.setItem(10, button(Material.WHITE_CONCRETE, ChatColor.WHITE + "Common"));
-        inventory.setItem(12, button(Material.LIME_CONCRETE, ChatColor.DARK_GREEN + "Extra"));
-        inventory.setItem(14, button(Material.BLUE_CONCRETE, ChatColor.BLUE + "Unique"));
-        inventory.setItem(16, button(Material.MAGENTA_CONCRETE, ChatColor.DARK_PURPLE + "Ultimate"));
+        if(SkillsController.playerHasSkill(player, SkillRarity.common))
+            inventory.setItem(10, button(Material.WHITE_CONCRETE, SkillRarity.common));
+        if(SkillsController.playerHasSkill(player, SkillRarity.extra))
+            inventory.setItem(12, button(Material.LIME_CONCRETE, SkillRarity.extra));
+        if(SkillsController.playerHasSkill(player, SkillRarity.unique))
+            inventory.setItem(14, button(Material.BLUE_CONCRETE, SkillRarity.unique));
+        if(SkillsController.playerHasSkill(player, SkillRarity.ultimate))
+            inventory.setItem(16, button(Material.MAGENTA_CONCRETE, SkillRarity.ultimate));
+        if(unknownRarity)
+            inventory.setItem(31, button(Material.BLACK_CONCRETE, SkillRarity.unknown));
     }
 
     public SkillsGui(Player player, SkillRarity rarity)
@@ -72,23 +81,10 @@ public class SkillsGui implements InventoryHolder
             headers.put("Items", ((page + 1) * 45) + "-45");
             request = ExtensionMethods.httpRequest("HEAD", Main.mainUrl + "endpoints/skills/" + player.getName() + "?rarity[]=" + rarity.toString(), headers);
             if(request.isOk())
-            {
-                ItemStack item = new ItemStack(Material.ARROW, 1);
-                ItemMeta meta = item.getItemMeta();
-                meta.setDisplayName(ChatColor.RESET + "Next page");
-                item.setItemMeta(meta);
-                inventory.setItem(53, item);
-            }
-
+                inventory.setItem(53, arrow(true));
         }
         if(page != 0)
-        {
-            ItemStack item = new ItemStack(Material.ARROW, 1);
-            ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName(ChatColor.RESET + "Prevoius page");
-            item.setItemMeta(meta);
-            inventory.setItem(45, item);
-        }
+            inventory.setItem(45, arrow(false));
     }
 
     public void onItemTake(InventoryClickEvent event)
@@ -96,34 +92,43 @@ public class SkillsGui implements InventoryHolder
         event.setCancelled(true);
         Player player = (Player) event.getWhoClicked();
         ItemStack item = event.getCurrentItem();
-        if(item.getType() != Material.GRAY_STAINED_GLASS_PANE && event.getInventory().getSize() == 3 * 9)
+        if(!NBTController.hasNBTTag(item, "gui-action"))
+            return;
+        String action = NBTController.getNBTString(item, "gui-action");
+        String[] part = action.split("-");
+        switch (part[0])
         {
-            player.openInventory(new SkillsGui((Player)player, SkillRarity.fromString(item.getItemMeta().getDisplayName())).getInventory());
-        }
-        else if(item.getType() == Material.ARROW && event.getInventory().getSize() == 6 * 9)
-        {
-            if(item.getItemMeta().getDisplayName().contains("Next"))
-            {
+            case "button":
+                player.openInventory(new SkillsGui(player, SkillRarity.fromString(part[1])).getInventory());
+                break;
+
+            case "arrow":
                 SkillsGui old = (SkillsGui)event.getClickedInventory().getHolder();
-                player.openInventory(new SkillsGui((Player) player, old.rarity, old.page + 1).getInventory());
-            }
-            else if(item.getItemMeta().getDisplayName().contains("Prevoius"))
-            {
-                SkillsGui old = (SkillsGui)event.getClickedInventory().getHolder();
-                player.openInventory(new SkillsGui((Player) player, old.rarity, old.page - 1).getInventory());
-            }
+                player.openInventory(new SkillsGui(player, old.rarity, old.page + (part[1].equals("next") ? 1 : -1)).getInventory());
+                break;
         }
     }
 
-    ItemStack button(Material material, String label)
+    ItemStack button(Material material, SkillRarity rarity)
     {
         ItemStack item = new ItemStack(material, 1);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(label);
+        meta.setDisplayName(rarity.toColoredString());
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         meta.addEnchant(Enchantment.DURABILITY, 1, true);
         item.setItemMeta(meta);
-        return item;
+        return NBTController.putNBTString(item, "gui-action", "button-" + rarity.toString());
+    }
+
+    ItemStack arrow(boolean next)
+    {
+        ItemStack item = new ItemStack(Material.ARROW, 1);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(ChatColor.RESET + (next ? "Next page" : "Prevoius page"));
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        meta.addEnchant(Enchantment.DURABILITY, 1, true);
+        item.setItemMeta(meta);
+        return NBTController.putNBTString(item, "gui-action", "arrow-" + (next ? "next" : "prevoius"));
     }
 
     ItemStack skill(SkillData skill)

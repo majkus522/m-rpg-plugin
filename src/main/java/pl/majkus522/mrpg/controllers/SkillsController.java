@@ -9,8 +9,10 @@ import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.SkillData;
 import pl.majkus522.mrpg.common.classes.api.RequestResult;
 import pl.majkus522.mrpg.common.classes.api.RequestSkills;
+import pl.majkus522.mrpg.common.enums.SkillRarity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class SkillsController
 {
@@ -63,6 +65,14 @@ public class SkillsController
     public static boolean playerHasSkill(Player player, String skill)
     {
         RequestResult request = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/skills/" + player.getName() + "/" + skill, player);
+        return request.isOk();
+    }
+
+    public static boolean playerHasSkill(Player player, SkillRarity rarity)
+    {
+        HashMap<String, String> headers = ExtensionMethods.getSessionHeaders(player);
+        headers.put("Items", "0-1");
+        RequestResult request = ExtensionMethods.httpRequest("HEAD", Main.mainUrl + "endpoints/skills/" + player.getName() + "?rarity[]=" + rarity.toString(), headers);
         return request.isOk();
     }
 

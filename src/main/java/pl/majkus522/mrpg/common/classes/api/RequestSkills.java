@@ -8,7 +8,12 @@ public class RequestSkills
     public String skill;
     public int player;
     public SkillRarity rarity;
-    public boolean toggle;
+    int toggle;
+
+    public boolean getToggle()
+    {
+        return toggle == 1;
+    }
 
     @Override
     public String toString()
