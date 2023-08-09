@@ -2,26 +2,18 @@ package pl.majkus522.mrpg.common.classes.api;
 
 import pl.majkus522.mrpg.common.classes.PlayerStatus;
 
-public class RequestPlayer extends PlayerStatus
+public class RequestFakeStatus extends PlayerStatus
 {
-    public String username;
-    public String email;
-    public int exp;
-    public int energy;
-    public String world;
+    public int player;
 
     @Override
     public String toString()
     {
-        return "RequestPlayer{" +
+        return "RequestFakeStatus{" +
                 "id=" + id +
-                ", username='" + username + '\'' +
-                ", email='" + email + '\'' +
+                ", player=" + player +
                 ", money=" + money +
                 ", level=" + level +
-                ", exp=" + exp +
-                ", energy=" + energy +
-                ", world='" + world + '\'' +
                 ", strength=" + strength +
                 ", agility=" + agility +
                 ", charisma=" + charisma +

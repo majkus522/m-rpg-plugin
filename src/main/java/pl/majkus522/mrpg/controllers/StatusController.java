@@ -5,7 +5,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import pl.majkus522.mrpg.Main;
 import pl.majkus522.mrpg.common.ExtensionMethods;
+import pl.majkus522.mrpg.common.classes.PlayerStatus;
 import pl.majkus522.mrpg.common.classes.api.RequestErrorResult;
+import pl.majkus522.mrpg.common.classes.api.RequestFakeStatus;
 import pl.majkus522.mrpg.common.classes.api.RequestPlayer;
 import pl.majkus522.mrpg.common.classes.api.RequestResult;
 
@@ -45,35 +47,56 @@ public class StatusController
             return;
         }
 
-        RequestResult senderRequest = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/players/" + sender.getName(), sender);
-        if(!senderRequest.isOk())
-        {
-            senderRequest.printError();
-            sender.sendMessage("Server error");
-            return;
-        }
-        RequestResult whoseRequest = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/players/" + whose.getName(), whose);
-        if(!whoseRequest.isOk())
-        {
-            whoseRequest.printError();
-            sender.sendMessage("Server error");
-            return;
-        }
         Gson gson = new Gson();
-        int level = gson.fromJson(senderRequest.content, RequestPlayer.class).level;
-        RequestPlayer playerData = gson.fromJson(whoseRequest.content, RequestPlayer.class);
+        boolean statusVision = SkillsController.playerHasSkill(sender, "statusVision");
+        int senderLevel = -1;
+        if(!statusVision)
+        {
+            RequestResult request = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/players/" + sender.getName(), sender);
+            if(!request.isOk())
+            {
+                request.printError();
+                sender.sendMessage("Server error");
+                return;
+            }
+            senderLevel = gson.fromJson(request.content, RequestPlayer.class).level;
+        }
+        boolean statusFake = statusVision ? false : SkillsController.playerHasSkill(whose, "statusFake");
+        PlayerStatus status;
+        if(statusFake)
+        {
+            RequestResult request = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/fake-status/" + whose.getName(), whose);
+            if(!request.isOk())
+            {
+                request.printError();
+                sender.sendMessage("Server error");
+                return;
+            }
+            status = gson.fromJson(request.content, RequestFakeStatus.class);
+        }
+        else
+        {
+            RequestResult request = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/players/" + whose.getName(), whose);
+            if(!request.isOk())
+            {
+                request.printError();
+                sender.sendMessage("Server error");
+                return;
+            }
+            status = gson.fromJson(request.content, RequestPlayer.class);
+        }
         int round = -1;
-        if(playerData.level - level > 5)
+        if(status.level - senderLevel > 5)
             round = -2;
-        if (SkillsController.playerHasSkill(sender, "statusVision"))
+        if (statusVision)
             round = 0;
         sender.sendMessage(ChatColor.BLUE + "=-=-=-=-= " + ChatColor.GREEN + "Status: " + whose.getName() + ChatColor.BLUE + " =-=-=-=-=");
-        sender.sendMessage("Level: " + round(playerData.level, round));
-        sender.sendMessage("Money: " + (round == 0 ? playerData.money : round(playerData.money, round)));
-        sender.sendMessage("Strength: " + round(playerData.strength, round));
-        sender.sendMessage("Agility: " + round(playerData.agility, round));
-        sender.sendMessage("Charisma: " + round(playerData.charisma, round));
-        sender.sendMessage("Intelligence: " + round(playerData.intelligence, round));
+        sender.sendMessage("Level: " + round(status.level, round));
+        sender.sendMessage("Money: " + (round == 0 ? status.money : round(status.money, round)));
+        sender.sendMessage("Strength: " + round(status.strength, round));
+        sender.sendMessage("Agility: " + round(status.agility, round));
+        sender.sendMessage("Charisma: " + round(status.charisma, round));
+        sender.sendMessage("Intelligence: " + round(status.intelligence, round));
         sender.sendMessage(ChatColor.BLUE + "=-=-=-=-= " + ChatColor.GREEN + "Status: " + whose.getName() + ChatColor.BLUE + " =-=-=-=-=");
     }
 
