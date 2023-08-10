@@ -8,7 +8,7 @@ import pl.majkus522.mrpg.Main;
 import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.SkillData;
 import pl.majkus522.mrpg.common.classes.api.RequestResult;
-import pl.majkus522.mrpg.common.classes.api.RequestSkills;
+import pl.majkus522.mrpg.common.classes.api.RequestSkill;
 import pl.majkus522.mrpg.common.enums.SkillRarity;
 
 import java.util.ArrayList;
@@ -81,8 +81,8 @@ public class SkillsController
         RequestResult request = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/skills/" + player.getName() + "?toggle=true", player);
         if(!request.isOk())
             return false;
-        RequestSkills[] skills = new Gson().fromJson(request.content, RequestSkills[].class);
-        for (RequestSkills element : skills)
+        RequestSkill[] skills = new Gson().fromJson(request.content, RequestSkill[].class);
+        for (RequestSkill element : skills)
         {
             if(element.skill.equals(skill))
                 return true;

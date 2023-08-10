@@ -17,7 +17,7 @@ import pl.majkus522.mrpg.Main;
 import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.SkillData;
 import pl.majkus522.mrpg.common.classes.api.RequestResult;
-import pl.majkus522.mrpg.common.classes.api.RequestSkills;
+import pl.majkus522.mrpg.common.classes.api.RequestSkill;
 import pl.majkus522.mrpg.common.enums.SkillRarity;
 import pl.majkus522.mrpg.controllers.NBTController;
 import pl.majkus522.mrpg.controllers.SkillsController;
@@ -69,7 +69,7 @@ public class SkillsGui implements InventoryHolder
         RequestResult request = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/skills/" + player.getName() + "?rarity[]=" + rarity.toString(), headers);
         Gson gson = new Gson();
         int index = 0;
-        for (RequestSkills skill : gson.fromJson(request.content, RequestSkills[].class))
+        for (RequestSkill skill : gson.fromJson(request.content, RequestSkill[].class))
         {
             SkillData data = gson.fromJson(ExtensionMethods.readJsonFile("data/skills/" + skill.skill + ".json"), SkillData.class);
             inventory.setItem(index, skill(data));
