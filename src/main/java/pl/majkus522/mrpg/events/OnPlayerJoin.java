@@ -14,6 +14,7 @@ public class OnPlayerJoin implements Listener
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event)
     {
+        event.setJoinMessage("");
         Player player = event.getPlayer();
         RequestResult request = ExtensionMethods.httpRequest("HEAD", Main.mainUrl + "endpoints/players/" + player.getName());
         if(!request.isOk())
