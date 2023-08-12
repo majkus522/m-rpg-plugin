@@ -31,6 +31,7 @@ public final class Main extends JavaPlugin
         registerEvent(new OnItemTake());
         registerEvent(new OnPlayerDeath());
         registerEvent(new OnPlayerRightClickEntity());
+        registerEvent(new OnPlayerChat());
 
         registerCommand("login", new CommandLogin());
         registerCommand("skills", new CommandSkills());

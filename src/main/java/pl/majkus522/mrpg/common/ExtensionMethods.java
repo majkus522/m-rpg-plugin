@@ -2,6 +2,7 @@ package pl.majkus522.mrpg.common;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -132,10 +133,22 @@ public class ExtensionMethods
 
     public static ArrayList<Player> getPlayersInRange(Location location, int range)
     {
+        int chunkRange = (range - (range % 16)) / 16 + 1;
+        int xStart = location.getChunk().getX() - chunkRange;
+        int zStart = location.getChunk().getZ() - chunkRange;
+        int xEnd = location.getChunk().getX() + chunkRange;
+        int zEnd = location.getChunk().getZ() + chunkRange;
         ArrayList<Player> players = new ArrayList<>();
-        for (Entity entity : location.getWorld().getNearbyEntities(location, range, range, range))
-            if(entity instanceof Player)
-                players.add((Player) entity);
+        World world = location.getWorld();
+        for (int x = xStart; x <= xEnd; x++)
+        {
+            for (int z = zStart; z <= zEnd; z++)
+            {
+                for (Entity entity : world.getChunkAt(x, z).getEntities())
+                    if(entity instanceof Player && Math.abs(location.distance(entity.getLocation())) <= range)
+                        players.add((Player)entity);
+            }
+        }
         return players;
     }
 
