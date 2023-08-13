@@ -4,6 +4,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.majkus522.mrpg.commands.CommandLogin;
+import pl.majkus522.mrpg.commands.CommandShout;
 import pl.majkus522.mrpg.commands.CommandSkills;
 import pl.majkus522.mrpg.commands.CommandStatus;
 import pl.majkus522.mrpg.events.*;
@@ -36,6 +37,7 @@ public final class Main extends JavaPlugin
         registerCommand("login", new CommandLogin());
         registerCommand("skills", new CommandSkills());
         registerCommand("status", new CommandStatus());
+        registerCommand("shout", new CommandShout());
     }
 
     @Override

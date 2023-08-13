@@ -15,3 +15,7 @@ commands:
   status:
     description: Check your status
     usage: /<command>
+
+  shout:
+    description: Shout your speach
+    usage: /<command> <text>
