@@ -15,12 +15,14 @@ public final class Main extends JavaPlugin
 {
     public static HashMap<String, String> playersSessions;
     public static String mainUrl = "http://127.0.0.1/m-rpg/api/";
+    public static Main plugin;
 
     @Override
     public void onLoad()
     {
         System.out.println("M-RPG loaded");
         playersSessions = new HashMap<String, String>();
+        plugin = this;
     }
 
     @Override
