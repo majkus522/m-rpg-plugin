@@ -19,7 +19,7 @@ public class SkillsController
     public static void playerObtainSkill(Player player, String skill)
     {
         String body = "{\"player\": \"" + player.getName() + "\", \"skill\": \"" + skill + "\"}";
-        RequestResult request = ExtensionMethods.httpRequest("POST", Main.mainUrl + "endpoints/skills", body, player);
+        RequestResult request = ExtensionMethods.httpRequest("POST", "endpoints/skills", body, player);
         Gson gson = new Gson();
         if(request.isOk())
         {
@@ -64,7 +64,7 @@ public class SkillsController
 
     public static boolean playerHasSkill(Player player, String skill)
     {
-        RequestResult request = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/skills/" + player.getName() + "/" + skill, player);
+        RequestResult request = ExtensionMethods.httpRequest("GET", "endpoints/skills/" + player.getName() + "/" + skill, player);
         return request.isOk();
     }
 
@@ -72,13 +72,13 @@ public class SkillsController
     {
         HashMap<String, String> headers = ExtensionMethods.getSessionHeaders(player);
         headers.put("Items", "0-1");
-        RequestResult request = ExtensionMethods.httpRequest("HEAD", Main.mainUrl + "endpoints/skills/" + player.getName() + "?rarity[]=" + rarity.toString(), headers);
+        RequestResult request = ExtensionMethods.httpRequest("HEAD", "endpoints/skills/" + player.getName() + "?rarity[]=" + rarity.toString(), headers);
         return request.isOk();
     }
 
     public static boolean playerHasSkillEnabled(Player player, String skill)
     {
-        RequestResult request = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/skills/" + player.getName() + "?toggle=true", player);
+        RequestResult request = ExtensionMethods.httpRequest("GET", "endpoints/skills/" + player.getName() + "?toggle=true", player);
         if(!request.isOk())
             return false;
         RequestSkill[] skills = new Gson().fromJson(request.content, RequestSkill[].class);

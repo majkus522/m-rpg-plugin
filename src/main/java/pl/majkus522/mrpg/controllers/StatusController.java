@@ -18,7 +18,7 @@ public class StatusController
         if (!ExtensionMethods.isPlayerLogged(player))
             return;
 
-        RequestResult request = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/players/" + player.getName(), player);
+        RequestResult request = ExtensionMethods.httpRequest("GET", "endpoints/players/" + player.getName(), player);
         Gson gson = new Gson();
         if(request.isOk())
         {
@@ -52,7 +52,7 @@ public class StatusController
         int senderLevel = -1;
         if(!statusVision)
         {
-            RequestResult request = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/players/" + sender.getName(), sender);
+            RequestResult request = ExtensionMethods.httpRequest("GET", "endpoints/players/" + sender.getName(), sender);
             if(!request.isOk())
             {
                 request.printError();
@@ -65,7 +65,7 @@ public class StatusController
         PlayerStatus status;
         if(statusFake)
         {
-            RequestResult request = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/fake-status/" + whose.getName(), whose);
+            RequestResult request = ExtensionMethods.httpRequest("GET", "endpoints/fake-status/" + whose.getName(), whose);
             if(!request.isOk())
             {
                 request.printError();
@@ -76,7 +76,7 @@ public class StatusController
         }
         else
         {
-            RequestResult request = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/players/" + whose.getName(), whose);
+            RequestResult request = ExtensionMethods.httpRequest("GET", "endpoints/players/" + whose.getName(), whose);
             if(!request.isOk())
             {
                 request.printError();

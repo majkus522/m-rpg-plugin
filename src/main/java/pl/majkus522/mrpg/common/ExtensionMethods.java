@@ -55,7 +55,7 @@ public class ExtensionMethods
     {
         try
         {
-            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+            HttpURLConnection connection = (HttpURLConnection) new URL("http://127.0.0.1/m-rpg/api/" + url).openConnection();
             connection.setRequestMethod(method);
             connection.setDoOutput(true);
 

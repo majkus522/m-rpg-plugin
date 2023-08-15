@@ -26,7 +26,7 @@ public class ScoreboardController
         objective.setDisplayName(ChatColor.AQUA + "M-RPG");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-        RequestResult request = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/players/" + player.getName(), player);
+        RequestResult request = ExtensionMethods.httpRequest("GET", "endpoints/players/" + player.getName(), player);
         RequestPlayer playerData = new Gson().fromJson(request.content, RequestPlayer.class);
 
         ArrayList<String> elements = new ArrayList<String>();

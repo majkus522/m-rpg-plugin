@@ -38,7 +38,7 @@ public class CommandLogin implements CommandExecutor
         HashMap<String, String> headers = new HashMap<>();
         headers.put("Password", Base64.getEncoder().encodeToString(args[0].getBytes()));
         headers.put("Session-Type", "game");
-        RequestResult request = ExtensionMethods.httpRequest("GET", Main.mainUrl + "endpoints/players/" + player.getName() + "/logged", headers);
+        RequestResult request = ExtensionMethods.httpRequest("GET", "endpoints/players/" + player.getName() + "/logged", headers);
         if(!request.isOk())
         {
             Gson gson = new Gson();
