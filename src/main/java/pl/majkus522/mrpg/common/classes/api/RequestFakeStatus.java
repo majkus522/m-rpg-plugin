@@ -10,14 +10,14 @@ public class RequestFakeStatus extends PlayerStatus
     public String toString()
     {
         return "RequestFakeStatus{" +
-                "id=" + id +
-                ", player=" + player +
+                "player=" + player +
+                ", id=" + id +
                 ", money=" + money +
                 ", level=" + level +
-                ", strength=" + strength +
-                ", agility=" + agility +
-                ", charisma=" + charisma +
-                ", intelligence=" + intelligence +
+                ", str=" + str +
+                ", agl=" + agl +
+                ", chr=" + chr +
+                ", intl=" + intl +
                 '}';
     }
 }

@@ -5,8 +5,8 @@ public class PlayerStatus
     public int id;
     public float money;
     public int level;
-    public int strength;
-    public int agility;
-    public int charisma;
-    public int intelligence;
+    public int str;
+    public int agl;
+    public int chr;
+    public int intl;
 }

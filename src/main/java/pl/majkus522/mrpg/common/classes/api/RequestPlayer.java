@@ -17,15 +17,15 @@ public class RequestPlayer extends PlayerStatus
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
-                ", money=" + money +
-                ", level=" + level +
                 ", exp=" + exp +
                 ", energy=" + energy +
                 ", world='" + world + '\'' +
-                ", strength=" + strength +
-                ", agility=" + agility +
-                ", charisma=" + charisma +
-                ", intelligence=" + intelligence +
+                ", money=" + money +
+                ", level=" + level +
+                ", str=" + str +
+                ", agl=" + agl +
+                ", chr=" + chr +
+                ", intl=" + intl +
                 '}';
     }
 }
