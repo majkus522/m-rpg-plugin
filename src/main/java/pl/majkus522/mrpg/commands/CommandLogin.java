@@ -1,18 +1,16 @@
 package pl.majkus522.mrpg.commands;
 
-import com.google.gson.Gson;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import pl.majkus522.mrpg.Main;
 import pl.majkus522.mrpg.common.ExtensionMethods;
-import pl.majkus522.mrpg.common.classes.api.RequestErrorResult;
-import pl.majkus522.mrpg.common.classes.api.RequestResult;
+import pl.majkus522.mrpg.common.classes.HttpBuilder;
+import pl.majkus522.mrpg.common.enums.HttpMethod;
 import pl.majkus522.mrpg.controllers.ScoreboardController;
 
 import java.util.Base64;
-import java.util.HashMap;
 
 public class CommandLogin implements CommandExecutor
 {
@@ -35,18 +33,14 @@ public class CommandLogin implements CommandExecutor
             player.sendMessage("Enter password");
             return true;
         }
-        HashMap<String, String> headers = new HashMap<>();
-        headers.put("Password", Base64.getEncoder().encodeToString(args[0].getBytes()));
-        headers.put("Session-Type", "game");
-        RequestResult request = ExtensionMethods.httpRequest("GET", "endpoints/players/" + player.getName() + "/logged", headers);
+        HttpBuilder request = new HttpBuilder(HttpMethod.GET, "endpoints/players/" + player.getName() + "/logged").setHeader("Session-Type", "game").setHeader("Password", Base64.getEncoder().encodeToString(args[0].getBytes()));
         if(!request.isOk())
         {
-            Gson gson = new Gson();
-            player.sendMessage(gson.fromJson(request.content, RequestErrorResult.class).message);
+            player.sendMessage(request.getError().message);
             return true;
         }
         player.sendMessage("Logged in");
-        Main.playersSessions.put(player.getName(), request.content);
+        Main.playersSessions.put(player.getName(), request.getResultString());
         player.setScoreboard(ScoreboardController.createScoreboard(player));
         return true;
     }

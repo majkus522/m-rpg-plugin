@@ -13,18 +13,18 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.ChatPaginator;
-import pl.majkus522.mrpg.Main;
 import pl.majkus522.mrpg.common.ExtensionMethods;
+import pl.majkus522.mrpg.common.classes.HttpBuilder;
 import pl.majkus522.mrpg.common.classes.SkillData;
-import pl.majkus522.mrpg.common.classes.api.RequestResult;
 import pl.majkus522.mrpg.common.classes.api.RequestSkill;
+import pl.majkus522.mrpg.common.enums.HttpMethod;
 import pl.majkus522.mrpg.common.enums.SkillRarity;
+import pl.majkus522.mrpg.common.interfaces.IRequestResult;
 import pl.majkus522.mrpg.controllers.NBTController;
 import pl.majkus522.mrpg.controllers.SkillsController;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 
 public class SkillsGui implements InventoryHolder
 {
@@ -64,22 +64,18 @@ public class SkillsGui implements InventoryHolder
         ItemStack empty = ExtensionMethods.emptySlot();
         for(int index = 0; index < inventory.getSize(); index++)
             inventory.setItem(index, empty);
-        HashMap<String, String> headers = ExtensionMethods.getSessionHeaders(player);
-        headers.put("Items", (page * 45) + "-45");
-        RequestResult request = ExtensionMethods.httpRequest("GET", "endpoints/skills/" + player.getName() + "?rarity[]=" + rarity.toString(), headers);
+        HttpBuilder request = new HttpBuilder(HttpMethod.GET, "endpoints/skills/" + player.getName() + "?rarity[]=" + rarity.toString()).setSessionHeaders(player).setHeader("Items", (page * 45) + "-45");
         Gson gson = new Gson();
         int index = 0;
-        for (RequestSkill skill : gson.fromJson(request.content, RequestSkill[].class))
+        for (IRequestResult skill : request.getResultAll(RequestSkill.class))
         {
-            SkillData data = gson.fromJson(ExtensionMethods.readJsonFile("data/skills/" + skill.skill + ".json"), SkillData.class);
+            SkillData data = gson.fromJson(ExtensionMethods.readJsonFile("data/skills/" + ((RequestSkill)skill).skill + ".json"), SkillData.class);
             inventory.setItem(index, skill(data));
             index++;
         }
-        if(Integer.parseInt(request.headers.get("Items-Count")) == 45)
+        if(Integer.parseInt(request.getOutputHeader("Items-Count")) == 45)
         {
-            headers = ExtensionMethods.getSessionHeaders(player);
-            headers.put("Items", ((page + 1) * 45) + "-45");
-            request = ExtensionMethods.httpRequest("HEAD", "endpoints/skills/" + player.getName() + "?rarity[]=" + rarity.toString(), headers);
+            request = new HttpBuilder(HttpMethod.HEAD, "endpoints/skills/" + player.getName() + "?rarity[]=" + rarity.toString()).setSessionHeaders(player).setHeader("Items", ((page + 1) * 45) + "-45");
             if(request.isOk())
                 inventory.setItem(53, arrow(true));
         }

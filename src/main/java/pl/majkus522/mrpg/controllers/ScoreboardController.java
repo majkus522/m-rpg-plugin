@@ -1,6 +1,5 @@
 package pl.majkus522.mrpg.controllers;
 
-import com.google.gson.Gson;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -8,10 +7,9 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
-import pl.majkus522.mrpg.Main;
-import pl.majkus522.mrpg.common.ExtensionMethods;
+import pl.majkus522.mrpg.common.classes.HttpBuilder;
 import pl.majkus522.mrpg.common.classes.api.RequestPlayer;
-import pl.majkus522.mrpg.common.classes.api.RequestResult;
+import pl.majkus522.mrpg.common.enums.HttpMethod;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,9 +24,13 @@ public class ScoreboardController
         objective.setDisplayName(ChatColor.AQUA + "M-RPG");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-        RequestResult request = ExtensionMethods.httpRequest("GET", "endpoints/players/" + player.getName(), player);
-        RequestPlayer playerData = new Gson().fromJson(request.content, RequestPlayer.class);
-
+        HttpBuilder request = new HttpBuilder(HttpMethod.GET, "endpoints/players/" + player.getName()).setSessionHeaders(player);
+        if(!request.isOk())
+        {
+            player.sendMessage("Server error");
+            throw new RuntimeException(new Exception(request.getError().message));
+        }
+        RequestPlayer playerData = (RequestPlayer)request.getResult(RequestPlayer.class);
         ArrayList<String> elements = new ArrayList<String>();
         elements.add("Money: " + playerData.money);
         elements.add("Exp: " + playerData.exp);

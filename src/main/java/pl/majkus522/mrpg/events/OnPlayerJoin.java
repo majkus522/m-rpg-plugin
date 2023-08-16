@@ -5,9 +5,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import pl.majkus522.mrpg.Main;
-import pl.majkus522.mrpg.common.ExtensionMethods;
-import pl.majkus522.mrpg.common.classes.api.RequestResult;
+import pl.majkus522.mrpg.common.classes.HttpBuilder;
+import pl.majkus522.mrpg.common.enums.HttpMethod;
 
 public class OnPlayerJoin implements Listener
 {
@@ -16,7 +15,7 @@ public class OnPlayerJoin implements Listener
     {
         event.setJoinMessage("");
         Player player = event.getPlayer();
-        RequestResult request = ExtensionMethods.httpRequest("HEAD", "endpoints/players/" + player.getName());
+        HttpBuilder request = new HttpBuilder(HttpMethod.HEAD, "endpoints/players/" + player.getName());
         if(!request.isOk())
             player.kickPlayer("Please first register on our webstie \n\n" + ChatColor.BLUE + "M-RPG.COM");
     }

@@ -1,6 +1,8 @@
 package pl.majkus522.mrpg.common.classes.api;
 
-public class RequestSkill
+import pl.majkus522.mrpg.common.interfaces.IRequestResult;
+
+public class RequestSkill implements IRequestResult
 {
     public int id;
     public String skill;
