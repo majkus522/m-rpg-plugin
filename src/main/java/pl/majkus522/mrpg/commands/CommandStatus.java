@@ -1,29 +1,42 @@
 package pl.majkus522.mrpg.commands;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import pl.majkus522.mrpg.common.ExtensionMethods;
+import pl.majkus522.mrpg.common.classes.CustomCommand;
 import pl.majkus522.mrpg.controllers.StatusController;
 
-public class CommandStatus implements CommandExecutor
+import java.util.ArrayList;
+import java.util.List;
+
+public class CommandStatus extends CustomCommand
 {
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String string, String[] args)
+    public void onPlayerExecute(Player player, String[] args)
     {
-        if(!(sender instanceof Player))
-        {
-            sender.sendMessage("Command can only be used by player");
-            return true;
-        }
-        Player player = (Player) sender;
         if(!ExtensionMethods.isPlayerLogged(player))
         {
             player.sendMessage("You must be logged in");
-            return true;
+            return;
         }
         StatusController.sendPlayerStatus(player);
-        return true;
+    }
+
+    @Override
+    public void onTerminalExecute(ConsoleCommandSender console, String[] args)
+    {
+        console.sendMessage("Command can only be used by player");
+    }
+
+    @Override
+    public List<String> autocomplete(Player player, String[] args)
+    {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public String getCommand()
+    {
+        return "status";
     }
 }

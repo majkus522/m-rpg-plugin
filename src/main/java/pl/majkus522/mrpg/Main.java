@@ -1,12 +1,12 @@
 package pl.majkus522.mrpg;
 
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.majkus522.mrpg.commands.CommandLogin;
 import pl.majkus522.mrpg.commands.CommandShout;
 import pl.majkus522.mrpg.commands.CommandSkills;
 import pl.majkus522.mrpg.commands.CommandStatus;
+import pl.majkus522.mrpg.common.classes.CustomCommand;
 import pl.majkus522.mrpg.events.*;
 
 import java.util.HashMap;
@@ -35,10 +35,10 @@ public final class Main extends JavaPlugin
         registerEvent(new OnPlayerRightClickEntity());
         registerEvent(new OnPlayerChat());
 
-        registerCommand("login", new CommandLogin());
-        registerCommand("skills", new CommandSkills());
-        registerCommand("status", new CommandStatus());
-        registerCommand("shout", new CommandShout());
+        registerCommand(new CommandLogin());
+        registerCommand(new CommandSkills());
+        registerCommand(new CommandStatus());
+        registerCommand(new CommandShout());
     }
 
     @Override
@@ -52,8 +52,8 @@ public final class Main extends JavaPlugin
         getServer().getPluginManager().registerEvents(event, this);
     }
 
-    void registerCommand(String name, CommandExecutor executor)
+    void registerCommand(CustomCommand executor)
     {
-        this.getCommand(name).setExecutor(executor);
+        this.getCommand(executor.getCommand()).setExecutor(executor);
     }
 }
