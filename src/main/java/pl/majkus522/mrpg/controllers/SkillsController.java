@@ -72,7 +72,7 @@ public class SkillsController
 
     public static boolean playerHasSkillEnabled(Player player, String skill)
     {
-        HttpBuilder request = new HttpBuilder(HttpMethod.GET, "endpoints/skills/" + player.getName() + "?toggle=true").setSessionHeaders(player);
+        HttpBuilder request = new HttpBuilder(HttpMethod.GET, "endpoints/skills/" + player.getName() + "?toggle=true&search=" + skill).setSessionHeaders(player);
         if(!request.isOk())
             return false;
         List<IRequestResult> skills = request.getResultAll(RequestSkill.class);
