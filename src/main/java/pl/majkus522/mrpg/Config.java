@@ -4,4 +4,5 @@ public class Config
 {
     public final static int chatRange = 15;
     public final static int shoutRange = 50;
+    public final static int statusRange = 5;
 }
