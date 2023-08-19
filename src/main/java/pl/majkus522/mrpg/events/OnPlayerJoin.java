@@ -1,10 +1,13 @@
 package pl.majkus522.mrpg.events;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import pl.majkus522.mrpg.Main;
+import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.HttpBuilder;
 import pl.majkus522.mrpg.common.enums.HttpMethod;
 
@@ -18,5 +21,14 @@ public class OnPlayerJoin implements Listener
         HttpBuilder request = new HttpBuilder(HttpMethod.HEAD, "endpoints/players/" + player.getName());
         if(!request.isOk())
             player.kickPlayer("Please first register on our webstie \n\n" + ChatColor.BLUE + "M-RPG.COM");
+        Bukkit.getScheduler().runTaskLater(Main.plugin, new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                if (!ExtensionMethods.isPlayerLogged(player))
+                    player.kickPlayer("Login timeout");
+            }
+        }, 60 * 20L);
     }
 }
