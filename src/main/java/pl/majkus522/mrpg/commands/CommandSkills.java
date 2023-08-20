@@ -4,6 +4,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.CustomCommand;
+import pl.majkus522.mrpg.common.enums.SkillRarity;
 import pl.majkus522.mrpg.guis.SkillsGui;
 
 import java.util.ArrayList;
@@ -19,6 +20,15 @@ public class CommandSkills extends CustomCommand
             player.sendMessage("You must be logged in");
             return;
         }
+        if (args.length > 0)
+        {
+            SkillRarity rarity = SkillRarity.fromString(args[0]);
+            if (rarity != null)
+            {
+                player.openInventory(new SkillsGui(player, rarity).getInventory());
+                return;
+            }
+        }
         player.openInventory(new SkillsGui(player).getInventory());
     }
 
@@ -31,7 +41,14 @@ public class CommandSkills extends CustomCommand
     @Override
     public List<String> autocomplete(Player player, String[] args)
     {
-        return new ArrayList<>();
+        ArrayList<String> list = new ArrayList<>();
+        if (args.length == 1)
+        {
+            SkillRarity[] values = SkillRarity.values();
+            for (SkillRarity element : values)
+                list.add(element.toString());
+        }
+        return list;
     }
 
     @Override

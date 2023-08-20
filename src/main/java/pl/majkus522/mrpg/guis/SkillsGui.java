@@ -34,6 +34,11 @@ public class SkillsGui implements InventoryHolder
 
     public SkillsGui(Player player)
     {
+        basic(player);
+    }
+
+    void basic(Player player)
+    {
         boolean unknownRarity = SkillsController.playerHasSkill(player, SkillRarity.unknown);
         inventory = Bukkit.createInventory(this, unknownRarity ? 45 : 27, "Skills");
         ItemStack empty = ExtensionMethods.emptySlot();
@@ -65,6 +70,11 @@ public class SkillsGui implements InventoryHolder
         for(int index = 0; index < inventory.getSize(); index++)
             inventory.setItem(index, empty);
         HttpBuilder request = new HttpBuilder(HttpMethod.GET, "endpoints/skills/" + player.getName() + "?rarity[]=" + rarity.toString()).setSessionHeaders(player).setHeader("Items", (page * 45) + "-45");
+        if (!request.isOk())
+        {
+            basic(player);
+            return;
+        }
         Gson gson = new Gson();
         int index = 0;
         for (IRequestResult skill : request.getResultAll(RequestSkill.class))
