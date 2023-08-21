@@ -7,6 +7,7 @@ import pl.majkus522.mrpg.commands.CommandShout;
 import pl.majkus522.mrpg.commands.CommandSkills;
 import pl.majkus522.mrpg.commands.CommandStatus;
 import pl.majkus522.mrpg.common.classes.CustomCommand;
+import pl.majkus522.mrpg.common.classes.MySQL;
 import pl.majkus522.mrpg.events.*;
 
 import java.util.HashMap;
@@ -39,12 +40,15 @@ public final class Main extends JavaPlugin
         registerCommand(new CommandSkills());
         registerCommand(new CommandStatus());
         registerCommand(new CommandShout());
+
+        MySQL.connect();
     }
 
     @Override
     public void onDisable()
     {
         System.out.println("M-RPG disabled");
+        MySQL.disconnect();
     }
 
     void registerEvent(Listener event)
