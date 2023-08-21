@@ -6,12 +6,14 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.HttpBuilder;
+import pl.majkus522.mrpg.common.classes.MySQL;
 import pl.majkus522.mrpg.common.classes.SkillData;
 import pl.majkus522.mrpg.common.classes.api.RequestSkill;
 import pl.majkus522.mrpg.common.enums.HttpMethod;
 import pl.majkus522.mrpg.common.enums.SkillRarity;
 import pl.majkus522.mrpg.common.interfaces.IRequestResult;
 
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,10 +21,17 @@ public class SkillsController
 {
     public static void playerObtainSkill(Player player, String skill)
     {
-        String body = "{\"player\": \"" + player.getName() + "\", \"skill\": \"" + skill + "\"}";
-        HttpBuilder request = new HttpBuilder(HttpMethod.POST, "endpoints/skills").setSessionHeaders(player).setBody(body);
-        if (!request.isOk())
-            throw new RuntimeException(new Exception(request.getError().message));
+        try
+        {
+            PreparedStatement stmt = MySQL.getConnection().prepareStatement("insert into `skills` (`player`, `skill`) values ((select `id` from `players` where `username` = ?), ?)");
+            stmt.setString(1, player.getName());
+            stmt.setString(2, skill);
+            stmt.executeUpdate();
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
         SkillData data = new Gson().fromJson(ExtensionMethods.readJsonFile("data/skills/" + skill + ".json"), SkillData.class);
         switch (data.rarity)
         {
