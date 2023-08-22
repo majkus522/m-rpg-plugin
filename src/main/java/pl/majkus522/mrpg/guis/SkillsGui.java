@@ -79,8 +79,9 @@ public class SkillsGui implements InventoryHolder
         int index = 0;
         for (IRequestResult skill : request.getResultAll(RequestSkill.class))
         {
-            SkillData data = gson.fromJson(ExtensionMethods.readJsonFile("data/skills/" + ((RequestSkill)skill).skill + ".json"), SkillData.class);
-            inventory.setItem(index, skill(data));
+            RequestSkill apiSkill = (RequestSkill) skill;
+            SkillData data = gson.fromJson(ExtensionMethods.readJsonFile("data/skills/" + apiSkill.skill + ".json"), SkillData.class);
+            inventory.setItem(index, skill(data, data.toggle ? apiSkill.getToggle() : null));
             index++;
         }
         if(Integer.parseInt(request.getOutputHeader("Items-Count")) == 45)
@@ -137,12 +138,14 @@ public class SkillsGui implements InventoryHolder
         return NBTController.putNBTString(item, "gui-action", "arrow-" + (next ? "next" : "prevoius"));
     }
 
-    ItemStack skill(SkillData skill)
+    ItemStack skill(SkillData skill, Boolean toggle)
     {
         ItemStack item = new ItemStack(Material.EMERALD);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(ChatColor.RESET + skill.label);
         ArrayList<String> lore = new ArrayList<>();
+        if (toggle != null)
+            lore.add((toggle ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled")));
         lore.add("");
         for (String line : Arrays.asList(ChatPaginator.wordWrap(skill.description, 35)))
             lore.add(ChatColor.RESET + "" + ChatColor.WHITE + line);
