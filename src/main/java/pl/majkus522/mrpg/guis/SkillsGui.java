@@ -25,6 +25,7 @@ import pl.majkus522.mrpg.controllers.SkillsController;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class SkillsGui implements InventoryHolder
 {
@@ -81,7 +82,7 @@ public class SkillsGui implements InventoryHolder
         {
             RequestSkill apiSkill = (RequestSkill) skill;
             SkillData data = gson.fromJson(ExtensionMethods.readJsonFile("data/skills/" + apiSkill.skill + ".json"), SkillData.class);
-            inventory.setItem(index, skill(data, data.toggle ? apiSkill.getToggle() : null));
+            inventory.setItem(index, skill(data, apiSkill));
             index++;
         }
         if(Integer.parseInt(request.getOutputHeader("Items-Count")) == 45)
@@ -97,10 +98,10 @@ public class SkillsGui implements InventoryHolder
     public void onItemTake(InventoryClickEvent event)
     {
         event.setCancelled(true);
-        Player player = (Player) event.getWhoClicked();
         ItemStack item = event.getCurrentItem();
         if(!NBTController.hasNBTTag(item, "gui-action"))
             return;
+        Player player = (Player) event.getWhoClicked();
         String action = NBTController.getNBTString(item, "gui-action");
         String[] part = action.split("-");
         switch (part[0])
@@ -112,6 +113,18 @@ public class SkillsGui implements InventoryHolder
             case "arrow":
                 SkillsGui old = (SkillsGui)event.getClickedInventory().getHolder();
                 player.openInventory(new SkillsGui(player, old.rarity, old.page + (part[1].equals("next") ? 1 : -1)).getInventory());
+                break;
+
+            case "toggle":
+                ItemMeta meta = item.getItemMeta();
+                boolean enabled = !meta.getLore().get(0).contains("Enabled");
+                HttpBuilder request = new HttpBuilder(HttpMethod.PATCH, "endpoints/skills/" + player.getName() + "/" + part[1]).setSessionHeaders(player).setBody(Boolean.toString(enabled));
+                if (!request.isOk())
+                    throw new RuntimeException(new Exception(request.getError().message));
+                List<String> lore = meta.getLore();
+                lore.set(0, enabled ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled"));
+                meta.setLore(lore);
+                item.setItemMeta(meta);
                 break;
         }
     }
@@ -138,14 +151,17 @@ public class SkillsGui implements InventoryHolder
         return NBTController.putNBTString(item, "gui-action", "arrow-" + (next ? "next" : "prevoius"));
     }
 
-    ItemStack skill(SkillData skill, Boolean toggle)
+    ItemStack skill(SkillData skill, RequestSkill apiSkill)
     {
         ItemStack item = new ItemStack(Material.EMERALD);
+        ArrayList<String> lore = new ArrayList<>();
+        if (skill.toggle)
+        {
+            lore.add((apiSkill.getToggle() ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled")));
+            item = NBTController.putNBTString(item, "gui-action", "toggle-" + apiSkill.skill);
+        }
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(ChatColor.RESET + skill.label);
-        ArrayList<String> lore = new ArrayList<>();
-        if (toggle != null)
-            lore.add((toggle ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled")));
         lore.add("");
         for (String line : Arrays.asList(ChatPaginator.wordWrap(skill.description, 35)))
             lore.add(ChatColor.RESET + "" + ChatColor.WHITE + line);
