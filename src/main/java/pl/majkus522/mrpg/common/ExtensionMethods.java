@@ -9,6 +9,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import pl.majkus522.mrpg.Main;
 
+import java.io.File;
+import java.io.FileFilter;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -42,6 +44,17 @@ public class ExtensionMethods
             e.printStackTrace();
         }
         return "";
+    }
+
+    public static File[] scanDir(String url)
+    {
+        return new File(url).listFiles(new FileFilter()
+        {
+            public boolean accept(File f)
+            {
+                return f.isFile();
+            }
+        });
     }
 
     public static ArrayList<Player> getPlayersInRange(Location location, int range)
