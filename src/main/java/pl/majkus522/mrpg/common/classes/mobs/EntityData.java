@@ -9,6 +9,7 @@ public class EntityData
     public int str;
     public int def;
     public int health;
+    public double speed = 0.23;
     String type;
 
     public EntityType<? extends PathfinderMob> getType()

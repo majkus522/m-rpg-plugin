@@ -12,11 +12,11 @@ public class OnEntityDamage implements Listener
     @EventHandler
     public void onEntityDamage(EntityDamageByEntityEvent event)
     {
-        Entity entityHandle = ((CraftEntity)event.getDamager()).getHandle();
+        Entity entityHandle = ((CraftEntity)event.getEntity()).getHandle();
         if (entityHandle instanceof CustomEntity)
         {
             CustomEntity entity = (CustomEntity) entityHandle;
-            event.setDamage(entity.getDamage());
+            event.setDamage(entity.handleDamage(event.getDamage()));
         }
     }
 }
