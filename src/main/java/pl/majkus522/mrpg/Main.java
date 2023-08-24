@@ -2,10 +2,7 @@ package pl.majkus522.mrpg;
 
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.majkus522.mrpg.commands.CommandLogin;
-import pl.majkus522.mrpg.commands.CommandShout;
-import pl.majkus522.mrpg.commands.CommandSkills;
-import pl.majkus522.mrpg.commands.CommandStatus;
+import pl.majkus522.mrpg.commands.*;
 import pl.majkus522.mrpg.common.classes.CustomCommand;
 import pl.majkus522.mrpg.common.classes.MySQL;
 import pl.majkus522.mrpg.events.*;
@@ -35,11 +32,13 @@ public final class Main extends JavaPlugin
         registerEvent(new OnPlayerDeath());
         registerEvent(new OnPlayerRightClickEntity());
         registerEvent(new OnPlayerChat());
+        registerEvent(new OnEntityDamage());
 
         registerCommand(new CommandLogin());
         registerCommand(new CommandSkills());
         registerCommand(new CommandStatus());
         registerCommand(new CommandShout());
+        registerCommand(new CommandEntity());
 
         MySQL.connect();
     }

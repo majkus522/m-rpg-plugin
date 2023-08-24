@@ -19,3 +19,8 @@ commands:
   shout:
     description: Shout your speach
     usage: /<command> <text>
+
+  entity:
+    description: Spawn entity
+    usage: /<command>
+    permission: op
