@@ -21,7 +21,7 @@ public class ExtensionMethods
 {
     public static boolean isPlayerLogged(Player player)
     {
-        return Main.playersSessions.containsKey(player.getName());
+        return Main.players.containsKey(player.getName());
     }
 
     public static ItemStack emptySlot()

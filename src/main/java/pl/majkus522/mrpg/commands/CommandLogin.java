@@ -4,6 +4,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import pl.majkus522.mrpg.Main;
 import pl.majkus522.mrpg.common.ExtensionMethods;
+import pl.majkus522.mrpg.common.classes.Character;
 import pl.majkus522.mrpg.common.classes.CustomCommand;
 import pl.majkus522.mrpg.common.classes.HttpBuilder;
 import pl.majkus522.mrpg.common.enums.HttpMethod;
@@ -35,7 +36,7 @@ public class CommandLogin extends CustomCommand
             return;
         }
         player.sendMessage("Logged in");
-        Main.playersSessions.put(player.getName(), request.getResultString());
+        Main.players.put(player.getName(), new Character(player, request.getResultString()));
         player.setScoreboard(ScoreboardController.createScoreboard(player));
     }
 

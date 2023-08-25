@@ -51,7 +51,7 @@ public class HttpBuilder
 
     public HttpBuilder setSessionHeaders(Player player)
     {
-        setHeader("Session-Key", Main.playersSessions.get(player.getName()));
+        setHeader("Session-Key", Main.players.get(player.getName()).session);
         setHeader("Session-Type", "game");
         return this;
     }

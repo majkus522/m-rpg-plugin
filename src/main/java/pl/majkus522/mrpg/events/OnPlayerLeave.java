@@ -10,6 +10,6 @@ public class OnPlayerLeave implements Listener
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent event)
     {
-        Main.playersSessions.remove(event.getPlayer().getName());
+        Main.players.remove(event.getPlayer().getName());
     }
 }
