@@ -20,13 +20,19 @@ public class Character
     {
         this.player = player;
         this.session = session;
-        RequestPlayer request = (RequestPlayer)new HttpBuilder(HttpMethod.GET, "endpoints/players/" + player.getName()).setSessionHeaders(player).getResult(RequestPlayer.class);
-        this.level = request.level;
-        this.exp = request.exp;
-        this.str = request.str;
-        this.agl = request.agl;
-        this.chr = request.chr;
-        this.intl = request.intl;
-        this.money = request.money;
+        HttpBuilder request = new HttpBuilder(HttpMethod.GET, "endpoints/players/" + player.getName()).setSessionHeaders(player);
+        if(!request.isOk())
+        {
+            player.sendMessage("Server error");
+            throw new RuntimeException(new Exception(request.getError().message));
+        }
+        RequestPlayer data = (RequestPlayer)request.getResult(RequestPlayer.class);
+        this.level = data.level;
+        this.exp = data.exp;
+        this.str = data.str;
+        this.agl = data.agl;
+        this.chr = data.chr;
+        this.intl = data.intl;
+        this.money = data.money;
     }
 }
