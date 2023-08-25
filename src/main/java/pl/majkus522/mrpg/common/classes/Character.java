@@ -20,7 +20,7 @@ public class Character
     {
         this.player = player;
         this.session = session;
-        HttpBuilder request = new HttpBuilder(HttpMethod.GET, "endpoints/players/" + player.getName()).setSessionHeaders(player);
+        HttpBuilder request = new HttpBuilder(HttpMethod.GET, "endpoints/players/" + player.getName()).setHeader("Session-Key", session).setHeader("Session-Type", "game");
         if(!request.isOk())
         {
             player.sendMessage("Server error");
