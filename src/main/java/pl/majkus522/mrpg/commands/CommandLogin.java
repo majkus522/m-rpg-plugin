@@ -36,8 +36,9 @@ public class CommandLogin extends CustomCommand
             return;
         }
         player.sendMessage("Logged in");
-        Main.players.put(player.getName(), new Character(player, request.getResultString()));
-        player.setScoreboard(ScoreboardController.createScoreboard(player));
+        Character character = new Character(player, request.getResultString());
+        Main.players.put(player.getName(), character);
+        ScoreboardController.createScoreboard(character);
     }
 
     @Override
