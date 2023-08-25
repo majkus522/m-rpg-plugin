@@ -14,6 +14,7 @@ import pl.majkus522.mrpg.common.enums.HttpMethod;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Set;
 
 public class ScoreboardController
 {
@@ -64,5 +65,21 @@ public class ScoreboardController
     static String createScore(String input)
     {
         return ChatColor.BLUE + "| " + ChatColor.RESET + input;
+    }
+
+    public static void updateLevel(Character character)
+    {
+        Scoreboard scoreboard = character.player.getScoreboard();
+        Objective objective = scoreboard.getObjective(DisplaySlot.SIDEBAR);
+        Set<String> entries = scoreboard.getEntries();
+        for (String line : entries)
+        {
+            if (line.contains("Exp"))
+            {
+                scoreboard.resetScores(line);
+                Score score = objective.getScore(createScore("Exp: " + character.exp));
+                score.setScore(2);
+            }
+        }
     }
 }

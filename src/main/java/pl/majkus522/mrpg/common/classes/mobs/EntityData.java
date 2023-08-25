@@ -5,11 +5,12 @@ import net.minecraft.world.entity.PathfinderMob;
 
 public class EntityData
 {
-    public String name;
-    public int str;
-    public int def;
-    public int health;
+    public String name = "";
+    public int str = 0;
+    public int def = 0;
+    public int health = 0;
     public double speed = 0.23;
+    public int exp = 0;
     String type;
 
     public EntityType<? extends PathfinderMob> getType()

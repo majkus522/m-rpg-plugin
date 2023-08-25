@@ -30,6 +30,11 @@ public class CustomEntity extends PathfinderMob
         return input - data.def;
     }
 
+    public int getExp()
+    {
+        return data.exp;
+    }
+
     @Override
     protected void registerGoals() { }
 }
