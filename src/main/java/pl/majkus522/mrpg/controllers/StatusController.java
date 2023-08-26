@@ -2,11 +2,12 @@ package pl.majkus522.mrpg.controllers;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import pl.majkus522.mrpg.Main;
 import pl.majkus522.mrpg.common.ExtensionMethods;
+import pl.majkus522.mrpg.common.classes.Character;
 import pl.majkus522.mrpg.common.classes.HttpBuilder;
 import pl.majkus522.mrpg.common.classes.PlayerStatus;
 import pl.majkus522.mrpg.common.classes.api.RequestFakeStatus;
-import pl.majkus522.mrpg.common.classes.api.RequestPlayer;
 import pl.majkus522.mrpg.common.enums.HttpMethod;
 
 public class StatusController
@@ -15,16 +16,12 @@ public class StatusController
     {
         if (!ExtensionMethods.isPlayerLogged(player))
             return;
-
-        HttpBuilder request = new HttpBuilder(HttpMethod.GET, "endpoints/players/" + player.getName()).setSessionHeaders(player);
-        if(!request.isOk())
-            throw new RuntimeException(new Exception(request.getError().message));
-        RequestPlayer playerData = (RequestPlayer) request.getResult(RequestPlayer.class);
+        Character character = Main.players.get(player.getName());
         player.sendMessage(ChatColor.BLUE + "=-=-=-=-= " + ChatColor.GREEN + "Status: " + player.getName() + ChatColor.BLUE + " =-=-=-=-=");
-        player.sendMessage("Strength: " + playerData.str);
-        player.sendMessage("Agility: " + playerData.agl);
-        player.sendMessage("Charisma: " + playerData.chr);
-        player.sendMessage("Intelligence: " + playerData.intl);
+        player.sendMessage("Strength: " + character.getStr());
+        player.sendMessage("Agility: " + character.getAgl());
+        player.sendMessage("Charisma: " + character.getChr());
+        player.sendMessage("Intelligence: " + character.getIntl());
         player.sendMessage(ChatColor.BLUE + "=-=-=-=-= " + ChatColor.GREEN + "Status: " + player.getName() + ChatColor.BLUE + " =-=-=-=-=");
     }
 
@@ -43,13 +40,7 @@ public class StatusController
         int senderLevel = -1;
         if(!statusVision)
         {
-            HttpBuilder request = new HttpBuilder(HttpMethod.GET, "endpoints/players/" + sender.getName()).setSessionHeaders(sender);
-            if(!request.isOk())
-            {
-                sender.sendMessage("Server error");
-                throw new RuntimeException(new Exception(request.getError().message));
-            }
-            senderLevel = ((RequestPlayer)request.getResult(RequestPlayer.class)).level;
+            senderLevel = Main.players.get(sender.getName()).getLevel();
         }
         boolean statusFake = statusVision ? false : SkillsController.playerHasSkill(whose, "statusFake");
         PlayerStatus status;
@@ -65,26 +56,20 @@ public class StatusController
         }
         else
         {
-            HttpBuilder request = new HttpBuilder(HttpMethod.GET, "endpoints/players/" + whose.getName()).setSessionHeaders(whose);
-            if(!request.isOk())
-            {
-                sender.sendMessage("Server error");
-                throw new RuntimeException(new Exception(request.getError().message));
-            }
-            status = (RequestPlayer)request.getResult(RequestPlayer.class);
+            status = Main.players.get(whose.getName());
         }
         int round = -1;
-        if(status.level - senderLevel > 5)
+        if(status.getLevel() - senderLevel > 5)
             round = -2;
         if (statusVision)
             round = 0;
         sender.sendMessage(ChatColor.BLUE + "=-=-=-=-= " + ChatColor.GREEN + "Status: " + whose.getName() + ChatColor.BLUE + " =-=-=-=-=");
-        sender.sendMessage("Level: " + round(status.level, round));
-        sender.sendMessage("Money: " + (round == 0 ? status.money : round(status.money, round)));
-        sender.sendMessage("Strength: " + round(status.str, round));
-        sender.sendMessage("Agility: " + round(status.agl, round));
-        sender.sendMessage("Charisma: " + round(status.chr, round));
-        sender.sendMessage("Intelligence: " + round(status.intl, round));
+        sender.sendMessage("Level: " + round(status.getLevel(), round));
+        sender.sendMessage("Money: " + (round == 0 ? status.getMoney() : round(status.getMoney(), round)));
+        sender.sendMessage("Strength: " + round(status.getStr(), round));
+        sender.sendMessage("Agility: " + round(status.getAgl(), round));
+        sender.sendMessage("Charisma: " + round(status.getChr(), round));
+        sender.sendMessage("Intelligence: " + round(status.getIntl(), round));
         sender.sendMessage(ChatColor.BLUE + "=-=-=-=-= " + ChatColor.GREEN + "Status: " + whose.getName() + ChatColor.BLUE + " =-=-=-=-=");
     }
 

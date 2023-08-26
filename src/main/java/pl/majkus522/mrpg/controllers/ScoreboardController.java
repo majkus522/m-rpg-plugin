@@ -24,7 +24,7 @@ public class ScoreboardController
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         ArrayList<String> elements = new ArrayList<String>();
-        elements.add("Money: " + character.money);
+        elements.add("Money: " + character.getMoney());
         elements.add("Exp: " + character.getExp() + " / " + ExtensionMethods.levelExp(character.getLevel()));
         elements.add("Level: " + character.getLevel());
         Collections.max(elements);

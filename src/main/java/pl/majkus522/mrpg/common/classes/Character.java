@@ -1,21 +1,19 @@
 package pl.majkus522.mrpg.common.classes;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import pl.majkus522.mrpg.Main;
 import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.api.RequestPlayer;
 import pl.majkus522.mrpg.common.enums.HttpMethod;
 
-public class Character
+import java.sql.PreparedStatement;
+
+public class Character extends PlayerStatus
 {
     public Player player;
-    int level;
-    int exp;
-    public int str;
-    public int agl;
-    public int chr;
-    public int intl;
-    public float money;
     public String session;
+    boolean changes = false;
 
     public Character(Player player, String session)
     {
@@ -35,16 +33,34 @@ public class Character
         this.chr = data.chr;
         this.intl = data.intl;
         this.money = data.money;
-    }
 
-    public int getLevel()
-    {
-        return level;
-    }
-
-    public int getExp()
-    {
-        return exp;
+        Bukkit.getScheduler().runTaskTimerAsynchronously(Main.plugin, new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                if (changes)
+                {
+                    try
+                    {
+                        PreparedStatement stmt = MySQL.getConnection().prepareStatement("update `players` set `money` = ?, `str` = ?, `agl` = ?, `chr` = ?, `intl` = ?, `level` = ?, `exp` = ? where `username` = ?");
+                        stmt.setFloat(1, money);
+                        stmt.setInt(2, str);
+                        stmt.setInt(3, agl);
+                        stmt.setInt(4, chr);
+                        stmt.setInt(5, intl);
+                        stmt.setInt(6, level);
+                        stmt.setInt(7, exp);
+                        stmt.setString(8, player.getName());
+                        stmt.executeUpdate();
+                    }
+                    catch (Exception e)
+                    {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        }, 0, 20 * 60);
     }
 
     public void addExp(int input)
@@ -55,5 +71,36 @@ public class Character
             exp -= ExtensionMethods.levelExp(level);
             level++;
         }
+        changes = true;
+    }
+
+    public void setStr(int input)
+    {
+        str = input;
+        changes = true;
+    }
+
+    public void setAgl(int input)
+    {
+        agl = input;
+        changes = true;
+    }
+
+    public void setChr(int input)
+    {
+        chr = input;
+        changes = true;
+    }
+
+    public void setIntl(int input)
+    {
+        intl = input;
+        changes = true;
+    }
+
+    public void setMoney(float input)
+    {
+        money = input;
+        changes = true;
     }
 }

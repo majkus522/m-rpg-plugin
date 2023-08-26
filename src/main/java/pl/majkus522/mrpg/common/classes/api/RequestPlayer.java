@@ -7,7 +7,6 @@ public class RequestPlayer extends PlayerStatus implements IRequestResult
 {
     public String username;
     public String email;
-    public int exp;
     public int energy;
     public String world;
 
@@ -15,18 +14,18 @@ public class RequestPlayer extends PlayerStatus implements IRequestResult
     public String toString()
     {
         return "RequestPlayer{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
+                "username='" + username + '\'' +
                 ", email='" + email + '\'' +
-                ", exp=" + exp +
                 ", energy=" + energy +
                 ", world='" + world + '\'' +
-                ", money=" + money +
+                ", id=" + id +
                 ", level=" + level +
+                ", exp=" + exp +
                 ", str=" + str +
                 ", agl=" + agl +
                 ", chr=" + chr +
                 ", intl=" + intl +
+                ", money=" + money +
                 '}';
     }
 }

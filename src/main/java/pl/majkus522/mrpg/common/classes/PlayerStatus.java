@@ -3,10 +3,46 @@ package pl.majkus522.mrpg.common.classes;
 public class PlayerStatus
 {
     public int id;
-    public float money;
-    public int level;
-    public int str;
-    public int agl;
-    public int chr;
-    public int intl;
+    protected int level;
+    protected int exp;
+    protected int str;
+    protected int agl;
+    protected int chr;
+    protected int intl;
+    protected float money;
+
+    public int getLevel()
+    {
+        return level;
+    }
+
+    public int getExp()
+    {
+        return exp;
+    }
+
+    public int getStr()
+    {
+        return str;
+    }
+
+    public int getAgl()
+    {
+        return agl;
+    }
+
+    public int getChr()
+    {
+        return chr;
+    }
+
+    public int getIntl()
+    {
+        return intl;
+    }
+
+    public float getMoney()
+    {
+        return money;
+    }
 }
