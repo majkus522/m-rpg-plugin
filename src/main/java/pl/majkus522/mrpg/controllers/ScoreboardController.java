@@ -2,15 +2,12 @@ package pl.majkus522.mrpg.controllers;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
+import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.Character;
-import pl.majkus522.mrpg.common.classes.HttpBuilder;
-import pl.majkus522.mrpg.common.classes.api.RequestPlayer;
-import pl.majkus522.mrpg.common.enums.HttpMethod;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,8 +25,8 @@ public class ScoreboardController
 
         ArrayList<String> elements = new ArrayList<String>();
         elements.add("Money: " + character.money);
-        elements.add("Exp: " + character.exp);
-        elements.add("Level: " + character.level);
+        elements.add("Exp: " + character.getExp() + " / " + ExtensionMethods.levelExp(character.getLevel()));
+        elements.add("Level: " + character.getLevel());
         Collections.max(elements);
 
         ArrayList<Integer> lengths = new ArrayList<Integer>();
@@ -77,8 +74,14 @@ public class ScoreboardController
             if (line.contains("Exp"))
             {
                 scoreboard.resetScores(line);
-                Score score = objective.getScore(createScore("Exp: " + character.exp));
+                Score score = objective.getScore(createScore("Exp: " + character.getExp() + " / " + ExtensionMethods.levelExp(character.getLevel())));
                 score.setScore(2);
+            }
+            else if(line.contains("Level"))
+            {
+                scoreboard.resetScores(line);
+                Score score = objective.getScore(createScore("Level: " + character.getLevel()));
+                score.setScore(3);
             }
         }
     }

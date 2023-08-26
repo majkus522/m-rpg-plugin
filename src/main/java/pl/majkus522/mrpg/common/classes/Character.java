@@ -1,14 +1,15 @@
 package pl.majkus522.mrpg.common.classes;
 
 import org.bukkit.entity.Player;
+import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.api.RequestPlayer;
 import pl.majkus522.mrpg.common.enums.HttpMethod;
 
 public class Character
 {
     public Player player;
-    public int level;
-    public int exp;
+    int level;
+    int exp;
     public int str;
     public int agl;
     public int chr;
@@ -34,5 +35,25 @@ public class Character
         this.chr = data.chr;
         this.intl = data.intl;
         this.money = data.money;
+    }
+
+    public int getLevel()
+    {
+        return level;
+    }
+
+    public int getExp()
+    {
+        return exp;
+    }
+
+    public void addExp(int input)
+    {
+        exp += input;
+        while(exp > ExtensionMethods.levelExp(level))
+        {
+            exp -= ExtensionMethods.levelExp(level);
+            level++;
+        }
     }
 }

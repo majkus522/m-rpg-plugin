@@ -95,4 +95,11 @@ public class ExtensionMethods
     {
         return (int) Math.round(round(value, decimalPlace));
     }
+
+    public static int levelExp(int level)
+    {
+        if(level == 0)
+            return 0;
+        return (int)(Math.log(level + 1) * 1500) + levelExp(level - 1);
+    }
 }
