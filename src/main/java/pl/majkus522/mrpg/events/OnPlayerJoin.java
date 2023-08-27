@@ -2,6 +2,8 @@ package pl.majkus522.mrpg.events;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -10,6 +12,7 @@ import pl.majkus522.mrpg.Main;
 import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.HttpBuilder;
 import pl.majkus522.mrpg.common.enums.HttpMethod;
+import pl.majkus522.mrpg.controllers.WorldController;
 
 public class OnPlayerJoin implements Listener
 {
@@ -20,7 +23,12 @@ public class OnPlayerJoin implements Listener
         Player player = event.getPlayer();
         HttpBuilder request = new HttpBuilder(HttpMethod.HEAD, "endpoints/players/" + player.getName());
         if(!request.isOk())
+        {
             player.kickPlayer("Please first register on our webstie \n\n" + ChatColor.BLUE + "M-RPG.COM");
+            return;
+        }
+        player.setGameMode(GameMode.ADVENTURE);
+        player.teleport(new Location(WorldController.getWorld("worlds/login"), 0.5, 100, 0.5));
         Bukkit.getScheduler().runTaskLater(Main.plugin, new Runnable()
         {
             @Override

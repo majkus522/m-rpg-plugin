@@ -1,5 +1,7 @@
 package pl.majkus522.mrpg.commands;
 
+import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import pl.majkus522.mrpg.Main;
@@ -9,6 +11,7 @@ import pl.majkus522.mrpg.common.classes.CustomCommand;
 import pl.majkus522.mrpg.common.classes.HttpBuilder;
 import pl.majkus522.mrpg.common.enums.HttpMethod;
 import pl.majkus522.mrpg.controllers.ScoreboardController;
+import pl.majkus522.mrpg.controllers.WorldController;
 
 import java.util.ArrayList;
 import java.util.Base64;
@@ -36,6 +39,10 @@ public class CommandLogin extends CustomCommand
             return;
         }
         player.sendMessage("Logged in");
+        player.setGameMode(GameMode.SURVIVAL);
+        if (player.isOp())
+            player.setGameMode(GameMode.CREATIVE);
+        player.teleport(new Location(WorldController.getWorld("worlds/main"), 0.5, 100, 0.5));
         Character character = new Character(player, request.getResultString());
         Main.players.put(player.getName(), character);
         ScoreboardController.createScoreboard(character);

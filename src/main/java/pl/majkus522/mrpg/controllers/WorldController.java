@@ -40,4 +40,11 @@ public class WorldController
             player.teleport(location);
         }
     }
+
+    public static World getWorld(String name)
+    {
+        if (Bukkit.getWorld(name) == null)
+            return Bukkit.getServer().createWorld(new WorldCreator(name.replace("worlds/", "")));
+        return Bukkit.getWorld(name);
+    }
 }
