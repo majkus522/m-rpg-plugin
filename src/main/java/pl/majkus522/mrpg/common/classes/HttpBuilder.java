@@ -6,10 +6,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import org.bukkit.entity.Player;
-import pl.majkus522.mrpg.Main;
 import pl.majkus522.mrpg.common.classes.api.RequestError;
 import pl.majkus522.mrpg.common.enums.HttpMethod;
 import pl.majkus522.mrpg.common.interfaces.IRequestResult;
+import pl.majkus522.mrpg.controllers.PlayersController;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -51,7 +51,7 @@ public class HttpBuilder
 
     public HttpBuilder setSessionHeaders(Player player)
     {
-        setHeader("Session-Key", Main.players.get(player.getName()).session);
+        setHeader("Session-Key", PlayersController.getCharacter(player).session);
         setHeader("Session-Type", "game");
         return this;
     }

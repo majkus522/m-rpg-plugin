@@ -2,6 +2,7 @@ package pl.majkus522.mrpg.controllers;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
@@ -62,6 +63,11 @@ public class ScoreboardController
     static String createScore(String input)
     {
         return ChatColor.BLUE + "| " + ChatColor.RESET + input;
+    }
+
+    public static void updateLevel(Player player)
+    {
+        updateLevel(PlayersController.getCharacter(player));
     }
 
     public static void updateLevel(Character character)

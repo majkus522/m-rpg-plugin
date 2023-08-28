@@ -2,9 +2,9 @@ package pl.majkus522.mrpg.commands;
 
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.CustomCommand;
 import pl.majkus522.mrpg.common.enums.SkillRarity;
+import pl.majkus522.mrpg.controllers.PlayersController;
 import pl.majkus522.mrpg.guis.SkillsGui;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ public class CommandSkills extends CustomCommand
     @Override
     public void onPlayerExecute(Player player, String[] args)
     {
-        if(!ExtensionMethods.isPlayerLogged(player))
+        if(!PlayersController.isPlayerLogged(player))
         {
             player.sendMessage("You must be logged in");
             return;

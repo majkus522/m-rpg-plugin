@@ -2,7 +2,6 @@ package pl.majkus522.mrpg.controllers;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import pl.majkus522.mrpg.Main;
 import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.Character;
 import pl.majkus522.mrpg.common.classes.HttpBuilder;
@@ -14,9 +13,9 @@ public class StatusController
 {
     public static void sendPlayerStatus(Player player)
     {
-        if (!ExtensionMethods.isPlayerLogged(player))
+        if (!PlayersController.isPlayerLogged(player))
             return;
-        Character character = Main.players.get(player.getName());
+        Character character = PlayersController.getCharacter(player);
         player.sendMessage(ChatColor.BLUE + "=-=-=-=-= " + ChatColor.GREEN + "Status: " + player.getName() + ChatColor.BLUE + " =-=-=-=-=");
         player.sendMessage("Strength: " + character.getStr());
         player.sendMessage("Agility: " + character.getAgl());
@@ -27,7 +26,7 @@ public class StatusController
 
     public static void sendOtherPlayerStatus(Player sender, Player whose)
     {
-        if (!(ExtensionMethods.isPlayerLogged(sender) || ExtensionMethods.isPlayerLogged(whose)))
+        if (!(PlayersController.isPlayerLogged(sender) || PlayersController.isPlayerLogged(whose)))
             return;
 
         if(SkillsController.playerHasSkillEnabled(whose, "statusHide") && !SkillsController.playerHasSkill(sender, "statusVision"))
@@ -40,7 +39,7 @@ public class StatusController
         int senderLevel = -1;
         if(!statusVision)
         {
-            senderLevel = Main.players.get(sender.getName()).getLevel();
+            senderLevel = PlayersController.getCharacter(sender).getLevel();
         }
         boolean statusFake = statusVision ? false : SkillsController.playerHasSkill(whose, "statusFake");
         PlayerStatus status;
@@ -56,7 +55,7 @@ public class StatusController
         }
         else
         {
-            status = Main.players.get(whose.getName());
+            status = PlayersController.getCharacter(whose);
         }
         int round = -1;
         if(status.getLevel() - senderLevel > 5)

@@ -4,12 +4,11 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-import pl.majkus522.mrpg.Main;
-import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.Character;
 import pl.majkus522.mrpg.common.classes.CustomCommand;
 import pl.majkus522.mrpg.common.classes.HttpBuilder;
 import pl.majkus522.mrpg.common.enums.HttpMethod;
+import pl.majkus522.mrpg.controllers.PlayersController;
 import pl.majkus522.mrpg.controllers.ScoreboardController;
 import pl.majkus522.mrpg.controllers.WorldController;
 
@@ -22,7 +21,7 @@ public class CommandLogin extends CustomCommand
     @Override
     public void onPlayerExecute(Player player, String[] args)
     {
-        if(ExtensionMethods.isPlayerLogged(player))
+        if(PlayersController.isPlayerLogged(player))
         {
             player.sendMessage("You are already logged in");
             return;
@@ -44,7 +43,7 @@ public class CommandLogin extends CustomCommand
             player.setGameMode(GameMode.CREATIVE);
         player.teleport(new Location(WorldController.getWorld("worlds/main"), 0.5, 100, 0.5));
         Character character = new Character(player, request.getResultString());
-        Main.players.put(player.getName(), character);
+        PlayersController.playerJoin(character);
         ScoreboardController.createScoreboard(character);
     }
 

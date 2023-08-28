@@ -6,6 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import pl.majkus522.mrpg.Config;
 import pl.majkus522.mrpg.common.ExtensionMethods;
+import pl.majkus522.mrpg.controllers.PlayersController;
 
 public class OnPlayerChat implements Listener
 {
@@ -14,7 +15,7 @@ public class OnPlayerChat implements Listener
     {
         event.setCancelled(true);
         Player player = event.getPlayer();
-        if(!ExtensionMethods.isPlayerLogged(player))
+        if(!PlayersController.isPlayerLogged(player))
         {
             player.sendMessage("You must be logged in");
             return;

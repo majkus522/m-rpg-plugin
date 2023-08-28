@@ -7,7 +7,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import pl.majkus522.mrpg.Main;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -19,11 +18,6 @@ import java.util.ArrayList;
 
 public class ExtensionMethods
 {
-    public static boolean isPlayerLogged(Player player)
-    {
-        return Main.players.containsKey(player.getName());
-    }
-
     public static ItemStack emptySlot()
     {
         ItemStack item = new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1);

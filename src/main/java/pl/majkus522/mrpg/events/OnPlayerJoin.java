@@ -9,9 +9,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import pl.majkus522.mrpg.Main;
-import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.HttpBuilder;
 import pl.majkus522.mrpg.common.enums.HttpMethod;
+import pl.majkus522.mrpg.controllers.PlayersController;
 import pl.majkus522.mrpg.controllers.WorldController;
 
 public class OnPlayerJoin implements Listener
@@ -34,7 +34,7 @@ public class OnPlayerJoin implements Listener
             @Override
             public void run()
             {
-                if (!ExtensionMethods.isPlayerLogged(player))
+                if (!PlayersController.isPlayerLogged(player))
                     player.kickPlayer("Login timeout");
             }
         }, 60 * 20L);

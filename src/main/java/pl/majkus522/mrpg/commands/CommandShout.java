@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import pl.majkus522.mrpg.Config;
 import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.CustomCommand;
+import pl.majkus522.mrpg.controllers.PlayersController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,7 @@ public class CommandShout extends CustomCommand
     @Override
     public void onPlayerExecute(Player player, String[] args)
     {
-        if(!ExtensionMethods.isPlayerLogged(player))
+        if(!PlayersController.isPlayerLogged(player))
         {
             player.sendMessage("You must be logged in");
             return;

@@ -39,28 +39,33 @@ public class Character extends PlayerStatus
             @Override
             public void run()
             {
-                if (changes)
-                {
-                    try
-                    {
-                        PreparedStatement stmt = MySQL.getConnection().prepareStatement("update `players` set `money` = ?, `str` = ?, `agl` = ?, `chr` = ?, `intl` = ?, `level` = ?, `exp` = ? where `username` = ?");
-                        stmt.setFloat(1, money);
-                        stmt.setInt(2, str);
-                        stmt.setInt(3, agl);
-                        stmt.setInt(4, chr);
-                        stmt.setInt(5, intl);
-                        stmt.setInt(6, level);
-                        stmt.setInt(7, exp);
-                        stmt.setString(8, player.getName());
-                        stmt.executeUpdate();
-                    }
-                    catch (Exception e)
-                    {
-                        throw new RuntimeException(e);
-                    }
-                }
+                update();
             }
         }, 0, 20 * 60);
+    }
+
+    public void update()
+    {
+        if (changes)
+        {
+            try
+            {
+                PreparedStatement stmt = MySQL.getConnection().prepareStatement("update `players` set `money` = ?, `str` = ?, `agl` = ?, `chr` = ?, `intl` = ?, `level` = ?, `exp` = ? where `username` = ?");
+                stmt.setFloat(1, money);
+                stmt.setInt(2, str);
+                stmt.setInt(3, agl);
+                stmt.setInt(4, chr);
+                stmt.setInt(5, intl);
+                stmt.setInt(6, level);
+                stmt.setInt(7, exp);
+                stmt.setString(8, player.getName());
+                stmt.executeUpdate();
+            }
+            catch (Exception e)
+            {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     public void addExp(int input)
