@@ -25,7 +25,7 @@ public class ScoreboardController
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         ArrayList<String> elements = new ArrayList<String>();
-        elements.add("Money: " + character.getMoney());
+        elements.add("Money: " + character.getMoney() + "$");
         elements.add("Exp: " + character.getExp() + " / " + ExtensionMethods.levelExp(character.getLevel()));
         elements.add("Level: " + character.getLevel());
         Collections.max(elements);
@@ -88,6 +88,28 @@ public class ScoreboardController
                 scoreboard.resetScores(line);
                 Score score = objective.getScore(createScore("Level: " + character.getLevel()));
                 score.setScore(3);
+            }
+        }
+    }
+
+    public static void updateMoney(Player player)
+    {
+        updateMoney(PlayersController.getCharacter(player));
+    }
+
+    public static void updateMoney(Character character)
+    {
+        Scoreboard scoreboard = character.player.getScoreboard();
+        Objective objective = scoreboard.getObjective(DisplaySlot.SIDEBAR);
+        Set<String> entries = scoreboard.getEntries();
+        for (String line : entries)
+        {
+            if (line.contains("Money"))
+            {
+                scoreboard.resetScores(line);
+                Score score = objective.getScore(createScore("Money: " + character.getMoney() + "$"));
+                score.setScore(1);
+                return;
             }
         }
     }

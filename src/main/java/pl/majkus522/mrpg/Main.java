@@ -36,6 +36,7 @@ public final class Main extends JavaPlugin
         registerCommand(new CommandStatus());
         registerCommand(new CommandShout());
         registerCommand(new CommandEntity());
+        registerCommand(new CommandPay());
 
         MySQL.connect();
     }

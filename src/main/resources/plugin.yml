@@ -24,3 +24,7 @@ commands:
     description: Spawn entity
     usage: /<command>
     permission: op
+
+  pay:
+    description: Pay someone money
+    usage: /<command> <player> <amount>

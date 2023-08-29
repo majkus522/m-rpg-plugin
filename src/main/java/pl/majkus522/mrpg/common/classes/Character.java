@@ -103,9 +103,14 @@ public class Character extends PlayerStatus
         changes = true;
     }
 
-    public void setMoney(float input)
+    public boolean hasMoney(float input)
     {
-        money = input;
+        return money > input;
+    }
+
+    public void addMoney(float input)
+    {
+        money += input;
         changes = true;
     }
 }
