@@ -72,10 +72,7 @@ public class Character extends PlayerStatus
     {
         exp += input;
         while(exp > ExtensionMethods.levelExp(level))
-        {
-            exp -= ExtensionMethods.levelExp(level);
-            level++;
-        }
+            levelUp();
         changes = true;
     }
 
@@ -112,5 +109,16 @@ public class Character extends PlayerStatus
     {
         money += input;
         changes = true;
+    }
+
+    public void levelUp()
+    {
+        exp -= ExtensionMethods.levelExp(level);
+        level++;
+        str++;
+        agl++;
+        chr++;
+        intl++;
+        player.sendMessage("Your level has increased");
     }
 }
