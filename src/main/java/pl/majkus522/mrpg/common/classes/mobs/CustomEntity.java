@@ -6,6 +6,8 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_20_R1.CraftWorld;
+import org.bukkit.entity.Player;
+import pl.majkus522.mrpg.controllers.SkillsController;
 
 public class CustomEntity extends PathfinderMob
 {
@@ -30,9 +32,16 @@ public class CustomEntity extends PathfinderMob
         return input - data.def;
     }
 
-    public int getExp()
+    public int getExp(Player killer)
     {
-        return data.exp;
+        float multiplayer = 1;
+        if (SkillsController.playerHasSkill(killer, "fastLearning"))
+            multiplayer = 1.5f;
+        else if (SkillsController.playerHasSkill(killer, "superFastLearning"))
+            multiplayer = 3f;
+        else if (SkillsController.playerHasSkill(killer, "ultraFastLearning"))
+            multiplayer = 5f;
+        return (int)(data.exp * multiplayer);
     }
 
     @Override

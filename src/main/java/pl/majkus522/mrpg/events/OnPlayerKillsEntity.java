@@ -18,7 +18,7 @@ public class OnPlayerKillsEntity implements Listener
             return;
         Player player = event.getEntity().getKiller();
         CustomEntity entity = (CustomEntity)((CraftEntity)event.getEntity()).getHandle();
-        PlayersController.getCharacter(player).addExp(entity.getExp());
+        PlayersController.getCharacter(player).addExp(entity.getExp(player));
         ScoreboardController.updateLevel(player);
     }
 }
