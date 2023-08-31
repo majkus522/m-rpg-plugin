@@ -17,6 +17,7 @@ public class OnPlayerCommand implements Listener
         if (command == null)
         {
             player.sendMessage("Command doesn't exists");
+            event.setCancelled(true);
             return;
         }
         String permission = command.getPermission();
