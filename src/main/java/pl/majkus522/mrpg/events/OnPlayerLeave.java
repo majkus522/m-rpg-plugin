@@ -10,6 +10,7 @@ public class OnPlayerLeave implements Listener
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent event)
     {
+        event.setQuitMessage("");
         PlayersController.playerLeave(event.getPlayer());
     }
 }
