@@ -15,6 +15,7 @@ public class OnPlayerDeath implements Listener
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event)
     {
+        event.setDeathMessage("");
         Bukkit.getScheduler().runTask(Main.plugin, new Runnable()
         {
             @Override
