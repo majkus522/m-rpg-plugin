@@ -21,7 +21,8 @@ public class PlayersController
 
     public static void playerLeave(Player player)
     {
-        players.remove(player.getName()).update();
+        if (isPlayerLogged(player))
+            players.remove(player.getName()).update();
     }
 
     public static boolean isPlayerLogged(Player player)
