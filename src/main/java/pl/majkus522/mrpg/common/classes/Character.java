@@ -6,6 +6,7 @@ import pl.majkus522.mrpg.Main;
 import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.api.RequestPlayer;
 import pl.majkus522.mrpg.common.enums.HttpMethod;
+import pl.majkus522.mrpg.controllers.ScoreboardController;
 
 import java.sql.PreparedStatement;
 
@@ -66,6 +67,13 @@ public class Character extends PlayerStatus
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    public void deathPenalty()
+    {
+        exp = 0;
+        money = (float)ExtensionMethods.round(money * 0.99f, 2);
+        ScoreboardController.update(this);
     }
 
     public void addExp(int input)

@@ -113,4 +113,10 @@ public class ScoreboardController
             }
         }
     }
+
+    public static void update(Character character)
+    {
+        updateMoney(character);
+        updateLevel(character);
+    }
 }

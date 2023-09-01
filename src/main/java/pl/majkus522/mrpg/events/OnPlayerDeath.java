@@ -6,9 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import pl.majkus522.mrpg.Main;
-
-import java.util.Calendar;
-import java.util.Date;
+import pl.majkus522.mrpg.controllers.PlayersController;
 
 public class OnPlayerDeath implements Listener
 {
@@ -23,11 +21,7 @@ public class OnPlayerDeath implements Listener
             {
                 Player player = event.getEntity();
                 player.spigot().respawn();
-                Date date = new Date();
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(date);
-                calendar.add(Calendar.DATE, 1);
-                player.ban("You have died", calendar.getTime(), "death", true);
+                PlayersController.getCharacter(player).deathPenalty();
             }
         });
     }
