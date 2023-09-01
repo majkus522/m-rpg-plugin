@@ -13,6 +13,8 @@ public class OnPlayerCommand implements Listener
     public void onPlayerCommand(PlayerCommandPreprocessEvent event)
     {
         Player player = event.getPlayer();
+        if (player.isOp())
+            return;
         PluginCommand command = Bukkit.getPluginCommand(event.getMessage().split(" ")[0].replace("/", ""));
         if (command == null)
         {
