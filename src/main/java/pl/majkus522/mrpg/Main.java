@@ -1,10 +1,13 @@
 package pl.majkus522.mrpg;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.majkus522.mrpg.commands.*;
 import pl.majkus522.mrpg.common.classes.CustomCommand;
 import pl.majkus522.mrpg.common.classes.MySQL;
+import pl.majkus522.mrpg.controllers.PlayersController;
 import pl.majkus522.mrpg.events.*;
 
 public final class Main extends JavaPlugin
@@ -46,8 +49,10 @@ public final class Main extends JavaPlugin
     @Override
     public void onDisable()
     {
-        System.out.println("M-RPG disabled");
+        for (Player player : Bukkit.getOnlinePlayers())
+            PlayersController.getCharacter(player).update();
         MySQL.disconnect();
+        System.out.println("M-RPG disabled");
     }
 
     void registerEvent(Listener event)
