@@ -21,6 +21,7 @@ public class OnPlayerDeath implements Listener
             {
                 Player player = event.getEntity();
                 player.spigot().respawn();
+                player.sendMessage("You have died");
                 PlayersController.getCharacter(player).deathPenalty();
             }
         });
