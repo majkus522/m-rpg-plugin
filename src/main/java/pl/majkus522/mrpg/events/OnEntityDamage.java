@@ -5,7 +5,7 @@ import org.bukkit.craftbukkit.v1_20_R1.entity.CraftEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import pl.majkus522.mrpg.common.classes.mobs.CustomEntity;
+import pl.majkus522.mrpg.common.classes.entity.CustomEntity;
 
 public class OnEntityDamage implements Listener
 {

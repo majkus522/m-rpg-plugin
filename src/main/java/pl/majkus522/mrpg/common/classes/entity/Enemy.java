@@ -1,15 +1,16 @@
-package pl.majkus522.mrpg.common.classes.mobs;
+package pl.majkus522.mrpg.common.classes.entity;
 
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.player.Player;
 import org.bukkit.Location;
 
-public class Summon extends CustomEntity
+public class Enemy extends CustomEntity
 {
-    public Summon(Location location, EntityData data)
+    public Enemy(Location location, EntityData data)
     {
         super(location, data);
     }
@@ -22,6 +23,7 @@ public class Summon extends CustomEntity
         this.goalSelector.addGoal(2, new RandomLookAroundGoal(this));
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1, true));
 
-        this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<Enemy>(this, Enemy.class, false));
+        this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<Summon>(this, Summon.class, false));
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<Player>(this, Player.class, false));
     }
 }

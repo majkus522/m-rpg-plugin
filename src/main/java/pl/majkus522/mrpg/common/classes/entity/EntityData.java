@@ -1,4 +1,4 @@
-package pl.majkus522.mrpg.common.classes.mobs;
+package pl.majkus522.mrpg.common.classes.entity;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;

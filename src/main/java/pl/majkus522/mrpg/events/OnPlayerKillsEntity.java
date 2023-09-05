@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
-import pl.majkus522.mrpg.common.classes.mobs.CustomEntity;
+import pl.majkus522.mrpg.common.classes.entity.CustomEntity;
 import pl.majkus522.mrpg.controllers.PlayersController;
 import pl.majkus522.mrpg.controllers.ScoreboardController;
 
