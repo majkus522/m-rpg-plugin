@@ -35,7 +35,6 @@ public class GoalSummon extends Goal
         if (owner.distanceTo(entity) > maxDistance * 5)
         {
             entity.setPos(owner.getX(), owner.getY(), owner.getZ());
-            System.out.println("to far");
             return false;
         }
         if (owner.distanceTo(entity) < maxDistance)
@@ -49,7 +48,6 @@ public class GoalSummon extends Goal
     @Override
     public void start()
     {
-        System.out.println("move");
         entity.getNavigation().moveTo(x, y, z, speed);
     }
 
@@ -62,7 +60,6 @@ public class GoalSummon extends Goal
     @Override
     public void stop()
     {
-        System.out.println("stop");
         entity.getNavigation().stop();
     }
 }
