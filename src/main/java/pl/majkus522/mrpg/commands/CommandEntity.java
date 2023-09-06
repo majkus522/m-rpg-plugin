@@ -1,6 +1,7 @@
 package pl.majkus522.mrpg.commands;
 
 import com.google.gson.Gson;
+import net.minecraft.server.level.ServerLevel;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.craftbukkit.v1_20_R1.CraftWorld;
 import org.bukkit.entity.Player;
@@ -29,26 +30,23 @@ public class CommandEntity extends CustomCommand
             player.sendMessage("Enter entity");
             return;
         }
+        if(!new File("data/entities/" + args[0] + "/" + args[1] + ".json").exists())
+        {
+            player.sendMessage("Entity doesn't exits");
+            return;
+        }
+        EntityData data = new Gson().fromJson(ExtensionMethods.readJsonFile("data/entities/" + args[0] + "/" + args[1] + ".json"), EntityData.class);
+        ServerLevel world = ((CraftWorld)player.getWorld()).getHandle();
         switch (args[0].toLowerCase())
         {
             case "enemy":
-                if(!new File("data/entities/enemy/" + args[1] + ".json").exists())
-                {
-                    player.sendMessage("Entity doesn't exits");
-                    return;
-                }
-                Enemy enemy = new Enemy(player.getLocation(), new Gson().fromJson(ExtensionMethods.readJsonFile("data/entities/enemy/" + args[0] + ".json"), EntityData.class));
-                ((CraftWorld)player.getWorld()).getHandle().addFreshEntity(enemy);
+                Enemy enemy = new Enemy(player.getLocation(), data);
+                world.addFreshEntity(enemy);
                 break;
 
             case "summon":
-                if(!new File("data/entities/summon/" + args[1] + ".json").exists())
-                {
-                    player.sendMessage("Entity doesn't exits");
-                    return;
-                }
-                Summon summon = new Summon(player.getLocation(), new Gson().fromJson(ExtensionMethods.readJsonFile("data/entities/summon/" + args[0] + ".json"), EntityData.class));
-                ((CraftWorld)player.getWorld()).getHandle().addFreshEntity(summon);
+                Summon summon = new Summon(player.getLocation(), data, player);
+                world.addFreshEntity(summon);
                 break;
         }
 
