@@ -33,3 +33,7 @@ commands:
     description: Teleport between worlds
     usage: /<command> <world>
     permission: op
+
+  taunt:
+    description: Taunt enemies
+    usage: /<command>
