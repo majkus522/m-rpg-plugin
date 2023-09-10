@@ -89,10 +89,11 @@ public class SkillsGui implements InventoryHolder
         {
             request = new HttpBuilder(HttpMethod.HEAD, "endpoints/skills/" + player.getName() + "?rarity[]=" + rarity.toString()).setSessionHeaders(player).setHeader("Items", ((page + 1) * 45) + "-45");
             if(request.isOk())
-                inventory.setItem(53, arrow(true));
+                inventory.setItem(53, arrow(ArrowType.next));
         }
         if(page != 0)
-            inventory.setItem(45, arrow(false));
+            inventory.setItem(45, arrow(ArrowType.previous));
+        inventory.setItem(49, arrow(ArrowType.back));
     }
 
     public void onItemTake(InventoryClickEvent event)
@@ -112,7 +113,13 @@ public class SkillsGui implements InventoryHolder
 
             case "arrow":
                 SkillsGui old = (SkillsGui)event.getClickedInventory().getHolder();
-                player.openInventory(new SkillsGui(player, old.rarity, old.page + (part[1].equals("next") ? 1 : -1)).getInventory());
+                ArrowType arrow = ArrowType.valueOf(part[1]);
+                if (arrow == ArrowType.back)
+                {
+                    player.openInventory(new SkillsGui(player).getInventory());
+                    return;
+                }
+                player.openInventory(new SkillsGui(player, old.rarity, old.page + (arrow == ArrowType.next ? 1 : -1)).getInventory());
                 break;
 
             case "toggle":
@@ -140,15 +147,15 @@ public class SkillsGui implements InventoryHolder
         return NBTController.putNBTString(item, "gui-action", "button-" + rarity.toString());
     }
 
-    ItemStack arrow(boolean next)
+    ItemStack arrow(ArrowType type)
     {
         ItemStack item = new ItemStack(Material.ARROW, 1);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(ChatColor.RESET + (next ? "Next page" : "Prevoius page"));
+        meta.setDisplayName(ChatColor.RESET + type.toPrettyString());
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         meta.addEnchant(Enchantment.DURABILITY, 1, true);
         item.setItemMeta(meta);
-        return NBTController.putNBTString(item, "gui-action", "arrow-" + (next ? "next" : "prevoius"));
+        return NBTController.putNBTString(item, "gui-action", "arrow-" + type.toString());
     }
 
     ItemStack skill(SkillData skill, RequestSkill apiSkill)
@@ -174,5 +181,16 @@ public class SkillsGui implements InventoryHolder
     public Inventory getInventory()
     {
         return inventory;
+    }
+
+    public enum ArrowType
+    {
+        previous, back, next;
+
+        public String toPrettyString()
+        {
+            String string = toString();
+            return string.substring(0, 1).toUpperCase() + string.substring(1);
+        }
     }
 }
