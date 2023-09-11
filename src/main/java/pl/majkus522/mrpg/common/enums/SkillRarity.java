@@ -58,23 +58,6 @@ public enum SkillRarity
 
     public static SkillRarity fromString(String input)
     {
-        switch (ChatColor.stripColor(input.toLowerCase()))
-        {
-            case "common":
-                return SkillRarity.common;
-
-            case "extra":
-                return SkillRarity.extra;
-
-            case "unique":
-                return SkillRarity.unique;
-
-            case "ultimate":
-                return SkillRarity.ultimate;
-
-            case "unknown":
-                return SkillRarity.unknown;
-        }
-        return null;
+        return SkillRarity.valueOf(ChatColor.stripColor(input.toLowerCase()));
     }
 }
