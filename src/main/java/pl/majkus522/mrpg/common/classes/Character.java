@@ -77,7 +77,7 @@ public class Character extends PlayerStatus
     public void addExp(int input)
     {
         exp += input;
-        while(exp > ExtensionMethods.levelExp(level))
+        while(exp >= ExtensionMethods.levelExp(level))
             levelUp();
         changes = true;
     }
