@@ -15,6 +15,7 @@ import pl.majkus522.mrpg.common.interfaces.IRequestResult;
 
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SkillsController
@@ -91,5 +92,49 @@ public class SkillsController
                 return true;
         }
         return false;
+    }
+
+    public static void evolveSkill(Player player, String skill)
+    {
+        SkillData data = new Gson().fromJson(ExtensionMethods.readJsonFile("data/skills/" + skill + ".json"), SkillData.class);
+        boolean valid = true;
+        for(String element : data.evolution)
+        {
+            if (!playerHasSkill(player, element))
+            {
+                valid = false;
+                break;
+            }
+        }
+        if (!valid)
+        {
+            player.sendMessage("You don't have requiered skills");
+            return;
+        }
+        if (data.evolution.length > 0)
+        {
+            String query = "delete from `skills` where `player` = (select `id` from `players` where `username` = ?) and (";
+            ArrayList<String> params = new ArrayList<String>(Arrays.asList(player.getName()));
+            boolean first = true;
+            for(String element : data.evolution)
+            {
+                if (!first)
+                    query += " or";
+                query += " `skill` = ?";
+                params.add(element);
+            }
+            try
+            {
+                PreparedStatement stmt = MySQL.getConnection().prepareStatement(query + ")");
+                for (int index = 0; index < params.size(); index++)
+                    stmt.setString(index + 1, params.get(index));
+                stmt.executeUpdate();
+            }
+            catch (Exception e)
+            {
+                throw new RuntimeException(e);
+            }
+        }
+        playerObtainSkill(player, skill);
     }
 }
