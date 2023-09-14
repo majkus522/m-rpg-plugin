@@ -96,7 +96,7 @@ public class SkillsGui implements InventoryHolder
         inventory.setItem(49, arrow(ArrowType.back));
     }
 
-    public void onItemTake(InventoryClickEvent event)
+    public void onInventoryClick(InventoryClickEvent event)
     {
         event.setCancelled(true);
         ItemStack item = event.getCurrentItem();
