@@ -15,7 +15,6 @@ public class OnItemTake implements Listener
         if(event.getClickedInventory().getHolder() == null)
             return;
         if(event.getClickedInventory().getHolder() instanceof SkillsGui)
-            ((SkillsGui)event.getClickedInventory().getHolder()).onItemTake(event);
             ((SkillsGui)event.getClickedInventory().getHolder()).onInventoryClick(event);
     }
 }
