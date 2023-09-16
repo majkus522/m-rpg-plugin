@@ -20,7 +20,12 @@ public class ExtensionMethods
 {
     public static ItemStack emptySlot()
     {
-        ItemStack item = new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1);
+        return emptySlot(Material.GRAY_STAINED_GLASS_PANE);
+    }
+
+    public static ItemStack emptySlot(Material material)
+    {
+        ItemStack item = new ItemStack(material, 1);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(" ");
         item.setItemMeta(meta);

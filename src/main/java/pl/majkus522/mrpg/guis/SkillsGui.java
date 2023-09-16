@@ -1,19 +1,15 @@
 package pl.majkus522.mrpg.guis;
 
 import com.google.gson.Gson;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.ChatPaginator;
 import pl.majkus522.mrpg.common.ExtensionMethods;
+import pl.majkus522.mrpg.common.classes.CustomInventory;
 import pl.majkus522.mrpg.common.classes.HttpBuilder;
 import pl.majkus522.mrpg.common.classes.SkillData;
 import pl.majkus522.mrpg.common.classes.api.RequestSkill;
@@ -27,34 +23,25 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SkillsGui implements InventoryHolder
+public class SkillsGui extends CustomInventory
 {
-    Inventory inventory;
     public int page;
     public SkillRarity rarity;
 
     public SkillsGui(Player player)
     {
-        basic(player);
-    }
-
-    void basic(Player player)
-    {
-        boolean unknownRarity = SkillsController.playerHasSkill(player, SkillRarity.unknown);
-        inventory = Bukkit.createInventory(this, unknownRarity ? 45 : 27, "Skills");
-        ItemStack empty = ExtensionMethods.emptySlot();
-        for(int index = 0; index < inventory.getSize(); index++)
-            inventory.setItem(index, empty);
+        super(SkillsController.playerHasSkill(player, SkillRarity.unknown) ? 5 : 3, "Skills");
+        fillEmpty();
         if(SkillsController.playerHasSkill(player, SkillRarity.common))
-            inventory.setItem(10, button(Material.WHITE_CONCRETE, SkillRarity.common));
+            setItem(1, 1, button(Material.WHITE_CONCRETE, SkillRarity.common));
         if(SkillsController.playerHasSkill(player, SkillRarity.extra))
-            inventory.setItem(12, button(Material.LIME_CONCRETE, SkillRarity.extra));
+            setItem(3, 1, button(Material.LIME_CONCRETE, SkillRarity.extra));
         if(SkillsController.playerHasSkill(player, SkillRarity.unique))
-            inventory.setItem(14, button(Material.BLUE_CONCRETE, SkillRarity.unique));
+            setItem(5, 1, button(Material.BLUE_CONCRETE, SkillRarity.unique));
         if(SkillsController.playerHasSkill(player, SkillRarity.ultimate))
-            inventory.setItem(16, button(Material.MAGENTA_CONCRETE, SkillRarity.ultimate));
-        if(unknownRarity)
-            inventory.setItem(31, button(Material.BLACK_CONCRETE, SkillRarity.unknown));
+            setItem(7, 1, button(Material.MAGENTA_CONCRETE, SkillRarity.ultimate));
+        if(SkillsController.playerHasSkill(player, SkillRarity.unknown))
+            setItem(4, 3, button(Material.BLACK_CONCRETE, SkillRarity.unknown));
     }
 
     public SkillsGui(Player player, SkillRarity rarity)
@@ -64,16 +51,15 @@ public class SkillsGui implements InventoryHolder
 
     public SkillsGui(Player player, SkillRarity rarity, int page)
     {
+        super(6, "Skills - " + rarity.toPrettyString());
+        fillEmpty();
+        fillRow(5, ExtensionMethods.emptySlot(Material.GREEN_STAINED_GLASS_PANE));
         this.page = page;
         this.rarity = rarity;
-        inventory = Bukkit.createInventory(this, 6 * 9, "Skills - " + rarity.toPrettyString());
-        ItemStack empty = ExtensionMethods.emptySlot();
-        for(int index = 0; index < inventory.getSize(); index++)
-            inventory.setItem(index, empty);
         HttpBuilder request = new HttpBuilder(HttpMethod.GET, "endpoints/skills/" + player.getName() + "?rarity[]=" + rarity.toString()).setSessionHeaders(player).setHeader("Items", (page * 45) + "-45");
         if (!request.isOk())
         {
-            basic(player);
+            inventory = new SkillsGui(player).getInventory();
             return;
         }
         Gson gson = new Gson();
@@ -89,11 +75,11 @@ public class SkillsGui implements InventoryHolder
         {
             request = new HttpBuilder(HttpMethod.HEAD, "endpoints/skills/" + player.getName() + "?rarity[]=" + rarity.toString()).setSessionHeaders(player).setHeader("Items", ((page + 1) * 45) + "-45");
             if(request.isOk())
-                inventory.setItem(53, arrow(ArrowType.next));
+                setItem(8, 5, arrow(ArrowType.next));
         }
         if(page != 0)
-            inventory.setItem(45, arrow(ArrowType.previous));
-        inventory.setItem(49, arrow(ArrowType.back));
+            setItem(0, 5, arrow(ArrowType.previous));
+        setItem(4, 5, arrow(ArrowType.back));
     }
 
     public void onInventoryClick(InventoryClickEvent event)
@@ -138,24 +124,7 @@ public class SkillsGui implements InventoryHolder
 
     ItemStack button(Material material, SkillRarity rarity)
     {
-        ItemStack item = new ItemStack(material, 1);
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(rarity.toColoredString());
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        meta.addEnchant(Enchantment.DURABILITY, 1, true);
-        item.setItemMeta(meta);
-        return NBTController.putNBTString(item, "gui-action", "button-" + rarity.toString());
-    }
-
-    ItemStack arrow(ArrowType type)
-    {
-        ItemStack item = new ItemStack(Material.ARROW, 1);
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(ChatColor.RESET + type.toPrettyString());
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        meta.addEnchant(Enchantment.DURABILITY, 1, true);
-        item.setItemMeta(meta);
-        return NBTController.putNBTString(item, "gui-action", "arrow-" + type.toString());
+        return super.button(material, rarity.toColoredString(), rarity.toString());
     }
 
     ItemStack skill(SkillData skill, RequestSkill apiSkill)
@@ -175,22 +144,5 @@ public class SkillsGui implements InventoryHolder
         meta.setLore(lore);
         item.setItemMeta(meta);
         return item;
-    }
-
-    @Override
-    public Inventory getInventory()
-    {
-        return inventory;
-    }
-
-    public enum ArrowType
-    {
-        previous, back, next;
-
-        public String toPrettyString()
-        {
-            String string = toString();
-            return string.substring(0, 1).toUpperCase() + string.substring(1);
-        }
     }
 }
