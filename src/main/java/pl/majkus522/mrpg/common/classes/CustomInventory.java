@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -76,6 +77,8 @@ public abstract class CustomInventory implements InventoryHolder
         item.setItemMeta(meta);
         return NBTController.putNBTString(item, "gui-action", "button-" + action);
     }
+
+    public void interact(InventoryClickEvent event) { }
 
     @Override
     @Nonnull

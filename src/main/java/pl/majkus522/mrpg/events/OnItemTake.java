@@ -3,7 +3,7 @@ package pl.majkus522.mrpg.events;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import pl.majkus522.mrpg.guis.SkillsGui;
+import pl.majkus522.mrpg.common.classes.CustomInventory;
 
 public class OnItemTake implements Listener
 {
@@ -14,7 +14,7 @@ public class OnItemTake implements Listener
             return;
         if(event.getClickedInventory().getHolder() == null)
             return;
-        if(event.getClickedInventory().getHolder() instanceof SkillsGui)
-            ((SkillsGui)event.getClickedInventory().getHolder()).onInventoryClick(event);
+        if(event.getClickedInventory().getHolder() instanceof CustomInventory)
+            ((CustomInventory)event.getClickedInventory().getHolder()).interact(event);
     }
 }

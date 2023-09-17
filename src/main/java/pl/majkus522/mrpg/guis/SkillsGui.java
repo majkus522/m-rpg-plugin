@@ -82,7 +82,8 @@ public class SkillsGui extends CustomInventory
         setItem(4, 5, arrow(ArrowType.back));
     }
 
-    public void onInventoryClick(InventoryClickEvent event)
+    @Override
+    public void interact(InventoryClickEvent event)
     {
         event.setCancelled(true);
         ItemStack item = event.getCurrentItem();
