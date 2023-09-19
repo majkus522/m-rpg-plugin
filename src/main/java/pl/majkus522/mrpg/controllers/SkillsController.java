@@ -5,34 +5,19 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import pl.majkus522.mrpg.common.ExtensionMethods;
-import pl.majkus522.mrpg.common.classes.HttpBuilder;
-import pl.majkus522.mrpg.common.classes.MySQL;
+import pl.majkus522.mrpg.common.classes.Character;
 import pl.majkus522.mrpg.common.classes.SkillData;
-import pl.majkus522.mrpg.common.classes.api.RequestSkill;
-import pl.majkus522.mrpg.common.enums.HttpMethod;
 import pl.majkus522.mrpg.common.enums.SkillRarity;
-import pl.majkus522.mrpg.common.interfaces.IRequestResult;
 
-import java.sql.PreparedStatement;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.stream.Collectors;
 
 public class SkillsController
 {
     public static void playerObtainSkill(Player player, String skill)
     {
-        try
-        {
-            PreparedStatement stmt = MySQL.getConnection().prepareStatement("insert into `skills` (`player`, `skill`) values ((select `id` from `players` where `username` = ?), ?)");
-            stmt.setString(1, player.getName());
-            stmt.setString(2, skill);
-            stmt.executeUpdate();
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
+        Character character = PlayersController.getCharacter(player);
+        character.skills.add(new Character.CharacterSkill(skill, Character.Status.add));
         SkillData data = new Gson().fromJson(ExtensionMethods.readJsonFile("data/skills/" + skill + ".json"), SkillData.class);
         switch (data.rarity)
         {
@@ -72,26 +57,21 @@ public class SkillsController
 
     public static boolean playerHasSkill(Player player, String skill)
     {
-        return new HttpBuilder(HttpMethod.GET, "endpoints/skills/" + player.getName() + "/" + skill).setSessionHeaders(player).isOk();
+        Character character = PlayersController.getCharacter(player);
+        return character.skills.stream().filter(p -> p.skill.equals(skill) && p.status != Character.Status.remove).collect(Collectors.toList()).size() > 0;
     }
 
     public static boolean playerHasSkill(Player player, SkillRarity rarity)
     {
-        return new HttpBuilder(HttpMethod.HEAD, "endpoints/skills/" + player.getName() + "?rarity[]=" + rarity.toString()).setSessionHeaders(player).setHeader("Items", "0-1").isOk();
+        Character character = PlayersController.getCharacter(player);
+        Gson gson = new Gson();
+        return character.skills.stream().filter(p -> gson.fromJson(ExtensionMethods.readJsonFile("data/skills/" + p.skill + ".json"), SkillData.class).rarity == rarity && p.status != Character.Status.remove).collect(Collectors.toList()).size() > 0;
     }
 
     public static boolean playerHasSkillEnabled(Player player, String skill)
     {
-        HttpBuilder request = new HttpBuilder(HttpMethod.GET, "endpoints/skills/" + player.getName() + "?toggle=true&search=" + skill).setSessionHeaders(player);
-        if(!request.isOk())
-            return false;
-        List<IRequestResult> skills = request.getResultAll(RequestSkill.class);
-        for (IRequestResult element : skills)
-        {
-            if(((RequestSkill)element).skill.equals(skill))
-                return true;
-        }
-        return false;
+        Character character = PlayersController.getCharacter(player);
+        return character.skills.stream().filter(p -> p.skill.equals(skill) && p.getToggle() && p.status != Character.Status.remove).collect(Collectors.toList()).size() > 0;
     }
 
     public static void evolveSkill(Player player, String skill)
@@ -113,26 +93,10 @@ public class SkillsController
         }
         if (data.evolution.length > 0)
         {
-            String query = "delete from `skills` where `player` = (select `id` from `players` where `username` = ?) and (";
-            ArrayList<String> params = new ArrayList<String>(Arrays.asList(player.getName()));
-            boolean first = true;
+            Character character = PlayersController.getCharacter(player);
             for(String element : data.evolution)
             {
-                if (!first)
-                    query += " or";
-                query += " `skill` = ?";
-                params.add(element);
-            }
-            try
-            {
-                PreparedStatement stmt = MySQL.getConnection().prepareStatement(query + ")");
-                for (int index = 0; index < params.size(); index++)
-                    stmt.setString(index + 1, params.get(index));
-                stmt.executeUpdate();
-            }
-            catch (Exception e)
-            {
-                throw new RuntimeException(e);
+                character.skills.stream().filter(p -> p.skill.equals(element)).collect(Collectors.toList()).get(0).status = Character.Status.remove;
             }
         }
         playerObtainSkill(player, skill);

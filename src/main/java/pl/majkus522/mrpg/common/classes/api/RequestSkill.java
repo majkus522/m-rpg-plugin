@@ -2,12 +2,12 @@ package pl.majkus522.mrpg.common.classes.api;
 
 import pl.majkus522.mrpg.common.interfaces.IRequestResult;
 
+import java.util.Objects;
+
 public class RequestSkill implements IRequestResult
 {
-    public int id;
     public String skill;
-    public int player;
-    int toggle;
+    protected int toggle;
 
     public boolean getToggle()
     {
@@ -17,11 +17,20 @@ public class RequestSkill implements IRequestResult
     @Override
     public String toString()
     {
-        return "RequestSkills{" +
-                "id=" + id +
-                ", skill='" + skill + '\'' +
-                ", player=" + player +
+        return "RequestSkill{" +
+                "skill='" + skill + '\'' +
                 ", toggle=" + toggle +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        RequestSkill that = (RequestSkill) o;
+        return toggle == that.toggle && Objects.equals(skill, that.skill);
     }
 }
