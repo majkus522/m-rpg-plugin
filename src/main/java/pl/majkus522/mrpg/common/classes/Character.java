@@ -78,39 +78,46 @@ public class Character extends PlayerStatus
             stmt.setString(10, player.getName());
             stmt.executeUpdate();
 
-            String data = "";
-            boolean first = true;
             List<CharacterSkill> toAdd = skills.stream().filter(p -> p.status == Status.add).collect(Collectors.toList());
-            for(CharacterSkill element : toAdd)
+            if (toAdd.size() > 0)
             {
-                if (!first)
-                    data += ",";
-                data += "(" + id + ",\"" + element.skill + "\")";
-                first = false;
-                element.status = Status.ok;
+                String data = "";
+                boolean first = true;
+                for(CharacterSkill element : toAdd)
+                {
+                    if (!first)
+                        data += ",";
+                    data += "(" + id + ",\"" + element.skill + "\")";
+                    first = false;
+                    element.status = Status.ok;
+                }
+                String query = "insert into `skills`(`player`, `skill`) values ";
+                if (toAdd.size() > 1)
+                    query += "(";
+                query += data;
+                if (toAdd.size() > 1)
+                    query += ")";
+                stmt = MySQL.getConnection().prepareStatement(query);
+                stmt.executeUpdate();
             }
-            String query = "insert into `skills`(`player`, `skill`) values ";
-            if (toAdd.size() > 1)
-                query += "(";
-            query += data;
-            if (toAdd.size() > 1)
-                query += ")";
-            stmt = MySQL.getConnection().prepareStatement(query);
-            stmt.executeUpdate();
 
-            query = "delete from `skills` where `player` = ? and (";
-            first = true;
-            for(CharacterSkill element : skills.stream().filter(p -> p.status == Status.remove).collect(Collectors.toList()))
+            List<CharacterSkill> toRemove = skills.stream().filter(p -> p.status == Status.remove).collect(Collectors.toList());
+            if (toRemove.size() > 0)
             {
-                if (!first)
-                    query += " or ";
-                query += "`skill` = \"" + element.skill + "\"";
-                first = false;
-                skills.remove(element);
+                String query = "delete from `skills` where `player` = ? and (";
+                boolean first = true;
+                for(CharacterSkill element : toRemove)
+                {
+                    if (!first)
+                        query += " or ";
+                    query += "`skill` = \"" + element.skill + "\"";
+                    first = false;
+                    skills.remove(element);
+                }
+                stmt = MySQL.getConnection().prepareStatement(query + ")");
+                stmt.setInt(1, id);
+                stmt.executeUpdate();
             }
-            stmt = MySQL.getConnection().prepareStatement(query + ")");
-            stmt.setInt(1, id);
-            stmt.executeUpdate();
         }
         catch (Exception e)
         {
