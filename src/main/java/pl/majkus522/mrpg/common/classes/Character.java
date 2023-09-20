@@ -46,13 +46,9 @@ public class Character extends PlayerStatus
 
         skills = new ArrayList<CharacterSkill>();
         request = new HttpBuilder(HttpMethod.GET, "endpoints/skills/" + player.getName()).setHeader("Session-Key", session).setHeader("Session-Type", "game").setHeader("Items", "0-999");
-        if(!request.isOk())
-        {
-            player.sendMessage("Server error");
-            throw new RuntimeException(new Exception(request.getError().message));
-        }
-        for (IRequestResult element : request.getResultAll(RequestSkill.class))
-            skills.add(new CharacterSkill((RequestSkill) element));
+        if(request.isOk())
+            for (IRequestResult element : request.getResultAll(RequestSkill.class))
+                skills.add(new CharacterSkill((RequestSkill) element));
 
         Bukkit.getScheduler().runTaskTimerAsynchronously(Main.plugin, new Runnable()
         {
