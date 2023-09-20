@@ -40,6 +40,8 @@ public class Character extends PlayerStatus
         this.agl = data.agl;
         this.chr = data.chr;
         this.intl = data.intl;
+        this.def = data.def;
+        this.vtl = data.vtl;
         this.money = data.money;
 
         skills = new ArrayList<CharacterSkill>();
@@ -67,15 +69,17 @@ public class Character extends PlayerStatus
     {
         try
         {
-            PreparedStatement stmt = MySQL.getConnection().prepareStatement("update `players` set `money` = ?, `str` = ?, `agl` = ?, `chr` = ?, `intl` = ?, `level` = ?, `exp` = ? where `username` = ?");
+            PreparedStatement stmt = MySQL.getConnection().prepareStatement("update `players` set `money` = ?, `str` = ?, `agl` = ?, `chr` = ?, `intl` = ?, `def` = ?, `vtl` = ?, `level` = ?, `exp` = ? where `username` = ?");
             stmt.setFloat(1, money);
             stmt.setInt(2, str);
             stmt.setInt(3, agl);
             stmt.setInt(4, chr);
             stmt.setInt(5, intl);
-            stmt.setInt(6, level);
-            stmt.setInt(7, exp);
-            stmt.setString(8, player.getName());
+            stmt.setInt(6, def);
+            stmt.setInt(7, vtl);
+            stmt.setInt(8, level);
+            stmt.setInt(9, exp);
+            stmt.setString(10, player.getName());
             stmt.executeUpdate();
 
             String data = "";
@@ -157,6 +161,18 @@ public class Character extends PlayerStatus
         changes = true;
     }
 
+    public void setDef(int input)
+    {
+        def = input;
+        changes = true;
+    }
+
+    public void setVtl(int input)
+    {
+        vtl = input;
+        changes = true;
+    }
+
     public boolean hasMoney(float input)
     {
         return money > input;
@@ -176,6 +192,8 @@ public class Character extends PlayerStatus
         agl++;
         chr++;
         intl++;
+        def++;
+        vtl++;
         player.sendMessage("Your level has increased");
     }
 

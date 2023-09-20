@@ -13,12 +13,15 @@ public class RequestFakeStatus extends PlayerStatus implements IRequestResult
         return "RequestFakeStatus{" +
                 "player=" + player +
                 ", id=" + id +
-                ", money=" + money +
                 ", level=" + level +
+                ", exp=" + exp +
                 ", str=" + str +
                 ", agl=" + agl +
                 ", chr=" + chr +
                 ", intl=" + intl +
+                ", def=" + def +
+                ", vtl=" + vtl +
+                ", money=" + money +
                 '}';
     }
 }

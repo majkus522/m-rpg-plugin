@@ -21,6 +21,8 @@ public class StatusController
         player.sendMessage("Agility: " + character.getAgl());
         player.sendMessage("Charisma: " + character.getChr());
         player.sendMessage("Intelligence: " + character.getIntl());
+        player.sendMessage("Defence: " + character.getDef());
+        player.sendMessage("Vitality: " + character.getVtl());
         player.sendMessage(ChatColor.BLUE + "=-=-=-=-= " + ChatColor.GREEN + "Status: " + player.getName() + ChatColor.BLUE + " =-=-=-=-=");
     }
 
@@ -69,6 +71,8 @@ public class StatusController
         sender.sendMessage("Agility: " + round(status.getAgl(), round));
         sender.sendMessage("Charisma: " + round(status.getChr(), round));
         sender.sendMessage("Intelligence: " + round(status.getIntl(), round));
+        sender.sendMessage("Defence: " + round(status.getDef(), round));
+        sender.sendMessage("Vitality: " + round(status.getVtl(), round));
         sender.sendMessage(ChatColor.BLUE + "=-=-=-=-= " + ChatColor.GREEN + "Status: " + whose.getName() + ChatColor.BLUE + " =-=-=-=-=");
     }
 

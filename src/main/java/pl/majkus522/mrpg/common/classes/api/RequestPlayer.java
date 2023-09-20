@@ -25,6 +25,8 @@ public class RequestPlayer extends PlayerStatus implements IRequestResult
                 ", agl=" + agl +
                 ", chr=" + chr +
                 ", intl=" + intl +
+                ", def=" + def +
+                ", vtl=" + vtl +
                 ", money=" + money +
                 '}';
     }
