@@ -42,7 +42,10 @@ public class Character extends PlayerStatus
         this.intl = data.intl;
         this.def = data.def;
         this.vtl = data.vtl;
+        this.dex = data.dex;
         this.money = data.money;
+        player.setMaxHealth(vtl);
+        player.setHealth(vtl);
 
         skills = new ArrayList<CharacterSkill>();
         request = new HttpBuilder(HttpMethod.GET, "endpoints/skills/" + player.getName()).setHeader("Session-Key", session).setHeader("Session-Type", "game").setHeader("Items", "0-999");
@@ -65,7 +68,7 @@ public class Character extends PlayerStatus
     {
         try
         {
-            PreparedStatement stmt = MySQL.getConnection().prepareStatement("update `players` set `money` = ?, `str` = ?, `agl` = ?, `chr` = ?, `intl` = ?, `def` = ?, `vtl` = ?, `level` = ?, `exp` = ? where `username` = ?");
+            PreparedStatement stmt = MySQL.getConnection().prepareStatement("update `players` set `money` = ?, `str` = ?, `agl` = ?, `chr` = ?, `intl` = ?, `def` = ?, `vtl` = ?, `dex` = ?, `level` = ?, `exp` = ? where `username` = ?");
             stmt.setFloat(1, money);
             stmt.setInt(2, str);
             stmt.setInt(3, agl);
@@ -73,9 +76,10 @@ public class Character extends PlayerStatus
             stmt.setInt(5, intl);
             stmt.setInt(6, def);
             stmt.setInt(7, vtl);
-            stmt.setInt(8, level);
-            stmt.setInt(9, exp);
-            stmt.setString(10, player.getName());
+            stmt.setInt(8, dex);
+            stmt.setInt(9, level);
+            stmt.setInt(10, exp);
+            stmt.setString(11, player.getName());
             stmt.executeUpdate();
 
             List<CharacterSkill> toAdd = skills.stream().filter(p -> p.status == Status.add).collect(Collectors.toList());
@@ -132,6 +136,14 @@ public class Character extends PlayerStatus
         ScoreboardController.update(this);
     }
 
+    public double handleDamage(double input)
+    {
+        double random = Math.random() * 100;
+        if (random < ((double)dex) / 5)
+            return 0;
+        return input - def;
+    }
+
     public void addExp(int input)
     {
         exp += input;
@@ -174,6 +186,14 @@ public class Character extends PlayerStatus
     {
         vtl = input;
         changes = true;
+        player.setMaxHealth(vtl);
+        player.setHealth(vtl);
+    }
+
+    public void setDex(int input)
+    {
+        dex = input;
+        changes = true;
     }
 
     public boolean hasMoney(float input)
@@ -197,6 +217,7 @@ public class Character extends PlayerStatus
         intl++;
         def++;
         vtl++;
+        dex++;
         player.sendMessage("Your level has increased");
     }
 

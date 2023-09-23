@@ -23,6 +23,7 @@ public class StatusController
         player.sendMessage("Intelligence: " + character.getIntl());
         player.sendMessage("Defence: " + character.getDef());
         player.sendMessage("Vitality: " + character.getVtl());
+        player.sendMessage("Dexterity: " + character.getDex());
         player.sendMessage(ChatColor.BLUE + "=-=-=-=-= " + ChatColor.GREEN + "Status: " + player.getName() + ChatColor.BLUE + " =-=-=-=-=");
     }
 
@@ -73,6 +74,7 @@ public class StatusController
         sender.sendMessage("Intelligence: " + round(status.getIntl(), round));
         sender.sendMessage("Defence: " + round(status.getDef(), round));
         sender.sendMessage("Vitality: " + round(status.getVtl(), round));
+        sender.sendMessage("Dexterity: " + round(status.getDex(), round));
         sender.sendMessage(ChatColor.BLUE + "=-=-=-=-= " + ChatColor.GREEN + "Status: " + whose.getName() + ChatColor.BLUE + " =-=-=-=-=");
     }
 

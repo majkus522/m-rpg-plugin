@@ -11,6 +11,7 @@ public class PlayerStatus
     protected int intl;
     protected int def;
     protected int vtl;
+    protected int dex;
     protected float money;
 
     public int getLevel()
@@ -51,6 +52,11 @@ public class PlayerStatus
     public int getVtl()
     {
         return vtl;
+    }
+
+    public int getDex()
+    {
+        return dex;
     }
 
     public float getMoney()
