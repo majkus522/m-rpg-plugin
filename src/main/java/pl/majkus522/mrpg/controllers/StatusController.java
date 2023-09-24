@@ -1,5 +1,8 @@
 package pl.majkus522.mrpg.controllers;
 
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import pl.majkus522.mrpg.common.ExtensionMethods;
@@ -17,13 +20,13 @@ public class StatusController
             return;
         Character character = PlayersController.getCharacter(player);
         player.sendMessage(ChatColor.BLUE + "=-=-=-=-= " + ChatColor.GREEN + "Status: " + player.getName() + ChatColor.BLUE + " =-=-=-=-=");
-        player.sendMessage("Strength: " + character.getStr());
-        player.sendMessage("Agility: " + character.getAgl());
-        player.sendMessage("Charisma: " + character.getChr());
-        player.sendMessage("Intelligence: " + character.getIntl());
-        player.sendMessage("Defence: " + character.getDef());
-        player.sendMessage("Vitality: " + character.getVtl());
-        player.sendMessage("Dexterity: " + character.getDex());
+        createLine("Strength: " + character.getStr(), "Base damage", player);
+        createLine("Agility: " + character.getAgl(), "Base speed", player);
+        createLine("Charisma: " + character.getChr(), "", player);
+        createLine("Intelligence: " + character.getIntl(), "", player);
+        createLine("Defence: " + character.getDef(), "Base damage reduction", player);
+        createLine("Vitality: " + character.getVtl(), "Base health", player);
+        createLine("Dexterity: " + character.getDex(), "Chance to dodge attack", player);
         player.sendMessage(ChatColor.BLUE + "=-=-=-=-= " + ChatColor.GREEN + "Status: " + player.getName() + ChatColor.BLUE + " =-=-=-=-=");
     }
 
@@ -66,20 +69,27 @@ public class StatusController
         if (statusVision)
             round = 0;
         sender.sendMessage(ChatColor.BLUE + "=-=-=-=-= " + ChatColor.GREEN + "Status: " + whose.getName() + ChatColor.BLUE + " =-=-=-=-=");
-        sender.sendMessage("Level: " + round(status.getLevel(), round));
-        sender.sendMessage("Money: " + (round == 0 ? status.getMoney() : round(status.getMoney(), round)));
-        sender.sendMessage("Strength: " + round(status.getStr(), round));
-        sender.sendMessage("Agility: " + round(status.getAgl(), round));
-        sender.sendMessage("Charisma: " + round(status.getChr(), round));
-        sender.sendMessage("Intelligence: " + round(status.getIntl(), round));
-        sender.sendMessage("Defence: " + round(status.getDef(), round));
-        sender.sendMessage("Vitality: " + round(status.getVtl(), round));
-        sender.sendMessage("Dexterity: " + round(status.getDex(), round));
+        createLine("Level: " + round(status.getLevel(), round), "", sender);
+        createLine("Money: " + (round == 0 ? status.getMoney() : round(status.getMoney(), round)), "", sender);
+        createLine("Strength: " + round(status.getStr(), round), "Base damage", sender);
+        createLine("Agility: " + round(status.getAgl(), round), "Base speed", sender);
+        createLine("Charisma: " + round(status.getChr(), round), "", sender);
+        createLine("Intelligence: " + round(status.getIntl(), round), "", sender);
+        createLine("Defence: " + round(status.getDef(), round), "Base damage reduction", sender);
+        createLine("Vitality: " + round(status.getVtl(), round), "Base health", sender);
+        createLine("Dexterity: " + round(status.getDex(), round), "Chance to dodge attack", sender);
         sender.sendMessage(ChatColor.BLUE + "=-=-=-=-= " + ChatColor.GREEN + "Status: " + whose.getName() + ChatColor.BLUE + " =-=-=-=-=");
     }
 
     static String round(double value, int decimalPlace)
     {
         return (decimalPlace < 0 ? "~" : "") + ExtensionMethods.roundInt(value, decimalPlace);
+    }
+
+    static void createLine(String text, String hover, Player player)
+    {
+        TextComponent component = new TextComponent(text);
+        component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(hover)));
+        player.spigot().sendMessage(component);
     }
 }
