@@ -22,7 +22,7 @@ public class CustomEntity extends PathfinderMob
         this.data = data;
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(data.health);
         this.setHealth(data.health);
-        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(data.str * 2);
+        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(data.str);
         this.getAttribute(Attributes.ARMOR).setBaseValue(0);
         this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(data.speed);
     }

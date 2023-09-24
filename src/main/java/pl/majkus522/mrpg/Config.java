@@ -7,4 +7,5 @@ public class Config
     public final static int statusRange = 5;
     public final static int payRange = 5;
     public final static double tauntRange = 20;
+    public final static float baseWalkSpeed = 0.2f;
 }

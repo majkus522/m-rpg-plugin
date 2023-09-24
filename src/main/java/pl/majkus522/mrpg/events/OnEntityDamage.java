@@ -20,13 +20,13 @@ public class OnEntityDamage implements Listener
         if (event.getEntity() instanceof Player)
         {
             Character character = PlayersController.getCharacter((Player)event.getEntity());
-            double newDamage = character.handleDamage(event.getDamage());
-            if (newDamage <= 0)
+            double damage = character.handleDamage(event.getDamage());
+            if (damage <= 0)
             {
                 event.setCancelled(true);
                 return;
             }
-            event.setDamage(newDamage);
+            event.setDamage(damage);
             if (((CraftEntity)event.getDamager()).getHandle() instanceof Enemy && ((LivingEntity)event.getEntity()).getHealth() - event.getDamage() < 0)
                 ((Enemy) ((CraftEntity)event.getDamager()).getHandle()).cancelTaunt();
             return;
@@ -35,8 +35,17 @@ public class OnEntityDamage implements Listener
         Entity entityHandle = ((CraftEntity)event.getEntity()).getHandle();
         if(entityHandle instanceof CustomEntity)
         {
+            double damage = event.getDamage();
+            if (event.getDamager() instanceof Player)
+                damage = PlayersController.getCharacter((Player)event.getDamager()).getDamage();
             CustomEntity entity = (CustomEntity) entityHandle;
-            event.setDamage(entity.handleDamage(event.getDamage()));
+            damage = entity.handleDamage(damage);
+            if (damage <= 0)
+            {
+                event.setCancelled(true);
+                return;
+            }
+            event.setDamage(damage);
         }
     }
 }

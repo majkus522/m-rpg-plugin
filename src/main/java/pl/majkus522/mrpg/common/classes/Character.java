@@ -2,6 +2,7 @@ package pl.majkus522.mrpg.common.classes;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import pl.majkus522.mrpg.Config;
 import pl.majkus522.mrpg.Main;
 import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.api.RequestPlayer;
@@ -44,8 +45,9 @@ public class Character extends PlayerStatus
         this.vtl = data.vtl;
         this.dex = data.dex;
         this.money = data.money;
-        player.setMaxHealth(vtl);
-        player.setHealth(vtl);
+
+        setMaxHealth();
+        setSpeed();
 
         skills = new ArrayList<CharacterSkill>();
         request = new HttpBuilder(HttpMethod.GET, "endpoints/skills/" + player.getName()).setHeader("Session-Key", session).setHeader("Session-Type", "game").setHeader("Items", "0-999");
@@ -129,11 +131,27 @@ public class Character extends PlayerStatus
         }
     }
 
+    void setMaxHealth()
+    {
+        player.setMaxHealth(getVtl());
+        player.setHealth(getVtl());
+    }
+
+    void setSpeed()
+    {
+        player.setWalkSpeed(Config.baseWalkSpeed * (1 + (getAgl() / 200)));
+    }
+
     public void deathPenalty()
     {
         exp = 0;
         money = (float)ExtensionMethods.round(money * 0.99f, 2);
         ScoreboardController.update(this);
+    }
+
+    public double getDamage()
+    {
+        return getStr();
     }
 
     public double handleDamage(double input)
@@ -162,6 +180,7 @@ public class Character extends PlayerStatus
     {
         agl = input;
         changes = true;
+        setSpeed();
     }
 
     public void setChr(int input)
@@ -186,8 +205,7 @@ public class Character extends PlayerStatus
     {
         vtl = input;
         changes = true;
-        player.setMaxHealth(vtl);
-        player.setHealth(vtl);
+        setMaxHealth();
     }
 
     public void setDex(int input)
