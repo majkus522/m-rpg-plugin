@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_20_R1.CraftWorld;
 import org.bukkit.entity.Player;
+import pl.majkus522.mrpg.Config;
 import pl.majkus522.mrpg.controllers.SkillsController;
 
 public class CustomEntity extends PathfinderMob
@@ -20,15 +21,23 @@ public class CustomEntity extends PathfinderMob
         this.setCustomName((Component) Component.Serializer.fromJson("\"" + ChatColor.translateAlternateColorCodes('$', data.name) + "\""));
         this.setCustomNameVisible(true);
         this.data = data;
-        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(data.health);
-        this.setHealth(data.health);
+        setMaxHealth();
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(data.str);
         this.getAttribute(Attributes.ARMOR).setBaseValue(0);
-        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(data.speed);
+        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(Config.baseWalkSpeed * (1 + (((double)data.agl) / 200)));
+    }
+
+    public void setMaxHealth()
+    {
+        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(data.vtl);
+        this.setHealth(data.vtl);
     }
 
     public double handleDamage(double input)
     {
+        double random = Math.random() * 100;
+        if (random < ((double)data.dex) / 5)
+            return 0;
         return input - data.def;
     }
 
