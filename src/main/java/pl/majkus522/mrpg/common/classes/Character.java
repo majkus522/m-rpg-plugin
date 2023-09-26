@@ -7,6 +7,7 @@ import pl.majkus522.mrpg.Main;
 import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.api.RequestPlayer;
 import pl.majkus522.mrpg.common.classes.api.RequestSkill;
+import pl.majkus522.mrpg.common.enums.DamageType;
 import pl.majkus522.mrpg.common.enums.HttpMethod;
 import pl.majkus522.mrpg.common.interfaces.IRequestResult;
 import pl.majkus522.mrpg.controllers.ScoreboardController;
@@ -156,10 +157,29 @@ public class Character extends PlayerStatus
 
     public double handleDamage(double input)
     {
+        return handleDamage(input, DamageType.physical);
+    }
+
+    public double handleDamage(double input, DamageType type)
+    {
+        switch (type)
+        {
+            case mental:
+            case poison:
+                return input;
+
+            case magical:
+                input -= (getDef() * 0.25f);
+                break;
+
+            case physical:
+                input -= getDef();
+                break;
+        }
         double random = Math.random() * 100;
-        if (random < ((double)dex) / 5)
+        if (random < ((double)getDex()) / 5)
             return 0;
-        return input - def;
+        return input;
     }
 
     public void addExp(int input)

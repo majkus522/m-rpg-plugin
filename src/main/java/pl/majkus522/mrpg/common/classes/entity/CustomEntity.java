@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_20_R1.CraftWorld;
 import org.bukkit.entity.Player;
 import pl.majkus522.mrpg.Config;
+import pl.majkus522.mrpg.common.enums.DamageType;
 import pl.majkus522.mrpg.controllers.SkillsController;
 
 public class CustomEntity extends PathfinderMob
@@ -35,10 +36,29 @@ public class CustomEntity extends PathfinderMob
 
     public double handleDamage(double input)
     {
+        return handleDamage(input, DamageType.physical);
+    }
+
+    public double handleDamage(double input, DamageType type)
+    {
+        switch (type)
+        {
+            case mental:
+            case poison:
+                return input;
+
+            case magical:
+                input -= (data.def * 0.25f);
+                break;
+
+            case physical:
+                input -= data.def;
+                break;
+        }
         double random = Math.random() * 100;
         if (random < ((double)data.dex) / 5)
             return 0;
-        return input - data.def;
+        return input;
     }
 
     public int getExp(Player killer)
