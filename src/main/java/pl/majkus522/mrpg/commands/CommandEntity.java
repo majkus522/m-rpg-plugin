@@ -7,8 +7,8 @@ import org.bukkit.craftbukkit.v1_20_R1.CraftWorld;
 import org.bukkit.entity.Player;
 import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.CustomCommand;
+import pl.majkus522.mrpg.common.classes.data.EntityData;
 import pl.majkus522.mrpg.common.classes.entity.Enemy;
-import pl.majkus522.mrpg.common.classes.entity.EntityData;
 import pl.majkus522.mrpg.common.classes.entity.Summon;
 
 import java.io.File;

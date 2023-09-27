@@ -1,5 +1,6 @@
 package pl.majkus522.mrpg.common.classes;
 
+import com.google.gson.JsonParser;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import pl.majkus522.mrpg.Config;
@@ -15,6 +16,7 @@ import pl.majkus522.mrpg.controllers.ScoreboardController;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Character extends PlayerStatus
@@ -38,15 +40,9 @@ public class Character extends PlayerStatus
         this.id = data.id;
         this.level = data.level;
         this.exp = data.exp;
-        this.str = data.str;
-        this.agl = data.agl;
-        this.chr = data.chr;
-        this.intl = data.intl;
-        this.def = data.def;
-        this.vtl = data.vtl;
-        this.dex = data.dex;
         this.money = data.money;
 
+        initStats(new JsonParser().parse(request.content).getAsJsonObject());
         setMaxHealth();
         setSpeed();
 
@@ -71,18 +67,14 @@ public class Character extends PlayerStatus
     {
         try
         {
-            PreparedStatement stmt = MySQL.getConnection().prepareStatement("update `players` set `money` = ?, `str` = ?, `agl` = ?, `chr` = ?, `intl` = ?, `def` = ?, `vtl` = ?, `dex` = ?, `level` = ?, `exp` = ? where `username` = ?");
+            String query = "update `players` set `money` = ?, `level` = ?, `exp` = ?";
+            for (Map.Entry<String, Integer> element : stats.entrySet())
+                query += ", `" + element.getKey() + "` = " + element.getValue();
+            PreparedStatement stmt = MySQL.getConnection().prepareStatement(query + " where `username` = ?");
             stmt.setFloat(1, money);
-            stmt.setInt(2, str);
-            stmt.setInt(3, agl);
-            stmt.setInt(4, chr);
-            stmt.setInt(5, intl);
-            stmt.setInt(6, def);
-            stmt.setInt(7, vtl);
-            stmt.setInt(8, dex);
-            stmt.setInt(9, level);
-            stmt.setInt(10, exp);
-            stmt.setString(11, player.getName());
+            stmt.setInt(2, level);
+            stmt.setInt(3, exp);
+            stmt.setString(4, player.getName());
             stmt.executeUpdate();
 
             List<CharacterSkill> toAdd = skills.stream().filter(p -> p.status == Status.add).collect(Collectors.toList());
@@ -98,7 +90,7 @@ public class Character extends PlayerStatus
                     first = false;
                     element.status = Status.ok;
                 }
-                String query = "insert into `skills`(`player`, `skill`) values ";
+                query = "insert into `skills`(`player`, `skill`) values ";
                 if (toAdd.size() > 1)
                     query += "(";
                 query += data;
@@ -111,7 +103,7 @@ public class Character extends PlayerStatus
             List<CharacterSkill> toRemove = skills.stream().filter(p -> p.status == Status.remove).collect(Collectors.toList());
             if (toRemove.size() > 0)
             {
-                String query = "delete from `skills` where `player` = ? and (";
+                query = "delete from `skills` where `player` = ? and (";
                 boolean first = true;
                 for(CharacterSkill element : toRemove)
                 {
@@ -134,13 +126,13 @@ public class Character extends PlayerStatus
 
     void setMaxHealth()
     {
-        player.setMaxHealth(getVtl());
-        player.setHealth(getVtl());
+        player.setMaxHealth(getStat("vtl"));
+        player.setHealth(getStat("vtl"));
     }
 
     void setSpeed()
     {
-        player.setWalkSpeed(Config.baseWalkSpeed * (1 + (getAgl() / 200)));
+        player.setWalkSpeed(Config.baseWalkSpeed * (1 + (getStat("agl") / 200)));
     }
 
     public void deathPenalty()
@@ -152,7 +144,7 @@ public class Character extends PlayerStatus
 
     public double getDamage()
     {
-        return getStr();
+        return getStat("str");
     }
 
     public double handleDamage(double input)
@@ -169,15 +161,15 @@ public class Character extends PlayerStatus
                 return input;
 
             case magical:
-                input -= (getDef() * 0.25f);
+                input -= (getStat("def") * 0.25f);
                 break;
 
             case physical:
-                input -= getDef();
+                input -= getStat("def");
                 break;
         }
         double random = Math.random() * 100;
-        if (random < ((double)getDex()) / 5)
+        if (random < ((double)getStat("dex")) / 5)
             return 0;
         return input;
     }
@@ -190,48 +182,25 @@ public class Character extends PlayerStatus
         changes = true;
     }
 
-    public void setStr(int input)
+    @Override
+    public int getStat(String label)
     {
-        str = input;
-        changes = true;
+        return stats.get(label);
     }
 
-    public void setAgl(int input)
+    public void setStat(String label, int value)
     {
-        agl = input;
-        changes = true;
-        setSpeed();
-    }
+        stats.put(label, value);
+        switch (label)
+        {
+            case "agl":
+                setSpeed();
+                break;
 
-    public void setChr(int input)
-    {
-        chr = input;
-        changes = true;
-    }
-
-    public void setIntl(int input)
-    {
-        intl = input;
-        changes = true;
-    }
-
-    public void setDef(int input)
-    {
-        def = input;
-        changes = true;
-    }
-
-    public void setVtl(int input)
-    {
-        vtl = input;
-        changes = true;
-        setMaxHealth();
-    }
-
-    public void setDex(int input)
-    {
-        dex = input;
-        changes = true;
+            case "vtl":
+                setMaxHealth();
+                break;
+        }
     }
 
     public boolean hasMoney(float input)
@@ -249,13 +218,8 @@ public class Character extends PlayerStatus
     {
         exp -= ExtensionMethods.levelExp(level);
         level++;
-        str++;
-        agl++;
-        chr++;
-        intl++;
-        def++;
-        vtl++;
-        dex++;
+        for (Map.Entry<String, Integer> element : stats.entrySet())
+            element.setValue(element.getValue() + 1);
         player.sendMessage("Your level has increased");
     }
 

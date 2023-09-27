@@ -6,7 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.Character;
-import pl.majkus522.mrpg.common.classes.SkillData;
+import pl.majkus522.mrpg.common.classes.data.SkillData;
 import pl.majkus522.mrpg.common.enums.SkillRarity;
 
 import java.util.ArrayList;
@@ -95,9 +95,7 @@ public class SkillsController
         {
             Character character = PlayersController.getCharacter(player);
             for(String element : data.evolution)
-            {
                 character.skills.stream().filter(p -> p.skill.equals(element)).collect(Collectors.toList()).get(0).status = Character.Status.remove;
-            }
         }
         playerObtainSkill(player, skill);
     }

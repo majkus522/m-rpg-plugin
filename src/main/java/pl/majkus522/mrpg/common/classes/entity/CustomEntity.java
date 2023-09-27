@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_20_R1.CraftWorld;
 import org.bukkit.entity.Player;
 import pl.majkus522.mrpg.Config;
+import pl.majkus522.mrpg.common.classes.data.EntityData;
 import pl.majkus522.mrpg.common.enums.DamageType;
 import pl.majkus522.mrpg.controllers.SkillsController;
 

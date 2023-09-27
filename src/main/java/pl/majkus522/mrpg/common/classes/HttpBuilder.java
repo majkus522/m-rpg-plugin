@@ -25,6 +25,7 @@ public class HttpBuilder
 {
     HttpURLConnection connection;
     HttpMethod method;
+    public String content;
 
     public HttpBuilder(HttpMethod method, String url)
     {
@@ -92,9 +93,7 @@ public class HttpBuilder
     {
         HashMap<String, String> headers = new HashMap<>();
         for(Map.Entry<String, List<String>> line : connection.getHeaderFields().entrySet())
-        {
             headers.put(line.getKey(), line.getValue().get(0));
-        }
         return headers;
     }
 
@@ -117,9 +116,7 @@ public class HttpBuilder
             return list;
         JsonArray array = JsonParser.parseString(getResultString()).getAsJsonArray();
         for (JsonElement element : array)
-        {
             list.add(new Gson().fromJson(element, clazz));
-        }
         return list;
     }
 
@@ -132,7 +129,8 @@ public class HttpBuilder
             String inputLine;
             while ((inputLine = reader.readLine()) != null)
                 response.append(inputLine);
-            return response.toString();
+            content = response.toString();
+            return content;
         }
         catch (Exception e)
         {

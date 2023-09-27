@@ -1,4 +1,4 @@
-package pl.majkus522.mrpg.common.classes;
+package pl.majkus522.mrpg.common.classes.data;
 
 import pl.majkus522.mrpg.common.enums.SkillRarity;
 

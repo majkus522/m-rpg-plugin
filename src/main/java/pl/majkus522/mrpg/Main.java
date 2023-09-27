@@ -45,6 +45,7 @@ public final class Main extends JavaPlugin
         registerCommand(new CommandTaunt());
 
         MySQL.connect();
+        Config.init();
     }
 
     @Override

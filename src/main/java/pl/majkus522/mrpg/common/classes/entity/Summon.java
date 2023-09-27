@@ -9,6 +9,7 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import pl.majkus522.mrpg.common.classes.data.EntityData;
 import pl.majkus522.mrpg.common.classes.entity.goal.GoalSummon;
 
 public class Summon extends CustomEntity

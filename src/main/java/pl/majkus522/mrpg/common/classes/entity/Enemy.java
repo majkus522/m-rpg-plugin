@@ -9,6 +9,7 @@ import net.minecraft.world.entity.player.Player;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
 import org.bukkit.event.entity.EntityTargetEvent;
+import pl.majkus522.mrpg.common.classes.data.EntityData;
 
 public class Enemy extends CustomEntity
 {
