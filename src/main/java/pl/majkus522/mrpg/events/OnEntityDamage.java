@@ -23,7 +23,7 @@ public class OnEntityDamage implements Listener
         {
             Character character = PlayersController.getCharacter((Player)event.getEntity());
             double damage = character.handleDamage(event.getDamage());
-            if (damage <= 0)
+            if (damage < 0)
             {
                 event.setCancelled(true);
                 return;
@@ -39,7 +39,7 @@ public class OnEntityDamage implements Listener
             double damage = event.getDamage();
             CustomEntity entity = (CustomEntity) entityHandle;
             damage = entity.handleDamage(damage);
-            if (damage <= 0)
+            if (damage < 0)
             {
                 event.setCancelled(true);
                 return;

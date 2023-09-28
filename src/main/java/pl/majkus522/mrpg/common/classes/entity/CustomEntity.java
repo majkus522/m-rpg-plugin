@@ -58,8 +58,8 @@ public class CustomEntity extends PathfinderMob
         }
         double random = Math.random() * 100;
         if (random < ((double)data.dex) / 5)
-            return 0;
-        return input;
+            return -1;
+        return Math.max(input, 0);
     }
 
     public int getExp(Player killer)

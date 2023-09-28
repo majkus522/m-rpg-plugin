@@ -170,8 +170,8 @@ public class Character extends PlayerStatus
         }
         double random = Math.random() * 100;
         if (random < ((double)getStat("dex")) / 5)
-            return 0;
-        return input;
+            return -1;
+        return Math.max(input, 0);
     }
 
     public void addExp(int input)
