@@ -16,7 +16,7 @@ public class CommandWorld extends CustomCommand
     {
         if (args.length < 1)
         {
-            player.sendMessage("Enter world");
+            player.sendMessage("Current world: " + player.getWorld().getName());
             return;
         }
         try
