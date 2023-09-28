@@ -41,7 +41,7 @@ public class CommandLogin extends CustomCommand
         player.setGameMode(GameMode.SURVIVAL);
         if (player.isOp())
             player.setGameMode(GameMode.CREATIVE);
-        player.teleport(new Location(WorldController.getWorld("worlds/main"), 0.5, 100, 0.5));
+        player.teleport(new Location(WorldController.getWorld("worlds/main", false), 0.5, 100, 0.5));
         Character character = new Character(player, request.getResultString());
         PlayersController.playerJoin(character);
         ScoreboardController.createScoreboard(character);

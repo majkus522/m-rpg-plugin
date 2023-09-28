@@ -1,50 +1,34 @@
 package pl.majkus522.mrpg.controllers;
 
-import org.bukkit.*;
-import org.bukkit.entity.Player;
-import pl.majkus522.mrpg.Main;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
+import org.bukkit.generator.ChunkGenerator;
+
+import javax.annotation.Nonnull;
+import java.util.Random;
 
 public class WorldController
 {
-    public static void teleport(Player player, String world, Location location)
-    {
-        Bukkit.getScheduler().runTask(Main.plugin, new WorldGenerator(player, world, location));
-    }
-
-    public static class WorldGenerator implements Runnable
-    {
-        String name;
-        Player player;
-        Location location;
-
-        public WorldGenerator(Player player, String world, Location location)
-        {
-            this.name = world;
-            this.player = player;
-            this.location = location;
-        }
-
-        @Override
-        public void run()
-        {
-            World world = Bukkit.getWorld(name);
-            if(world == null)
-            {
-                WorldCreator creator = new WorldCreator(name);
-                creator.type(WorldType.NORMAL);
-                creator.environment(World.Environment.NORMAL);
-                creator.generateStructures(false);
-                world = creator.createWorld();
-            }
-            location.setWorld(world);
-            player.teleport(location);
-        }
-    }
-
-    public static World getWorld(String name)
+    public static World getWorld(String name, boolean isVoid)
     {
         if (Bukkit.getWorld(name) == null)
-            return Bukkit.getServer().createWorld(new WorldCreator(name.replace("worlds/", "")));
+        {
+            WorldCreator creator = new WorldCreator(name.replace("worlds/", ""));
+            if (isVoid)
+                creator.generator(new VoidChunkGenerator());
+            return Bukkit.getServer().createWorld(creator);
+        }
         return Bukkit.getWorld(name);
+    }
+
+    public static class VoidChunkGenerator extends ChunkGenerator
+    {
+        @Override
+        @Nonnull
+        public ChunkData generateChunkData(@Nonnull World world, @Nonnull Random random, int x, int z, @Nonnull BiomeGrid biome)
+        {
+            return createChunkData(world);
+        }
     }
 }

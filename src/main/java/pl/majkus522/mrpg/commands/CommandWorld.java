@@ -21,7 +21,8 @@ public class CommandWorld extends CustomCommand
         }
         try
         {
-            player.teleport(new Location(WorldController.getWorld("worlds/" + args[0]), 0, 400, 0));
+            boolean isVoid = args.length >= 2 && args[1].equals("void");
+            player.teleport(new Location(WorldController.getWorld("worlds/" + args[0], isVoid), 0, 400, 0));
         }
         catch (Exception e)
         {

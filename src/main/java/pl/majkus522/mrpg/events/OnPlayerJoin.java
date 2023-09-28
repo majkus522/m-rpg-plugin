@@ -28,7 +28,7 @@ public class OnPlayerJoin implements Listener
             return;
         }
         player.setGameMode(GameMode.ADVENTURE);
-        player.teleport(new Location(WorldController.getWorld("worlds/login"), 0.5, 100, 0.5));
+        player.teleport(new Location(WorldController.getWorld("worlds/login", true), 0.5, 100, 0.5));
         player.sendTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "PLEASE LOGIN", "Type /login <password>", 5, 80, 5);
         Bukkit.getScheduler().runTaskLater(Main.plugin, new Runnable()
         {
