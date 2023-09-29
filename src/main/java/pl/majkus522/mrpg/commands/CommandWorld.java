@@ -1,8 +1,10 @@
 package pl.majkus522.mrpg.commands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import pl.majkus522.mrpg.Main;
 import pl.majkus522.mrpg.common.classes.CustomCommand;
 import pl.majkus522.mrpg.controllers.WorldController;
 
@@ -34,7 +36,30 @@ public class CommandWorld extends CustomCommand
     @Override
     public void onTerminalExecute(ConsoleCommandSender console, String[] args)
     {
-        console.sendMessage("Command can only be used by player");
+        if (args.length < 1)
+        {
+            console.sendMessage("Enter world name");
+            return;
+        }
+        Bukkit.getScheduler().runTask(Main.plugin, new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                console.sendMessage("Generating world");
+                try
+                {
+                    boolean isVoid = args.length >= 2 && args[1].equals("void");
+                    WorldController.getWorld("worlds/" + args[0], isVoid);
+                }
+                catch (Exception e)
+                {
+                    console.sendMessage("Incorrect world name");
+                    throw new RuntimeException(e);
+                }
+                console.sendMessage("World generation complete");
+            }
+        });
     }
 
     @Override
