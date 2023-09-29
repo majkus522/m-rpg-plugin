@@ -37,3 +37,8 @@ commands:
   taunt:
     description: Taunt enemies
     usage: /<command>
+
+  item:
+    description: Give custom item to player
+    usage: /<command> <item> <amount>
+    permission: op
