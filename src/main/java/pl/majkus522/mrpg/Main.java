@@ -64,6 +64,13 @@ public final class Main extends JavaPlugin
 
     void registerCommand(CustomCommand executor)
     {
-        this.getCommand(executor.getCommand()).setExecutor(executor);
+        try
+        {
+            this.getCommand(executor.getCommand()).setExecutor(executor);
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 }
