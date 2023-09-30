@@ -8,6 +8,7 @@ import pl.majkus522.mrpg.common.classes.Character;
 import pl.majkus522.mrpg.common.classes.CustomCommand;
 import pl.majkus522.mrpg.common.classes.HttpBuilder;
 import pl.majkus522.mrpg.common.enums.HttpMethod;
+import pl.majkus522.mrpg.controllers.ManaController;
 import pl.majkus522.mrpg.controllers.PlayersController;
 import pl.majkus522.mrpg.controllers.ScoreboardController;
 import pl.majkus522.mrpg.controllers.WorldController;
@@ -45,6 +46,7 @@ public class CommandLogin extends CustomCommand
         Character character = new Character(player, request.getResultString());
         PlayersController.playerJoin(character);
         ScoreboardController.createScoreboard(character);
+        ManaController.displayMana(player);
     }
 
     @Override

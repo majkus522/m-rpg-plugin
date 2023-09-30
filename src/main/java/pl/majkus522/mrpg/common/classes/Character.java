@@ -1,7 +1,10 @@
 package pl.majkus522.mrpg.common.classes;
 
 import com.google.gson.JsonParser;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import pl.majkus522.mrpg.Config;
 import pl.majkus522.mrpg.Main;
@@ -11,6 +14,7 @@ import pl.majkus522.mrpg.common.classes.api.RequestSkill;
 import pl.majkus522.mrpg.common.enums.DamageType;
 import pl.majkus522.mrpg.common.enums.HttpMethod;
 import pl.majkus522.mrpg.common.interfaces.IRequestResult;
+import pl.majkus522.mrpg.controllers.ManaController;
 import pl.majkus522.mrpg.controllers.ScoreboardController;
 
 import java.sql.PreparedStatement;
@@ -221,6 +225,25 @@ public class Character extends PlayerStatus
         for (Map.Entry<String, Integer> element : stats.entrySet())
             element.setValue(element.getValue() + 1);
         player.sendMessage("Your level has increased");
+    }
+
+    int manaDisplayTask;
+
+    public void displayMana()
+    {
+        manaDisplayTask = Bukkit.getScheduler().runTaskTimer(Main.plugin, new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatColor.AQUA + "Mana: " + ManaController.getChunkMana(player.getLocation())));
+            }
+        }, 0, 5).getTaskId();
+    }
+
+    public void hideMana()
+    {
+        Bukkit.getScheduler().cancelTask(manaDisplayTask);
     }
 
     public static class CharacterSkill extends RequestSkill
