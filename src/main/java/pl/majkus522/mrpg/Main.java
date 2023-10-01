@@ -35,6 +35,7 @@ public final class Main extends JavaPlugin
         registerEvent(new OnPlayerKillsEntity());
         registerEvent(new OnPlayerCommand());
         registerEvent(new OnChunkLoad());
+        registerEvent(new OnSkillToggled());
 
         registerCommand(new CommandLogin());
         registerCommand(new CommandSkills());

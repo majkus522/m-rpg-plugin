@@ -244,6 +244,7 @@ public class Character extends PlayerStatus
     public void hideMana()
     {
         Bukkit.getScheduler().cancelTask(manaDisplayTask);
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR,new TextComponent(""));
     }
 
     public static class CharacterSkill extends RequestSkill

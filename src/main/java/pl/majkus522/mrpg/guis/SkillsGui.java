@@ -1,6 +1,7 @@
 package pl.majkus522.mrpg.guis;
 
 import com.google.gson.Gson;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -13,6 +14,7 @@ import pl.majkus522.mrpg.common.classes.CustomInventory;
 import pl.majkus522.mrpg.common.classes.HttpBuilder;
 import pl.majkus522.mrpg.common.classes.api.RequestSkill;
 import pl.majkus522.mrpg.common.classes.data.SkillData;
+import pl.majkus522.mrpg.common.classes.events.SkillToggleEvent;
 import pl.majkus522.mrpg.common.enums.HttpMethod;
 import pl.majkus522.mrpg.common.enums.SkillRarity;
 import pl.majkus522.mrpg.common.interfaces.IRequestResult;
@@ -119,6 +121,7 @@ public class SkillsGui extends CustomInventory
                 lore.set(0, enabled ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled"));
                 meta.setLore(lore);
                 item.setItemMeta(meta);
+                Bukkit.getPluginManager().callEvent(new SkillToggleEvent(player, part[1], enabled));
                 break;
         }
     }
