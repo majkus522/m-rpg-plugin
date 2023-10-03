@@ -29,6 +29,7 @@ public class Character extends PlayerStatus
     public String session;
     boolean changes = false;
     public ArrayList<CharacterSkill> skills;
+    int mana;
 
     public Character(Player player, String session)
     {
@@ -41,14 +42,14 @@ public class Character extends PlayerStatus
             throw new RuntimeException(new Exception(request.getError().message));
         }
         RequestPlayer data = (RequestPlayer)request.getResult(RequestPlayer.class);
+        initStats(new JsonParser().parse(request.content).getAsJsonObject());
+        setMaxHealth();
+        setSpeed();
         this.id = data.id;
         this.level = data.level;
         this.exp = data.exp;
         this.money = data.money;
-
-        initStats(new JsonParser().parse(request.content).getAsJsonObject());
-        setMaxHealth();
-        setSpeed();
+        this.mana = getStat("intl") * 3 + 10;
 
         skills = new ArrayList<CharacterSkill>();
         request = new HttpBuilder(HttpMethod.GET, "endpoints/skills/" + player.getName()).setHeader("Session-Key", session).setHeader("Session-Type", "game").setHeader("Items", "0-999");
@@ -184,6 +185,7 @@ public class Character extends PlayerStatus
         while(exp >= ExtensionMethods.levelExp(level))
             levelUp();
         changes = true;
+        ScoreboardController.updateLevel(this);
     }
 
     @Override
@@ -225,6 +227,7 @@ public class Character extends PlayerStatus
         for (Map.Entry<String, Integer> element : stats.entrySet())
             element.setValue(element.getValue() + 1);
         player.sendMessage("Your level has increased");
+        ScoreboardController.update(this);
     }
 
     int manaDisplayTask;
@@ -245,6 +248,27 @@ public class Character extends PlayerStatus
     {
         Bukkit.getScheduler().cancelTask(manaDisplayTask);
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR,new TextComponent(""));
+    }
+
+    public int getMana()
+    {
+        return mana;
+    }
+
+    public int getMaxMana()
+    {
+        return getStat("intl") * 3 + 10;
+    }
+
+    public boolean hasMana(int amount)
+    {
+        return mana > amount;
+    }
+
+    public void useMana(int amount)
+    {
+        mana -= amount;
+        ScoreboardController.updateMana(this);
     }
 
     public static class CharacterSkill extends RequestSkill

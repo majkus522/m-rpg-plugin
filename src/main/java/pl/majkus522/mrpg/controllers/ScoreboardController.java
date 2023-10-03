@@ -25,6 +25,7 @@ public class ScoreboardController
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         ArrayList<String> elements = new ArrayList<String>();
+        elements.add("Mana: " + character.getMana() + "/" + character.getMaxMana());
         elements.add("Money: " + character.getMoney() + "$");
         elements.add("Exp: " + character.getExp() + " / " + ExtensionMethods.levelExp(character.getLevel()));
         elements.add("Level: " + character.getLevel());
@@ -114,9 +115,32 @@ public class ScoreboardController
         }
     }
 
+    public static void updateMana(Player player)
+    {
+        updateMana(PlayersController.getCharacter(player));
+    }
+
+    public static void updateMana(Character character)
+    {
+        Scoreboard scoreboard = character.player.getScoreboard();
+        Objective objective = scoreboard.getObjective(DisplaySlot.SIDEBAR);
+        Set<String> entries = scoreboard.getEntries();
+        for (String line : entries)
+        {
+            if (line.contains("Mana"))
+            {
+                scoreboard.resetScores(line);
+                Score score = objective.getScore(createScore("Mana: " + character.getMana() + "/" + character.getMaxMana()));
+                score.setScore(1);
+                return;
+            }
+        }
+    }
+
     public static void update(Character character)
     {
         updateMoney(character);
         updateLevel(character);
+        updateMana(character);
     }
 }

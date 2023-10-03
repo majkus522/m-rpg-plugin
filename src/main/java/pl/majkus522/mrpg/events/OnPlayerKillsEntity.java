@@ -7,7 +7,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import pl.majkus522.mrpg.common.classes.entity.CustomEntity;
 import pl.majkus522.mrpg.controllers.PlayersController;
-import pl.majkus522.mrpg.controllers.ScoreboardController;
 
 public class OnPlayerKillsEntity implements Listener
 {
@@ -23,6 +22,5 @@ public class OnPlayerKillsEntity implements Listener
         Player player = event.getEntity().getKiller();
         CustomEntity entity = (CustomEntity)((CraftEntity)event.getEntity()).getHandle();
         PlayersController.getCharacter(player).addExp(entity.getExp(player));
-        ScoreboardController.updateLevel(player);
     }
 }
