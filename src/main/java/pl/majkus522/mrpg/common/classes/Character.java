@@ -1,22 +1,29 @@
 package pl.majkus522.mrpg.common.classes;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import pl.majkus522.mrpg.Config;
 import pl.majkus522.mrpg.Main;
 import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.api.RequestPlayer;
 import pl.majkus522.mrpg.common.classes.api.RequestSkill;
+import pl.majkus522.mrpg.common.classes.data.SkillData;
 import pl.majkus522.mrpg.common.enums.DamageType;
 import pl.majkus522.mrpg.common.enums.HttpMethod;
 import pl.majkus522.mrpg.common.interfaces.IRequestResult;
 import pl.majkus522.mrpg.controllers.ManaController;
+import pl.majkus522.mrpg.controllers.NBTController;
 import pl.majkus522.mrpg.controllers.ScoreboardController;
 
+import javax.annotation.Nullable;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +37,7 @@ public class Character extends PlayerStatus
     boolean changes = false;
     public ArrayList<CharacterSkill> skills;
     int mana;
+    String[] assignedSkills;
 
     public Character(Player player, String session)
     {
@@ -56,6 +64,9 @@ public class Character extends PlayerStatus
         if(request.isOk())
             for (IRequestResult element : request.getResultAll(RequestSkill.class))
                 skills.add(new CharacterSkill((RequestSkill) element));
+
+        assignedSkills = new String[3];
+        reassignSkills();
 
         Bukkit.getScheduler().runTaskTimerAsynchronously(Main.plugin, new Runnable()
         {
@@ -271,6 +282,38 @@ public class Character extends PlayerStatus
         ScoreboardController.updateMana(this);
     }
 
+    public void assignSkill(String skill, int slot)
+    {
+        assignedSkills[slot] = skill;
+        reassignSkills();
+    }
+
+    @Nullable
+    public String getAssagnedSkill(int slot)
+    {
+        return assignedSkills[slot];
+    }
+
+    public boolean isSkillAssigned(String skill)
+    {
+        for (String element : assignedSkills)
+        {
+            if (element == null)
+                continue;
+            if (element.equals(skill))
+                return true;
+        }
+        return false;
+    }
+
+    void reassignSkills()
+    {
+        for (int index = 0; index < assignedSkills.length; index++)
+        {
+            player.getInventory().setItem(6 + index, hotbarSkill(index));
+        }
+    }
+
     public static class CharacterSkill extends RequestSkill
     {
         public Status status = Status.ok;
@@ -313,5 +356,14 @@ public class Character extends PlayerStatus
         {
             ok, add, remove
         }
+    }
+
+    ItemStack hotbarSkill(int slot)
+    {
+        ItemStack item = new ItemStack(assignedSkills[slot] == null ? Material.GRAY_DYE : Material.LIME_DYE);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(ChatColor.RESET + (assignedSkills[slot] == null ? "Empty" : new Gson().fromJson(ExtensionMethods.readJsonFile("data/skills/" + assignedSkills[slot] + ".json"), SkillData.class).label));
+        item.setItemMeta(meta);
+        return NBTController.putNBTString(item, "assign", "skill-" + slot);
     }
 }

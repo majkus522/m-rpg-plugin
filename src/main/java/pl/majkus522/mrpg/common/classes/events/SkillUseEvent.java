@@ -1,18 +1,17 @@
 package pl.majkus522.mrpg.common.classes.events;
 
 import org.bukkit.entity.Player;
+import pl.majkus522.mrpg.controllers.PlayersController;
 
-public class SkillToggleEvent extends CustomEvent
+public class SkillUseEvent extends CustomEvent
 {
     final Player player;
     final String skill;
-    final boolean toggle;
 
-    public SkillToggleEvent(Player player, String skill, boolean toggle)
+    public SkillUseEvent(Player player, int slot)
     {
         this.player = player;
-        this.skill = skill;
-        this.toggle = toggle;
+        this.skill = PlayersController.getCharacter(player).getAssagnedSkill(slot);
     }
 
     public Player getPlayer()
@@ -23,10 +22,5 @@ public class SkillToggleEvent extends CustomEvent
     public String getSkill()
     {
         return skill;
-    }
-
-    public boolean getToggle()
-    {
-        return toggle;
     }
 }

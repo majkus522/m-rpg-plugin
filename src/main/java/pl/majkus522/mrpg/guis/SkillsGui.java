@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.ChatPaginator;
 import pl.majkus522.mrpg.common.ExtensionMethods;
+import pl.majkus522.mrpg.common.classes.Character;
 import pl.majkus522.mrpg.common.classes.CustomInventory;
 import pl.majkus522.mrpg.common.classes.HttpBuilder;
 import pl.majkus522.mrpg.common.classes.api.RequestSkill;
@@ -19,6 +20,7 @@ import pl.majkus522.mrpg.common.enums.HttpMethod;
 import pl.majkus522.mrpg.common.enums.SkillRarity;
 import pl.majkus522.mrpg.common.interfaces.IRequestResult;
 import pl.majkus522.mrpg.controllers.NBTController;
+import pl.majkus522.mrpg.controllers.PlayersController;
 import pl.majkus522.mrpg.controllers.SkillsController;
 
 import java.util.ArrayList;
@@ -29,6 +31,7 @@ public class SkillsGui extends CustomInventory
 {
     public int page;
     public SkillRarity rarity;
+    Player player;
 
     public SkillsGui(Player player)
     {
@@ -54,6 +57,7 @@ public class SkillsGui extends CustomInventory
     public SkillsGui(Player player, SkillRarity rarity, int page)
     {
         super(6, "Skills - " + rarity.toPrettyString());
+        this.player = player;
         fillEmpty();
         fillRow(5, ExtensionMethods.emptySlot(Material.GREEN_STAINED_GLASS_PANE));
         this.page = page;
@@ -84,6 +88,16 @@ public class SkillsGui extends CustomInventory
         setItem(4, 5, arrow(ArrowType.back));
     }
 
+    public SkillsGui(Player player, String skill)
+    {
+        super(1, "Skills - select skill slot");
+        this.player = player;
+        fillEmpty();
+        inventory.setItem(0, button(Material.RED_CONCRETE, ChatColor.RED + "Cancel", "assign-cancel"));
+        for (int index = 0; index < 3; index++)
+            inventory.setItem(index + 3, assign(index, skill));
+    }
+
     @Override
     public void interact(InventoryClickEvent event)
     {
@@ -97,7 +111,12 @@ public class SkillsGui extends CustomInventory
         switch (part[0])
         {
             case "button":
-                player.openInventory(new SkillsGui(player, SkillRarity.fromString(part[1])).getInventory());
+                if (part[1].equals("assign") && part[2].equals("cancel"))
+                {
+                    player.openInventory(new SkillsGui(player).getInventory());
+                }
+                else
+                    player.openInventory(new SkillsGui(player, SkillRarity.fromString(part[1])).getInventory());
                 break;
 
             case "arrow":
@@ -123,6 +142,15 @@ public class SkillsGui extends CustomInventory
                 item.setItemMeta(meta);
                 Bukkit.getPluginManager().callEvent(new SkillToggleEvent(player, part[1], enabled));
                 break;
+
+            case "assign":
+                player.openInventory(new SkillsGui(player, part[1]).getInventory());
+                break;
+
+            case "slot":
+                PlayersController.getCharacter(player).assignSkill(part[2], Integer.parseInt(part[1]));
+                player.openInventory(new SkillsGui(player).getInventory());
+                break;
         }
     }
 
@@ -140,6 +168,15 @@ public class SkillsGui extends CustomInventory
             lore.add((apiSkill.getToggle() ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled")));
             item = NBTController.putNBTString(item, "gui-action", "toggle-" + apiSkill.skill);
         }
+        else if (skill.usable)
+        {
+            Character character = PlayersController.getCharacter(player);
+            if (!character.isSkillAssigned(apiSkill.skill))
+            {
+                lore.add(ChatColor.GREEN + "Click to select skill");
+                item = NBTController.putNBTString(item, "gui-action", "assign-" + apiSkill.skill);
+            }
+        }
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(ChatColor.RESET + skill.label);
         lore.add("");
@@ -148,5 +185,29 @@ public class SkillsGui extends CustomInventory
         meta.setLore(lore);
         item.setItemMeta(meta);
         return item;
+    }
+
+    ItemStack assign(int slot, String skill)
+    {
+        Character character = PlayersController.getCharacter(player);
+        String old = character.getAssagnedSkill(slot);
+        ItemStack item;
+        if (old == null)
+        {
+            item = new ItemStack(Material.GRAY_DYE);
+            ItemMeta meta = item.getItemMeta();
+            meta.setDisplayName(ChatColor.RESET + "Empty slot");
+            meta.setLore(Arrays.asList(ChatColor.RESET + "" + ChatColor.GREEN + "Click to assign"));
+            item.setItemMeta(meta);
+        }
+        else
+        {
+            item = new ItemStack(Material.LIME_DYE);
+            ItemMeta meta = item.getItemMeta();
+            meta.setDisplayName(ChatColor.RESET + new Gson().fromJson(ExtensionMethods.readJsonFile("data/skills/" + old + ".json"), SkillData.class).label);
+            meta.setLore(Arrays.asList(ChatColor.RESET + "" + ChatColor.GREEN + "Click to assign"));
+            item.setItemMeta(meta);
+        }
+        return NBTController.putNBTString(item, "gui-action", "slot-" + slot + "-" + skill);
     }
 }
