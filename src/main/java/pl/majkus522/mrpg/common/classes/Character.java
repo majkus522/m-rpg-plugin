@@ -1,6 +1,5 @@
 package pl.majkus522.mrpg.common.classes;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -15,13 +14,13 @@ import pl.majkus522.mrpg.Main;
 import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.api.RequestPlayer;
 import pl.majkus522.mrpg.common.classes.api.RequestSkill;
-import pl.majkus522.mrpg.common.classes.data.SkillData;
 import pl.majkus522.mrpg.common.enums.DamageType;
 import pl.majkus522.mrpg.common.enums.HttpMethod;
 import pl.majkus522.mrpg.common.interfaces.IRequestResult;
 import pl.majkus522.mrpg.controllers.ManaController;
 import pl.majkus522.mrpg.controllers.NBTController;
 import pl.majkus522.mrpg.controllers.ScoreboardController;
+import pl.majkus522.mrpg.controllers.SkillsController;
 
 import javax.annotation.Nullable;
 import java.sql.PreparedStatement;
@@ -362,7 +361,7 @@ public class Character extends PlayerStatus
     {
         ItemStack item = new ItemStack(assignedSkills[slot] == null ? Material.GRAY_DYE : Material.LIME_DYE);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(ChatColor.RESET + (assignedSkills[slot] == null ? "Empty" : new Gson().fromJson(ExtensionMethods.readJsonFile("data/skills/" + assignedSkills[slot] + ".json"), SkillData.class).label));
+        meta.setDisplayName(ChatColor.RESET + (assignedSkills[slot] == null ? "Empty" : SkillsController.getSkillData(assignedSkills[slot]).label));
         item.setItemMeta(meta);
         return NBTController.putNBTString(item, "assign", "skill-" + slot);
     }

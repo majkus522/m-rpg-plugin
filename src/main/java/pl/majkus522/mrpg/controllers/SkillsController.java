@@ -18,7 +18,7 @@ public class SkillsController
     {
         Character character = PlayersController.getCharacter(player);
         character.skills.add(new Character.CharacterSkill(skill, Character.CharacterSkill.Status.add));
-        SkillData data = new Gson().fromJson(ExtensionMethods.readJsonFile("data/skills/" + skill + ".json"), SkillData.class);
+        SkillData data = getSkillData(skill);
         switch (data.rarity)
         {
             case common:
@@ -65,7 +65,7 @@ public class SkillsController
     {
         Character character = PlayersController.getCharacter(player);
         Gson gson = new Gson();
-        return character.skills.stream().filter(p -> gson.fromJson(ExtensionMethods.readJsonFile("data/skills/" + p.skill + ".json"), SkillData.class).rarity == rarity && p.status != Character.CharacterSkill.Status.remove).collect(Collectors.toList()).size() > 0;
+        return character.skills.stream().filter(p -> SkillsController.getSkillData(p.skill).rarity == rarity && p.status != Character.CharacterSkill.Status.remove).collect(Collectors.toList()).size() > 0;
     }
 
     public static boolean playerHasSkillEnabled(Player player, String skill)
@@ -76,7 +76,7 @@ public class SkillsController
 
     public static void evolveSkill(Player player, String skill)
     {
-        SkillData data = new Gson().fromJson(ExtensionMethods.readJsonFile("data/skills/" + skill + ".json"), SkillData.class);
+        SkillData data = SkillsController.getSkillData(skill);
         boolean valid = true;
         for(String element : data.evolution)
         {
@@ -98,5 +98,10 @@ public class SkillsController
                 character.skills.stream().filter(p -> p.skill.equals(element)).collect(Collectors.toList()).get(0).status = Character.CharacterSkill.Status.remove;
         }
         playerObtainSkill(player, skill);
+    }
+
+    public static SkillData getSkillData(String skill)
+    {
+        return new Gson().fromJson(ExtensionMethods.readJsonFile("data/skills/" + skill + ".json"), SkillData.class);
     }
 }

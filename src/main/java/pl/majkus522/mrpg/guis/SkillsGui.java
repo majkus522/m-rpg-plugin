@@ -73,7 +73,7 @@ public class SkillsGui extends CustomInventory
         for (IRequestResult skill : request.getResultAll(RequestSkill.class))
         {
             RequestSkill apiSkill = (RequestSkill) skill;
-            SkillData data = gson.fromJson(ExtensionMethods.readJsonFile("data/skills/" + apiSkill.skill + ".json"), SkillData.class);
+            SkillData data = SkillsController.getSkillData(apiSkill.skill);
             inventory.setItem(index, skill(data, apiSkill));
             index++;
         }
@@ -204,7 +204,7 @@ public class SkillsGui extends CustomInventory
         {
             item = new ItemStack(Material.LIME_DYE);
             ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName(ChatColor.RESET + new Gson().fromJson(ExtensionMethods.readJsonFile("data/skills/" + old + ".json"), SkillData.class).label);
+            meta.setDisplayName(ChatColor.RESET + SkillsController.getSkillData(old).label);
             meta.setLore(Arrays.asList(ChatColor.RESET + "" + ChatColor.GREEN + "Click to assign"));
             item.setItemMeta(meta);
         }
