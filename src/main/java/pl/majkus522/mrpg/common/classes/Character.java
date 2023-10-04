@@ -82,7 +82,7 @@ public class Character extends PlayerStatus
             stmt.setString(4, player.getName());
             stmt.executeUpdate();
 
-            List<CharacterSkill> toAdd = skills.stream().filter(p -> p.status == Status.add).collect(Collectors.toList());
+            List<CharacterSkill> toAdd = skills.stream().filter(p -> p.status == CharacterSkill.Status.add).collect(Collectors.toList());
             if (toAdd.size() > 0)
             {
                 String data = "";
@@ -93,7 +93,7 @@ public class Character extends PlayerStatus
                         data += ",";
                     data += "(" + id + ",\"" + element.skill + "\")";
                     first = false;
-                    element.status = Status.ok;
+                    element.status = CharacterSkill.Status.ok;
                 }
                 query = "insert into `skills`(`player`, `skill`) values ";
                 if (toAdd.size() > 1)
@@ -105,7 +105,7 @@ public class Character extends PlayerStatus
                 stmt.executeUpdate();
             }
 
-            List<CharacterSkill> toRemove = skills.stream().filter(p -> p.status == Status.remove).collect(Collectors.toList());
+            List<CharacterSkill> toRemove = skills.stream().filter(p -> p.status == CharacterSkill.Status.remove).collect(Collectors.toList());
             if (toRemove.size() > 0)
             {
                 query = "delete from `skills` where `player` = ? and (";
@@ -308,10 +308,10 @@ public class Character extends PlayerStatus
                     ", toggle=" + toggle +
                     '}';
         }
-    }
 
-    public enum Status
-    {
-        ok, add, remove
+        public enum Status
+        {
+            ok, add, remove
+        }
     }
 }

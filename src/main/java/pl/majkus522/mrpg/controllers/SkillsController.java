@@ -17,7 +17,7 @@ public class SkillsController
     public static void playerObtainSkill(Player player, String skill)
     {
         Character character = PlayersController.getCharacter(player);
-        character.skills.add(new Character.CharacterSkill(skill, Character.Status.add));
+        character.skills.add(new Character.CharacterSkill(skill, Character.CharacterSkill.Status.add));
         SkillData data = new Gson().fromJson(ExtensionMethods.readJsonFile("data/skills/" + skill + ".json"), SkillData.class);
         switch (data.rarity)
         {
@@ -58,20 +58,20 @@ public class SkillsController
     public static boolean playerHasSkill(Player player, String skill)
     {
         Character character = PlayersController.getCharacter(player);
-        return character.skills.stream().filter(p -> p.skill.equals(skill) && p.status != Character.Status.remove).collect(Collectors.toList()).size() > 0;
+        return character.skills.stream().filter(p -> p.skill.equals(skill) && p.status != Character.CharacterSkill.Status.remove).collect(Collectors.toList()).size() > 0;
     }
 
     public static boolean playerHasSkill(Player player, SkillRarity rarity)
     {
         Character character = PlayersController.getCharacter(player);
         Gson gson = new Gson();
-        return character.skills.stream().filter(p -> gson.fromJson(ExtensionMethods.readJsonFile("data/skills/" + p.skill + ".json"), SkillData.class).rarity == rarity && p.status != Character.Status.remove).collect(Collectors.toList()).size() > 0;
+        return character.skills.stream().filter(p -> gson.fromJson(ExtensionMethods.readJsonFile("data/skills/" + p.skill + ".json"), SkillData.class).rarity == rarity && p.status != Character.CharacterSkill.Status.remove).collect(Collectors.toList()).size() > 0;
     }
 
     public static boolean playerHasSkillEnabled(Player player, String skill)
     {
         Character character = PlayersController.getCharacter(player);
-        return character.skills.stream().filter(p -> p.skill.equals(skill) && p.getToggle() && p.status != Character.Status.remove).collect(Collectors.toList()).size() > 0;
+        return character.skills.stream().filter(p -> p.skill.equals(skill) && p.getToggle() && p.status != Character.CharacterSkill.Status.remove).collect(Collectors.toList()).size() > 0;
     }
 
     public static void evolveSkill(Player player, String skill)
@@ -95,7 +95,7 @@ public class SkillsController
         {
             Character character = PlayersController.getCharacter(player);
             for(String element : data.evolution)
-                character.skills.stream().filter(p -> p.skill.equals(element)).collect(Collectors.toList()).get(0).status = Character.Status.remove;
+                character.skills.stream().filter(p -> p.skill.equals(element)).collect(Collectors.toList()).get(0).status = Character.CharacterSkill.Status.remove;
         }
         playerObtainSkill(player, skill);
     }
