@@ -19,6 +19,7 @@ public final class Main extends JavaPlugin
     {
         System.out.println("M-RPG loaded");
         plugin = this;
+        Bukkit.getScheduler().cancelTasks(this);
     }
 
     @Override
