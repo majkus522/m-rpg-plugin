@@ -101,4 +101,9 @@ public class ExtensionMethods
             return 0;
         return (int)(Math.log(level + 1) * 1500) + levelExp(level - 1);
     }
+
+    public static int randomRange(int min, int max)
+    {
+        return (int) ((Math.random() * (max - min)) + min);
+    }
 }

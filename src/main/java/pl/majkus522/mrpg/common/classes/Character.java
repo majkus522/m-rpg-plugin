@@ -74,6 +74,7 @@ public class Character extends PlayerStatus
             {
                 if (changes)
                     update();
+                ManaController.gatherMana(player, 5);
             }
         }, 0, 20 * 60);
     }
@@ -270,6 +271,11 @@ public class Character extends PlayerStatus
         return getStat("intl") * 3 + 10;
     }
 
+    public int getManaDiffrence()
+    {
+        return getMaxMana() - getMana();
+    }
+
     public boolean hasMana(int amount)
     {
         return mana > amount;
@@ -278,6 +284,12 @@ public class Character extends PlayerStatus
     public void useMana(int amount)
     {
         mana -= amount;
+        ScoreboardController.updateMana(this);
+    }
+
+    public void addMana(int amount)
+    {
+        mana += amount;
         ScoreboardController.updateMana(this);
     }
 

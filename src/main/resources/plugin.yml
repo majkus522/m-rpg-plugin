@@ -42,3 +42,7 @@ commands:
     description: Give custom item to player
     usage: /<command> <item> <amount>
     permission: op
+
+  mana:
+    description: Manipulate mana
+    usage: /<command> <option>
