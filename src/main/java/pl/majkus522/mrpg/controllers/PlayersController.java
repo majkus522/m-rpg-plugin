@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 public class PlayersController
 {
-    static HashMap<String, Character> players = new HashMap<>();
+    public static HashMap<String, Character> players = new HashMap<>();
 
     public static Character getCharacter(Player player)
     {
@@ -22,7 +22,7 @@ public class PlayersController
     public static void playerLeave(Player player)
     {
         if (isPlayerLogged(player))
-            players.remove(player.getName()).update();
+            players.remove(player.getName()).playerLeave();
     }
 
     public static boolean isPlayerLogged(Player player)

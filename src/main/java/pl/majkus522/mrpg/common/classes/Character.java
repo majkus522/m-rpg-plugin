@@ -37,6 +37,8 @@ public class Character extends PlayerStatus
     public ArrayList<CharacterSkill> skills;
     int mana;
     String[] assignedSkills;
+    int taskManaDisplay;
+    int taskUpdate;
 
     public Character(Player player, String session)
     {
@@ -67,7 +69,7 @@ public class Character extends PlayerStatus
         assignedSkills = new String[3];
         reassignSkills();
 
-        Bukkit.getScheduler().runTaskTimerAsynchronously(Main.plugin, new Runnable()
+        taskUpdate = Bukkit.getScheduler().runTaskTimerAsynchronously(Main.plugin, new Runnable()
         {
             @Override
             public void run()
@@ -76,10 +78,16 @@ public class Character extends PlayerStatus
                     update();
                 ManaController.gatherMana(player, 5);
             }
-        }, 0, 20 * 60);
+        }, 0, 20 * 60).getTaskId();
     }
 
-    public void update()
+    public void playerLeave()
+    {
+        Bukkit.getScheduler().cancelTask(taskUpdate);
+        update();
+    }
+
+    void update()
     {
         try
         {
@@ -241,11 +249,9 @@ public class Character extends PlayerStatus
         ScoreboardController.update(this);
     }
 
-    int manaDisplayTask;
-
     public void displayMana()
     {
-        manaDisplayTask = Bukkit.getScheduler().runTaskTimer(Main.plugin, new Runnable()
+        taskManaDisplay = Bukkit.getScheduler().runTaskTimer(Main.plugin, new Runnable()
         {
             @Override
             public void run()
@@ -257,7 +263,7 @@ public class Character extends PlayerStatus
 
     public void hideMana()
     {
-        Bukkit.getScheduler().cancelTask(manaDisplayTask);
+        Bukkit.getScheduler().cancelTask(taskManaDisplay);
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR,new TextComponent(""));
     }
 
