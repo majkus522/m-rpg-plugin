@@ -8,6 +8,7 @@ import pl.majkus522.mrpg.common.classes.Character;
 import pl.majkus522.mrpg.common.classes.CustomCommand;
 import pl.majkus522.mrpg.common.classes.MySQL;
 import pl.majkus522.mrpg.controllers.PlayersController;
+import pl.majkus522.mrpg.controllers.WorldController;
 import pl.majkus522.mrpg.events.*;
 
 import java.util.Map;
@@ -56,6 +57,7 @@ public final class Main extends JavaPlugin
 
         MySQL.connect();
         Config.init();
+        WorldController.init();
     }
 
     @Override

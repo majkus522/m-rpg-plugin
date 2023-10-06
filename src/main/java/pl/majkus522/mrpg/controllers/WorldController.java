@@ -4,12 +4,28 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.generator.ChunkGenerator;
+import pl.majkus522.mrpg.Main;
 
 import javax.annotation.Nonnull;
 import java.util.Random;
 
 public class WorldController
 {
+    static String[] worlds = new String[] {"main", "login"};
+
+    public static void init()
+    {
+        Bukkit.getScheduler().runTask(Main.plugin, new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                for(String element : worlds)
+                    getWorld(element, false);
+            }
+        });
+    }
+
     public static World getWorld(String name, boolean isVoid)
     {
         if (Bukkit.getWorld(name) == null)
