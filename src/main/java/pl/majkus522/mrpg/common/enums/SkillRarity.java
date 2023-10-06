@@ -20,12 +20,6 @@ public enum SkillRarity
     @SerializedName("unknown")
     unknown;
 
-    @Override
-    public String toString()
-    {
-        return super.toString();
-    }
-
     public String toPrettyString()
     {
         String string = toString();

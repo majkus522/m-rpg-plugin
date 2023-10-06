@@ -15,15 +15,6 @@ public class RequestSkill implements IRequestResult
     }
 
     @Override
-    public String toString()
-    {
-        return "RequestSkill{" +
-                "skill='" + skill + '\'' +
-                ", toggle=" + toggle +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o)
     {
         if (this == o)

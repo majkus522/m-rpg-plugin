@@ -359,16 +359,6 @@ public class Character extends PlayerStatus
             this.status = status;
         }
 
-        @Override
-        public String toString()
-        {
-            return "CharacterSkill{" +
-                    "status=" + status +
-                    ", skill='" + skill + '\'' +
-                    ", toggle=" + toggle +
-                    '}';
-        }
-
         public enum Status
         {
             ok, add, remove

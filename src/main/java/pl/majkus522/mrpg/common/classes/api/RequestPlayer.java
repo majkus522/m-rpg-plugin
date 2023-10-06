@@ -9,20 +9,4 @@ public class RequestPlayer extends PlayerStatus implements IRequestResult
     public String email;
     public int energy;
     public String world;
-
-    @Override
-    public String toString()
-    {
-        return "RequestPlayer{" +
-                "username='" + username + '\'' +
-                ", email='" + email + '\'' +
-                ", energy=" + energy +
-                ", world='" + world + '\'' +
-                ", id=" + id +
-                ", level=" + level +
-                ", exp=" + exp +
-                ", stats=" + stats +
-                ", money=" + money +
-                '}';
-    }
 }
