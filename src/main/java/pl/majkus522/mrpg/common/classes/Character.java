@@ -237,6 +237,7 @@ public class Character extends PlayerStatus
     {
         money += input;
         changes = true;
+        ScoreboardController.updateMoney(this);
     }
 
     public void levelUp()
