@@ -29,7 +29,6 @@ public class ScoreboardController
         elements.add("Money: " + character.getMoney() + "$");
         elements.add("Exp: " + character.getExp() + " / " + ExtensionMethods.levelExp(character.getLevel()));
         elements.add("Level: " + character.getLevel());
-        Collections.max(elements);
 
         ArrayList<Integer> lengths = new ArrayList<Integer>();
         int index = 1;
