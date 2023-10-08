@@ -14,6 +14,7 @@ import pl.majkus522.mrpg.Main;
 import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.api.RequestPlayer;
 import pl.majkus522.mrpg.common.classes.api.RequestSkill;
+import pl.majkus522.mrpg.common.classes.effects.StatusEffect;
 import pl.majkus522.mrpg.common.enums.DamageType;
 import pl.majkus522.mrpg.common.enums.HttpMethod;
 import pl.majkus522.mrpg.common.interfaces.IRequestResult;
@@ -39,6 +40,7 @@ public class Character extends PlayerStatus
     String[] assignedSkills;
     int taskManaDisplay;
     int taskUpdate;
+    public ArrayList<StatusEffect> statusEffects;
 
     public Character(Player player, String session)
     {
@@ -68,6 +70,7 @@ public class Character extends PlayerStatus
 
         assignedSkills = new String[3];
         reassignSkills();
+        statusEffects = new ArrayList<>();
 
         taskUpdate = Bukkit.getScheduler().runTaskTimerAsynchronously(Main.plugin, new Runnable()
         {
@@ -154,7 +157,7 @@ public class Character extends PlayerStatus
         player.setHealth(getStat("vtl"));
     }
 
-    void setSpeed()
+    public void setSpeed()
     {
         player.setWalkSpeed(Config.baseWalkSpeed * (1 + (getStat("agl") / 200)));
     }
@@ -169,6 +172,11 @@ public class Character extends PlayerStatus
     public double getDamage()
     {
         return getStat("str");
+    }
+
+    public void damage(double input, DamageType type)
+    {
+        player.damage(handleDamage(input, type));
     }
 
     public double handleDamage(double input)

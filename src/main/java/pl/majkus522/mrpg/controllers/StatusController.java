@@ -13,7 +13,9 @@ import pl.majkus522.mrpg.common.classes.HttpBuilder;
 import pl.majkus522.mrpg.common.classes.PlayerStatus;
 import pl.majkus522.mrpg.common.classes.api.RequestFakeStatus;
 import pl.majkus522.mrpg.common.classes.data.StatData;
+import pl.majkus522.mrpg.common.classes.effects.StatusEffect;
 import pl.majkus522.mrpg.common.enums.HttpMethod;
+import pl.majkus522.mrpg.common.enums.StatusEffectType;
 
 public class StatusController
 {
@@ -22,10 +24,17 @@ public class StatusController
         if (!PlayersController.isPlayerLogged(player))
             return;
         Character character = PlayersController.getCharacter(player);
-        player.sendMessage(ChatColor.BLUE + "=-=-=-=-= " + ChatColor.GREEN + "Status: " + player.getName() + ChatColor.BLUE + " =-=-=-=-=");
+        player.sendMessage(ChatColor.BLUE + "=-=-= " + ChatColor.GREEN + "Status: " + player.getName() + ChatColor.BLUE + " =-=-=");
         for (StatData element : Config.characterStats)
             createLine(element.display + ": " + character.getStat(element.label), element.description, player);
-        player.sendMessage(ChatColor.BLUE + "=-=-=-=-= " + ChatColor.GREEN + "Status: " + player.getName() + ChatColor.BLUE + " =-=-=-=-=");
+        if (character.statusEffects.size() > 0)
+        {
+            player.sendMessage(ChatColor.BLUE + "=-=-=-=-=-=-=-=-=");
+            player.sendMessage("Status effects:");
+            for (StatusEffect effect : character.statusEffects)
+                player.sendMessage("    " + effect.getType().toColor() + effect.getTitle() + ChatColor.WHITE + " " + effect.getTime() + "s");
+        }
+        player.sendMessage(ChatColor.BLUE + "=-=-= " + ChatColor.GREEN + "Status: " + player.getName() + ChatColor.BLUE + " =-=-=");
     }
 
     public static void sendOtherPlayerStatus(Player sender, Player whose)
