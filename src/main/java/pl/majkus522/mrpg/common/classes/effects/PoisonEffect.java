@@ -1,23 +1,20 @@
 package pl.majkus522.mrpg.common.classes.effects;
 
-import pl.majkus522.mrpg.common.classes.Character;
 import pl.majkus522.mrpg.common.enums.DamageType;
 import pl.majkus522.mrpg.common.enums.StatusEffectType;
+import pl.majkus522.mrpg.common.interfaces.IStatusEffectTarget;
 
 public class PoisonEffect extends StatusEffect
 {
-    Character character;
-
-    public PoisonEffect(Character character, int duration)
+    public PoisonEffect(IStatusEffectTarget target, int duration)
     {
-        super(character, duration);
-        this.character = character;
+        super(target, duration);
     }
 
     @Override
     public void tick()
     {
-        character.damage(4, DamageType.poison);
+        target.damage(4, DamageType.poison);
     }
 
     @Override
@@ -29,7 +26,7 @@ public class PoisonEffect extends StatusEffect
     @Override
     public StatusEffectType getType()
     {
-        return StatusEffectType.secret;
+        return StatusEffectType.negative;
     }
 
     @Override

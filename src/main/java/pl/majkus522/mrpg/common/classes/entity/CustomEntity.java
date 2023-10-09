@@ -6,15 +6,21 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_20_R1.CraftWorld;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import pl.majkus522.mrpg.Config;
 import pl.majkus522.mrpg.common.classes.data.EntityData;
+import pl.majkus522.mrpg.common.classes.effects.StatusEffect;
 import pl.majkus522.mrpg.common.enums.DamageType;
+import pl.majkus522.mrpg.common.interfaces.IStatusEffectTarget;
 import pl.majkus522.mrpg.controllers.SkillsController;
 
-public class CustomEntity extends PathfinderMob
+import java.util.ArrayList;
+
+public class CustomEntity extends PathfinderMob implements IStatusEffectTarget
 {
     EntityData data;
+    ArrayList<StatusEffect> effects;
 
     public CustomEntity(Location location, EntityData data)
     {
@@ -26,7 +32,26 @@ public class CustomEntity extends PathfinderMob
         setMaxHealth();
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(data.str);
         this.getAttribute(Attributes.ARMOR).setBaseValue(0);
+        setSpeed();
+        effects = new ArrayList<>();
+    }
+
+    @Override
+    public void setSpeed()
+    {
         this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(Config.baseWalkSpeed * (1 + (((double)data.agl) / 200)));
+    }
+
+    @Override
+    public void setSpeed(float value)
+    {
+        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(value);
+    }
+
+    @Override
+    public void damage(double value, DamageType type)
+    {
+        ((LivingEntity)this.getBukkitEntity()).damage(handleDamage(value, type));
     }
 
     public void setMaxHealth()
@@ -76,4 +101,16 @@ public class CustomEntity extends PathfinderMob
 
     @Override
     protected void registerGoals() { }
+
+    @Override
+    public void addEffect(StatusEffect effect)
+    {
+        effects.add(effect);
+    }
+
+    @Override
+    public void removeEffect(StatusEffect effect)
+    {
+        effects.remove(effect);
+    }
 }

@@ -18,6 +18,7 @@ import pl.majkus522.mrpg.common.classes.effects.StatusEffect;
 import pl.majkus522.mrpg.common.enums.DamageType;
 import pl.majkus522.mrpg.common.enums.HttpMethod;
 import pl.majkus522.mrpg.common.interfaces.IRequestResult;
+import pl.majkus522.mrpg.common.interfaces.IStatusEffectTarget;
 import pl.majkus522.mrpg.controllers.ManaController;
 import pl.majkus522.mrpg.controllers.NBTController;
 import pl.majkus522.mrpg.controllers.ScoreboardController;
@@ -30,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class Character extends PlayerStatus
+public class Character extends PlayerStatus implements IStatusEffectTarget
 {
     public Player player;
     public String session;
@@ -160,6 +161,12 @@ public class Character extends PlayerStatus
     public void setSpeed()
     {
         player.setWalkSpeed(Config.baseWalkSpeed * (1 + (getStat("agl") / 200)));
+    }
+
+    @Override
+    public void setSpeed(float value)
+    {
+        player.setWalkSpeed(value);
     }
 
     public void deathPenalty()
@@ -338,6 +345,18 @@ public class Character extends PlayerStatus
         {
             player.getInventory().setItem(6 + index, hotbarSkill(index));
         }
+    }
+
+    @Override
+    public void addEffect(StatusEffect effect)
+    {
+        statusEffects.add(effect);
+    }
+
+    @Override
+    public void removeEffect(StatusEffect effect)
+    {
+        statusEffects.remove(effect);
     }
 
     public static class CharacterSkill extends RequestSkill

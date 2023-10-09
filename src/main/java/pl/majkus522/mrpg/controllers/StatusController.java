@@ -15,7 +15,6 @@ import pl.majkus522.mrpg.common.classes.api.RequestFakeStatus;
 import pl.majkus522.mrpg.common.classes.data.StatData;
 import pl.majkus522.mrpg.common.classes.effects.StatusEffect;
 import pl.majkus522.mrpg.common.enums.HttpMethod;
-import pl.majkus522.mrpg.common.enums.StatusEffectType;
 
 public class StatusController
 {
