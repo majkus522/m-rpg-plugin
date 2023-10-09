@@ -11,7 +11,7 @@ import java.util.Random;
 
 public class WorldController
 {
-    static String[] worlds = new String[] {"main", "login"};
+    static String[] worlds = new String[] {"login", "main"};
 
     public static void init()
     {
