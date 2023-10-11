@@ -28,7 +28,4 @@ public class PoisonEffect extends StatusEffect
     {
         return StatusEffectType.negative;
     }
-
-    @Override
-    public void end() { }
 }

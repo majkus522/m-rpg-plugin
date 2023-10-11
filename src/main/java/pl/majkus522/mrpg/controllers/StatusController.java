@@ -31,7 +31,12 @@ public class StatusController
             player.sendMessage(ChatColor.BLUE + "=-=-=-=-=-=-=-=-=");
             player.sendMessage("Status effects:");
             for (StatusEffect effect : character.statusEffects)
-                player.sendMessage("    " + effect.getType().toColor() + effect.getTitle() + ChatColor.WHITE + " " + effect.getTime() + "s");
+            {
+                String line = "    " + effect.getType().toColor() + effect.getTitle();
+                if (!effect.isInfinite())
+                    line += ChatColor.WHITE + " " + effect.getTime() + "s";
+                player.sendMessage(line);
+            }
         }
         player.sendMessage(ChatColor.BLUE + "=-=-= " + ChatColor.GREEN + "Status: " + player.getName() + ChatColor.BLUE + " =-=-=");
     }

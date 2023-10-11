@@ -14,6 +14,7 @@ import pl.majkus522.mrpg.Main;
 import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.api.RequestPlayer;
 import pl.majkus522.mrpg.common.classes.api.RequestSkill;
+import pl.majkus522.mrpg.common.classes.effects.ManaOverloadEffect;
 import pl.majkus522.mrpg.common.classes.effects.StatusEffect;
 import pl.majkus522.mrpg.common.enums.DamageType;
 import pl.majkus522.mrpg.common.enums.HttpMethod;
@@ -80,7 +81,8 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
             {
                 if (changes)
                     update();
-                ManaController.gatherMana(player, 5);
+                if(getMaxMana() - mana > 0)
+                    ManaController.gatherMana(player, 5);
             }
         }, 0, 20 * 60).getTaskId();
     }
@@ -293,11 +295,6 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
         return getStat("intl") * 3 + 10;
     }
 
-    public int getManaDiffrence()
-    {
-        return getMaxMana() - getMana();
-    }
-
     public boolean hasMana(int amount)
     {
         return mana > amount;
@@ -307,12 +304,20 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
     {
         mana -= amount;
         ScoreboardController.updateMana(this);
+        if (mana < getMaxMana())
+        {
+            List<StatusEffect> list = statusEffects.stream().filter(p -> p instanceof ManaOverloadEffect).collect(Collectors.toList());
+            if (list.size() > 0)
+                ((ManaOverloadEffect)list.get(0)).end();
+        }
     }
 
     public void addMana(int amount)
     {
         mana += amount;
         ScoreboardController.updateMana(this);
+        if (mana > getMaxMana() * 1.25f)
+            new ManaOverloadEffect(this);
     }
 
     public void assignSkill(String skill, int slot)

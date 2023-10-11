@@ -91,7 +91,6 @@ public class ManaController
     public static void gatherMana(Player player, int amount)
     {
         Character character = PlayersController.getCharacter(player);
-        amount = Math.min(character.getManaDiffrence(), amount);
         amount = ManaController.removeMana(player.getLocation(), amount);
         character.addMana(amount);
     }

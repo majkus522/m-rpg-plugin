@@ -26,6 +26,7 @@ public class StunEffect extends StatusEffect
     @Override
     public void end()
     {
+        super.end();
         target.setSpeed();
     }
 }
