@@ -23,6 +23,11 @@ public class FilesController
         }
     }
 
+    public static void writeJsonFile(String file, Object data)
+    {
+        writeJsonFile(file, new Gson().toJson(data));
+    }
+
     public static void writeJsonFile(String file, String content)
     {
         try

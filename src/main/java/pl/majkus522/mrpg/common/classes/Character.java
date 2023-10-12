@@ -20,10 +20,7 @@ import pl.majkus522.mrpg.common.enums.DamageType;
 import pl.majkus522.mrpg.common.enums.HttpMethod;
 import pl.majkus522.mrpg.common.interfaces.IRequestResult;
 import pl.majkus522.mrpg.common.interfaces.IStatusEffectTarget;
-import pl.majkus522.mrpg.controllers.ManaController;
-import pl.majkus522.mrpg.controllers.NBTController;
-import pl.majkus522.mrpg.controllers.ScoreboardController;
-import pl.majkus522.mrpg.controllers.SkillsController;
+import pl.majkus522.mrpg.controllers.*;
 
 import javax.annotation.Nullable;
 import java.sql.PreparedStatement;
@@ -62,7 +59,7 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
         this.level = data.level;
         this.exp = data.exp;
         this.money = data.money;
-        this.mana = getStat("intl") * 3 + 10;
+        this.mana = getMaxMana();
 
         skills = new ArrayList<CharacterSkill>();
         request = new HttpBuilder(HttpMethod.GET, "endpoints/skills/" + player.getName()).setHeader("Session-Key", session).setHeader("Session-Type", "game").setHeader("Items", "0-999");
@@ -70,9 +67,17 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
             for (IRequestResult element : request.getResultAll(RequestSkill.class))
                 skills.add(new CharacterSkill((RequestSkill) element));
 
-        assignedSkills = new String[3];
-        reassignSkills();
         statusEffects = new ArrayList<>();
+        assignedSkills = new String[3];
+        if (FilesController.fileExists("settings/" + player.getName() + ".json"))
+        {
+            System.out.println("read");
+            PlayerSettings settings = FilesController.readJsonFile("settings/" + player.getName(), PlayerSettings.class);
+            assignedSkills = settings.skills;
+            this.mana = settings.mana;
+            player.setHealth(settings.health);
+        }
+        reassignSkills();
 
         taskUpdate = Bukkit.getScheduler().runTaskTimerAsynchronously(Main.plugin, new Runnable()
         {
@@ -84,13 +89,14 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
                 if(getMaxMana() - mana > 0)
                     ManaController.gatherMana(player, 5);
             }
-        }, 0, 20 * 60).getTaskId();
+        }, 20 * 60, 20 * 60).getTaskId();
     }
 
     public void playerLeave()
     {
         Bukkit.getScheduler().cancelTask(taskUpdate);
         update();
+        FilesController.writeJsonFile("settings/" + player.getName(), new PlayerSettings((int) player.getHealth(), mana, assignedSkills));
     }
 
     void update()
