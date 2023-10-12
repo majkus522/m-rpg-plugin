@@ -4,6 +4,7 @@ import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class CustomCommand implements CommandExecutor, TabCompleter
 {
@@ -24,7 +25,7 @@ public abstract class CustomCommand implements CommandExecutor, TabCompleter
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String string, String[] args)
     {
-        return autocomplete((Player)sender, args);
+        return autocomplete((Player)sender, args).stream().filter(p -> p.startsWith(args[args.length - 1])).collect(Collectors.toList());
     }
 
     public abstract List<String> autocomplete(Player player, String[] args);
