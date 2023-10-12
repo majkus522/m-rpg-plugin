@@ -1,6 +1,5 @@
 package pl.majkus522.mrpg.commands;
 
-import com.google.gson.Gson;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
@@ -9,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.CustomCommand;
 import pl.majkus522.mrpg.common.classes.data.ItemData;
+import pl.majkus522.mrpg.controllers.FilesController;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -22,12 +22,12 @@ public class CommandItem extends CustomCommand
         ItemStack item = null;
         if(args.length >= 1)
         {
-            if (!new File("data/items/" + args[0] + ".json").exists())
+            if (!FilesController.fileExists("data/items/" + args[0] + ".json"))
             {
                 player.sendMessage("Item doesn't exists");
                 return;
             }
-            item = new Gson().fromJson(ExtensionMethods.readJsonFile("data/items/" + args[0] + ".json"), ItemData.class).toItem();
+            item = FilesController.readJsonFile("data/items/" + args[0], ItemData.class).toItem();
         }
         if (args.length >= 2)
         {
@@ -54,12 +54,12 @@ public class CommandItem extends CustomCommand
         Player player = null;
         if(args.length >= 1)
         {
-            if (!new File("data/items/" + args[0] + ".json").exists())
+            if (!FilesController.fileExists("data/items/" + args[0] + ".json"))
             {
                 console.sendMessage("Item doesn't exists");
                 return;
             }
-            item = new Gson().fromJson(ExtensionMethods.readJsonFile("data/items/" + args[0] + ".json"), ItemData.class).toItem();
+            item = FilesController.readJsonFile("data/items/" + args[0], ItemData.class).toItem();
         }
         if (args.length >= 2)
         {

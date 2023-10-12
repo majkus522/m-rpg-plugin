@@ -11,9 +11,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.io.File;
 import java.io.FileFilter;
 import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class ExtensionMethods
@@ -30,19 +27,6 @@ public class ExtensionMethods
         meta.setDisplayName(" ");
         item.setItemMeta(meta);
         return item;
-    }
-
-    public static String readJsonFile(String url)
-    {
-        try
-        {
-            return new String(Files.readAllBytes(Paths.get(url)), StandardCharsets.UTF_8);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return "";
     }
 
     public static File[] scanDir(String url)

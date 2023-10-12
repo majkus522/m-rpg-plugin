@@ -102,6 +102,6 @@ public class SkillsController
 
     public static SkillData getSkillData(String skill)
     {
-        return new Gson().fromJson(ExtensionMethods.readJsonFile("data/skills/" + skill + ".json"), SkillData.class);
+        return FilesController.readJsonFile("data/skills/" + skill, SkillData.class);
     }
 }

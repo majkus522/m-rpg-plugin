@@ -1,6 +1,5 @@
 package pl.majkus522.mrpg.commands;
 
-import com.google.gson.Gson;
 import net.minecraft.server.level.ServerLevel;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.craftbukkit.v1_20_R1.CraftWorld;
@@ -10,6 +9,7 @@ import pl.majkus522.mrpg.common.classes.CustomCommand;
 import pl.majkus522.mrpg.common.classes.data.EntityData;
 import pl.majkus522.mrpg.common.classes.entity.Enemy;
 import pl.majkus522.mrpg.common.classes.entity.Summon;
+import pl.majkus522.mrpg.controllers.FilesController;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -27,15 +27,20 @@ public class CommandEntity extends CustomCommand
         }
         if (args.length == 1)
         {
+            if (!FilesController.fileExists("data/entities/" + args[0]))
+            {
+                player.sendMessage("Incorect entity type");
+                return;
+            }
             player.sendMessage("Enter entity");
             return;
         }
-        if(!new File("data/entities/" + args[0] + "/" + args[1] + ".json").exists())
+        if(!FilesController.fileExists("data/entities/" + args[0] + "/" + args[1] + ".json"))
         {
             player.sendMessage("Entity doesn't exits");
             return;
         }
-        EntityData data = new Gson().fromJson(ExtensionMethods.readJsonFile("data/entities/" + args[0] + "/" + args[1] + ".json"), EntityData.class);
+        EntityData data = FilesController.readJsonFile("data/entities/" + args[0] + "/" + args[1], EntityData.class);
         ServerLevel world = ((CraftWorld)player.getWorld()).getHandle();
         switch (args[0].toLowerCase())
         {
@@ -69,9 +74,12 @@ public class CommandEntity extends CustomCommand
         }
         else if (args.length == 2)
         {
-            File[] files = ExtensionMethods.scanDir("data/entities/" + args[0] + "/");
-            for (File file : files)
-                list.add(file.getName().replace(".json", ""));
+            if (FilesController.fileExists("data/entities/" + args[0]))
+            {
+                File[] files = ExtensionMethods.scanDir("data/entities/" + args[0] + "/");
+                for (File file : files)
+                    list.add(file.getName().replace(".json", ""));
+            }
         }
         return list;
     }

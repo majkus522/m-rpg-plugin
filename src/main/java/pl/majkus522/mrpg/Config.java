@@ -1,8 +1,7 @@
 package pl.majkus522.mrpg;
 
-import com.google.gson.Gson;
-import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.data.StatData;
+import pl.majkus522.mrpg.controllers.FilesController;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,6 +18,6 @@ public class Config
 
     public static void init()
     {
-        characterStats = new ArrayList<>(Arrays.asList(new Gson().fromJson(ExtensionMethods.readJsonFile("data/playerStats.json"), StatData[].class)));
+        characterStats = new ArrayList<>(Arrays.asList(FilesController.readJsonFile("data/playerStats", StatData[].class)));
     }
 }
