@@ -12,6 +12,7 @@ public class SkillUseEvent extends CustomEvent
     {
         this.player = player;
         this.skill = PlayersController.getCharacter(player).getAssagnedSkill(slot);
+        PlayersController.getCharacter(player).cooldownSkill(skill);
     }
 
     public Player getPlayer()

@@ -15,6 +15,7 @@ public class Config
     public final static double tauntRange = 20;
     public final static float baseWalkSpeed = 0.2f;
     public static ArrayList<StatData> characterStats;
+    public static int characterSkills = 5;
 
     public static void init()
     {

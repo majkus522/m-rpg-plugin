@@ -14,6 +14,7 @@ import pl.majkus522.mrpg.Main;
 import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.api.RequestPlayer;
 import pl.majkus522.mrpg.common.classes.api.RequestSkill;
+import pl.majkus522.mrpg.common.classes.data.SkillData;
 import pl.majkus522.mrpg.common.classes.effects.ManaOverloadEffect;
 import pl.majkus522.mrpg.common.classes.effects.StatusEffect;
 import pl.majkus522.mrpg.common.enums.DamageType;
@@ -36,7 +37,7 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
     boolean changes = false;
     public ArrayList<CharacterSkill> skills;
     int mana;
-    String[] assignedSkills;
+    ArrayList<String> assignedSkills;
     int taskManaDisplay;
     int taskUpdate;
     public ArrayList<StatusEffect> statusEffects;
@@ -68,14 +69,18 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
                 skills.add(new CharacterSkill((RequestSkill) element));
 
         statusEffects = new ArrayList<>();
-        assignedSkills = new String[3];
+        assignedSkills = new ArrayList<>();
         if (FilesController.fileExists("settings/" + player.getName() + ".json"))
         {
-            System.out.println("read");
             PlayerSettings settings = FilesController.readJsonFile("settings/" + player.getName(), PlayerSettings.class);
-            assignedSkills = settings.skills;
+            for (String element : settings.skills)
+                assignedSkills.add(element);
             this.mana = settings.mana;
             player.setHealth(settings.health);
+            while(assignedSkills.size() > Config.characterSkills)
+                assignedSkills.remove(assignedSkills.size() - 1);
+            while (assignedSkills.size() < Config.characterSkills)
+                assignedSkills.add(null);
         }
         reassignSkills();
 
@@ -96,7 +101,7 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
     {
         Bukkit.getScheduler().cancelTask(taskUpdate);
         update();
-        FilesController.writeJsonFile("settings/" + player.getName(), new PlayerSettings((int) player.getHealth(), mana, assignedSkills));
+        FilesController.writeJsonFile("settings/" + player.getName(), new PlayerSettings((int) player.getHealth(), mana, assignedSkills.toArray(new String[0])));
     }
 
     void update()
@@ -328,14 +333,14 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
 
     public void assignSkill(String skill, int slot)
     {
-        assignedSkills[slot] = skill;
+        assignedSkills.set(slot, skill);
         reassignSkills();
     }
 
     @Nullable
     public String getAssagnedSkill(int slot)
     {
-        return assignedSkills[slot];
+        return assignedSkills.get(slot);
     }
 
     public boolean isSkillAssigned(String skill)
@@ -352,10 +357,25 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
 
     void reassignSkills()
     {
-        for (int index = 0; index < assignedSkills.length; index++)
+        for (int index = 0; index < assignedSkills.size(); index++)
         {
-            player.getInventory().setItem(6 + index, hotbarSkill(index));
+            player.getInventory().setItem(9 - Config.characterSkills + index, hotbarSkill(index, false));
         }
+    }
+
+    public void cooldownSkill(String skill)
+    {
+        SkillData data = SkillsController.getSkillData(skill);
+        int index = assignedSkills.indexOf(skill);
+        player.getInventory().setItem(9 - Config.characterSkills + index, hotbarSkill(index, true));
+        Bukkit.getScheduler().runTaskLater(Main.plugin, new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                player.getInventory().setItem(9 - Config.characterSkills + index, hotbarSkill(index, false));
+            }
+        }, 20 * data.cooldown);
     }
 
     @Override
@@ -404,11 +424,16 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
         }
     }
 
-    ItemStack hotbarSkill(int slot)
+    ItemStack hotbarSkill(int slot, boolean cooldown)
     {
-        ItemStack item = new ItemStack(assignedSkills[slot] == null ? Material.GRAY_DYE : Material.LIME_DYE);
+        Material material = Material.GRAY_DYE;
+        if (cooldown)
+            material = Material.RED_DYE;
+        else if (assignedSkills.get(slot) != null)
+            material = Material.LIME_DYE;
+        ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(ChatColor.RESET + (assignedSkills[slot] == null ? "Empty" : SkillsController.getSkillData(assignedSkills[slot]).label));
+        meta.setDisplayName(ChatColor.RESET + (assignedSkills.get(slot) == null ? "Empty" : SkillsController.getSkillData(assignedSkills.get(slot)).label));
         item.setItemMeta(meta);
         return NBTController.putNBTString(item, "assign", "skill-" + slot);
     }

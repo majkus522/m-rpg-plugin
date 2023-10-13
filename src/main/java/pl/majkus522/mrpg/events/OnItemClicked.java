@@ -1,6 +1,7 @@
 package pl.majkus522.mrpg.events;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -28,6 +29,11 @@ public class OnItemClicked implements Listener
                         case "skill":
                             if (item.getType() == Material.GRAY_DYE)
                                 return;
+                            else if (item.getType() == Material.RED_DYE)
+                            {
+                                event.getPlayer().sendMessage(ChatColor.RED + "Skill is on cooldown");
+                                return;
+                            }
                             Bukkit.getPluginManager().callEvent(new SkillUseEvent(event.getPlayer(), Integer.parseInt(part[1])));
                             break;
                     }

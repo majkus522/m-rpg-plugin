@@ -9,6 +9,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.ChatPaginator;
+import pl.majkus522.mrpg.Config;
 import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.Character;
 import pl.majkus522.mrpg.common.classes.CustomInventory;
@@ -94,8 +95,8 @@ public class SkillsGui extends CustomInventory
         this.player = player;
         fillEmpty();
         inventory.setItem(0, button(Material.RED_CONCRETE, ChatColor.RED + "Cancel", "assign-cancel"));
-        for (int index = 0; index < 3; index++)
-            inventory.setItem(index + 3, assign(index, skill));
+        for (int index = 0; index < Config.characterSkills; index++)
+            inventory.setItem(index + 2, assign(index, skill));
     }
 
     @Override
