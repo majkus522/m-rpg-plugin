@@ -26,6 +26,7 @@ import pl.majkus522.mrpg.controllers.*;
 import javax.annotation.Nullable;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,7 +38,7 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
     boolean changes = false;
     public ArrayList<CharacterSkill> skills;
     int mana;
-    ArrayList<String> assignedSkills;
+    List<String> assignedSkills;
     int taskManaDisplay;
     int taskUpdate;
     public ArrayList<StatusEffect> statusEffects;
@@ -73,8 +74,7 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
         if (FilesController.fileExists("settings/" + player.getName() + ".json"))
         {
             PlayerSettings settings = FilesController.readJsonFile("settings/" + player.getName(), PlayerSettings.class);
-            for (String element : settings.skills)
-                assignedSkills.add(element);
+            assignedSkills = Arrays.asList(settings.skills);
             this.mana = settings.mana;
             player.setHealth(settings.health);
             while(assignedSkills.size() > Config.characterSkills)
@@ -381,6 +381,11 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
     @Override
     public void addEffect(StatusEffect effect)
     {
+        if (hasEffect(effect))
+        {
+            statusEffects.stream().filter(p -> p.getClass() == effect.getClass()).collect(Collectors.toList()).get(0).overrideTime(effect.getTime());
+            return;
+        }
         statusEffects.add(effect);
     }
 
@@ -388,6 +393,12 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
     public void removeEffect(StatusEffect effect)
     {
         statusEffects.remove(effect);
+    }
+
+    @Override
+    public boolean hasEffect(StatusEffect effect)
+    {
+        return statusEffects.stream().filter(p -> p.getClass() == effect.getClass()).collect(Collectors.toList()).size() > 0;
     }
 
     public static class CharacterSkill extends RequestSkill

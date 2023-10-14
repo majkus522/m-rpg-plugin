@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.potion.PotionEffect;
 import pl.majkus522.mrpg.Main;
 import pl.majkus522.mrpg.common.classes.HttpBuilder;
 import pl.majkus522.mrpg.common.enums.HttpMethod;
@@ -27,6 +28,8 @@ public class OnPlayerJoin implements Listener
             player.kickPlayer("Please first register on our webstie \n\n" + ChatColor.BLUE + "M-RPG.COM");
             return;
         }
+        for (PotionEffect effect : player.getActivePotionEffects())
+            player.removePotionEffect(effect.getType());
         player.setGameMode(GameMode.ADVENTURE);
         player.teleport(new Location(WorldController.getWorld("worlds/login", true), 0.5, 100, 0.5));
         player.sendTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "PLEASE LOGIN", "Type /login <password>", 5, 80, 5);

@@ -16,11 +16,12 @@ import pl.majkus522.mrpg.common.interfaces.IStatusEffectTarget;
 import pl.majkus522.mrpg.controllers.SkillsController;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class CustomEntity extends PathfinderMob implements IStatusEffectTarget
 {
     EntityData data;
-    ArrayList<StatusEffect> effects;
+    ArrayList<StatusEffect> statusEffects;
 
     public CustomEntity(Location location, EntityData data)
     {
@@ -33,7 +34,7 @@ public class CustomEntity extends PathfinderMob implements IStatusEffectTarget
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(data.str);
         this.getAttribute(Attributes.ARMOR).setBaseValue(0);
         setSpeed();
-        effects = new ArrayList<>();
+        statusEffects = new ArrayList<>();
     }
 
     @Override
@@ -105,12 +106,23 @@ public class CustomEntity extends PathfinderMob implements IStatusEffectTarget
     @Override
     public void addEffect(StatusEffect effect)
     {
-        effects.add(effect);
+        if (hasEffect(effect))
+        {
+            statusEffects.stream().filter(p -> p.getClass() == effect.getClass()).collect(Collectors.toList()).get(0).overrideTime(effect.getTime());
+            return;
+        }
+        statusEffects.add(effect);
     }
 
     @Override
     public void removeEffect(StatusEffect effect)
     {
-        effects.remove(effect);
+        statusEffects.remove(effect);
+    }
+
+    @Override
+    public boolean hasEffect(StatusEffect effect)
+    {
+        return statusEffects.stream().filter(p -> p.getClass() == effect.getClass()).collect(Collectors.toList()).size() > 0;
     }
 }
