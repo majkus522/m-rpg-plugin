@@ -17,9 +17,14 @@ public abstract class StatusEffect
     {
         this.duration = time;
         this.target = target;
+        boolean has = target.hasEffect(this);
+        if (has && isInfinite())
+            return;
         target.addEffect(this);
         if (getType() != StatusEffectType.secret && getType() != StatusEffectType.hidden && target instanceof Character)
             ((Character)target).player.sendMessage("Status effect " + getType().toColor() + getTitle() + ChatColor.WHITE + " was inflicted on you");
+        if (has)
+            return;
         task = Bukkit.getScheduler().runTaskTimer(Main.plugin, new Runnable()
         {
             @Override
@@ -51,6 +56,11 @@ public abstract class StatusEffect
     public final int getTime()
     {
         return duration;
+    }
+
+    public final void overrideTime(int time)
+    {
+        this.duration = time;
     }
 
     public final boolean isInfinite()
