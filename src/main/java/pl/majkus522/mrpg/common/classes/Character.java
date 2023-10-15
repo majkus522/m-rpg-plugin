@@ -313,7 +313,7 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
 
     public void useMana(int amount)
     {
-        mana -= amount;
+        mana = Math.max(mana - amount, 0);
         ScoreboardController.updateMana(this);
         if (mana < getMaxMana())
         {

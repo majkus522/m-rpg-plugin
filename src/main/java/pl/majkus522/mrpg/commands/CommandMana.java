@@ -1,5 +1,6 @@
 package pl.majkus522.mrpg.commands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import pl.majkus522.mrpg.common.ExtensionMethods;
@@ -44,7 +45,59 @@ public class CommandMana extends CustomCommand
     @Override
     public void onTerminalExecute(ConsoleCommandSender console, String[] args)
     {
-        console.sendMessage("Command can only be used by player");
+        if (args.length == 0)
+        {
+            console.sendMessage("Enter player");
+            return;
+        }
+        if (args.length == 1)
+        {
+            console.sendMessage("Enter option");
+            return;
+        }
+        if (args.length == 2)
+        {
+            console.sendMessage("Enter amount");
+            return;
+        }
+        Player player = Bukkit.getPlayer(args[0]);
+        if (player == null)
+        {
+            console.sendMessage("Player doesn't exists");
+            return;
+        }
+        Character character = PlayersController.getCharacter(player);
+        if (character == null)
+        {
+            console.sendMessage("Player isn't logged in");
+            return;
+        }
+        int amount;
+        try
+        {
+            amount = Integer.parseInt(args[2]);
+        }
+        catch (Exception e)
+        {
+            console.sendMessage("Incorect number");
+            return;
+        }
+        switch (args[1].toLowerCase())
+        {
+            case "add":
+                character.addMana(amount);
+                console.sendMessage("Added mana to player");
+                break;
+
+            case "remove":
+                character.useMana(amount);
+                console.sendMessage("Removed mana from player");
+                break;
+
+            default:
+                console.sendMessage("Incorect option");
+                break;
+        }
     }
 
     @Override
