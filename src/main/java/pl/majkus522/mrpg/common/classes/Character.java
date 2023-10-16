@@ -38,7 +38,7 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
     boolean changes = false;
     public ArrayList<CharacterSkill> skills;
     int mana;
-    List<String> assignedSkills;
+    ArrayList<String> assignedSkills;
     int taskManaDisplay;
     int taskUpdate;
     public ArrayList<StatusEffect> statusEffects;
@@ -74,14 +74,14 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
         if (FilesController.fileExists("settings/" + player.getName() + ".json"))
         {
             PlayerSettings settings = FilesController.readJsonFile("settings/" + player.getName(), PlayerSettings.class);
-            assignedSkills = Arrays.asList(settings.skills);
+            assignedSkills = new ArrayList<>(Arrays.asList(settings.skills));
             this.mana = settings.mana;
             player.setHealth(settings.health);
-            while(assignedSkills.size() > Config.characterSkills)
-                assignedSkills.remove(assignedSkills.size() - 1);
-            while (assignedSkills.size() < Config.characterSkills)
-                assignedSkills.add(null);
         }
+        while(assignedSkills.size() > Config.characterSkills)
+            assignedSkills.remove(assignedSkills.size() - 1);
+        while (assignedSkills.size() < Config.characterSkills)
+            assignedSkills.add(null);
         reassignSkills();
 
         taskUpdate = Bukkit.getScheduler().runTaskTimerAsynchronously(Main.plugin, new Runnable()
