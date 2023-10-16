@@ -3,6 +3,7 @@ package pl.majkus522.mrpg.common.classes;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
+import javax.annotation.CheckForNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,5 +31,6 @@ public abstract class CustomCommand implements CommandExecutor, TabCompleter
 
     public abstract List<String> autocomplete(Player player, String[] args);
 
+    @CheckForNull
     public abstract String getCommand();
 }

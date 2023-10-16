@@ -29,35 +29,43 @@ public final class Main extends JavaPlugin
     public void onEnable()
     {
         System.out.println("M-RPG enabled");
-        registerEvent(new OnPlayerJoin());
-        registerEvent(new OnPlayerLeave());
-        registerEvent(new OnItemTake());
-        registerEvent(new OnPlayerDeath());
-        registerEvent(new OnPlayerRightClickEntity());
-        registerEvent(new OnPlayerChat());
-        registerEvent(new OnEntityDamage());
-        registerEvent(new OnPlayerKillsEntity());
-        registerEvent(new OnPlayerCommand());
-        registerEvent(new OnChunkLoad());
-        registerEvent(new OnSkillToggled());
-        registerEvent(new OnPlayerDropItem());
-        registerEvent(new OnItemClicked());
-        registerEvent(new OnSkillUsed());
+        try
+        {
+            registerEvent(new OnPlayerJoin());
+            registerEvent(new OnPlayerLeave());
+            registerEvent(new OnItemTake());
+            registerEvent(new OnPlayerDeath());
+            registerEvent(new OnPlayerRightClickEntity());
+            registerEvent(new OnPlayerChat());
+            registerEvent(new OnEntityDamage());
+            registerEvent(new OnPlayerKillsEntity());
+            registerEvent(new OnPlayerCommand());
+            registerEvent(new OnChunkLoad());
+            registerEvent(new OnSkillToggled());
+            registerEvent(new OnPlayerDropItem());
+            registerEvent(new OnItemClicked());
+            registerEvent(new OnSkillUsed());
 
-        registerCommand(new CommandLogin());
-        registerCommand(new CommandSkills());
-        registerCommand(new CommandStatus());
-        registerCommand(new CommandShout());
-        registerCommand(new CommandEntity());
-        registerCommand(new CommandPay());
-        registerCommand(new CommandWorld());
-        registerCommand(new CommandTaunt());
-        registerCommand(new CommandItem());
-        registerCommand(new CommandMana());
+            registerCommand(new CommandLogin());
+            registerCommand(new CommandSkills());
+            registerCommand(new CommandStatus());
+            registerCommand(new CommandShout());
+            registerCommand(new CommandEntity());
+            registerCommand(new CommandPay());
+            registerCommand(new CommandWorld());
+            registerCommand(new CommandTaunt());
+            registerCommand(new CommandItem());
+            registerCommand(new CommandMana());
 
-        MySQL.connect();
-        Config.init();
-        WorldController.init();
+            MySQL.connect();
+            Config.init();
+            WorldController.init();
+        }
+        catch (Exception e)
+        {
+            Bukkit.getServer().shutdown();
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -76,13 +84,6 @@ public final class Main extends JavaPlugin
 
     void registerCommand(CustomCommand executor)
     {
-        try
-        {
-            this.getCommand(executor.getCommand()).setExecutor(executor);
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
+        this.getCommand(executor.getCommand()).setExecutor(executor);
     }
 }
