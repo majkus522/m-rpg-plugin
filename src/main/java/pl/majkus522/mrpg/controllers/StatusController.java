@@ -81,6 +81,14 @@ public class StatusController
         createLine("Money: " + (round == 0 ? status.getMoney() : round(status.getMoney(), round)), "", sender);
         for (StatData element : Config.characterStats)
             createLine(element.display + ": " + status.getStat(element.label), element.description, sender);
+        Character character = PlayersController.getCharacter(whose);
+        if (character.statusEffects.size() > 0)
+        {
+            sender.sendMessage(ChatColor.BLUE + "=-=-=-=-=-=-=-=-=");
+            sender.sendMessage("Status effects:");
+            for (StatusEffect effect : character.statusEffects)
+                sender.sendMessage("    " + effect.getType().toColor() + effect.getTitle());
+        }
         sender.sendMessage(ChatColor.BLUE + "=-=-=-=-= " + ChatColor.GREEN + "Status: " + whose.getName() + ChatColor.BLUE + " =-=-=-=-=");
     }
 
