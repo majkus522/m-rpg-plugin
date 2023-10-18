@@ -1,7 +1,6 @@
 package pl.majkus522.mrpg.commands;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import pl.majkus522.mrpg.Main;
@@ -24,7 +23,7 @@ public class CommandWorld extends CustomCommand
         try
         {
             boolean isVoid = args.length >= 2 && args[1].equals("void");
-            player.teleport(new Location(WorldController.getWorld("worlds/" + args[0], isVoid), 0, 400, 0));
+            player.teleport(WorldController.getWorld("worlds/" + args[0], isVoid).getSpawnLocation());
         }
         catch (Exception e)
         {
