@@ -29,7 +29,7 @@ public class CommandEntity extends CustomCommand
         {
             if (!FilesController.fileExists("data/entities/" + args[0]))
             {
-                player.sendMessage("Incorect entity type");
+                player.sendMessage("Incorrect entity type");
                 return;
             }
             player.sendMessage("Enter entity");

@@ -2,6 +2,7 @@ package pl.majkus522.mrpg.commands;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -19,72 +20,52 @@ public class CommandItem extends CustomCommand
     @Override
     public void onPlayerExecute(Player player, String[] args)
     {
-        ItemStack item = null;
-        if(args.length >= 1)
+        if(args.length == 0)
         {
-            if (!FilesController.fileExists("data/items/" + args[0] + ".json"))
-            {
-                player.sendMessage("Item doesn't exists");
-                return;
-            }
-            item = FilesController.readJsonFile("data/items/" + args[0], ItemData.class).toItem();
+            player.sendMessage("Enter item");
+            return;
         }
+        if (!FilesController.fileExists("data/items/" + args[0] + ".json"))
+        {
+            player.sendMessage("Item doesn't exists");
+            return;
+        }
+        ItemStack item = FilesController.readJsonFile("data/items/" + args[0], ItemData.class).toItem();
         if (args.length >= 2)
-        {
-            if (!NumberUtils.isParsable(args[1]))
-            {
-                player.sendMessage("Incorrect number");
-                return;
-            }
-            int amount = Integer.parseInt(args[1]);
-            if (amount < 1)
-            {
-                player.sendMessage("Incorrect item amount");
-                return;
-            }
-            item.setAmount(amount);
-        }
+            item.setAmount(parseNumber(args[1], player));
         player.getInventory().addItem(item);
     }
 
     @Override
     public void onTerminalExecute(ConsoleCommandSender console, String[] args)
     {
-        ItemStack item = null;
-        Player player = null;
-        if(args.length >= 1)
+        if (args.length == 0)
         {
-            if (!FilesController.fileExists("data/items/" + args[0] + ".json"))
-            {
-                console.sendMessage("Item doesn't exists");
-                return;
-            }
-            item = FilesController.readJsonFile("data/items/" + args[0], ItemData.class).toItem();
+            console.sendMessage("Enter player");
+            return;
         }
-        if (args.length >= 2)
+        else if(args.length == 1)
         {
-            player = Bukkit.getPlayer(args[1]);
-            if (player == null)
-            {
-                console.sendMessage("Player doesn't exists");
-                return;
-            }
+            console.sendMessage("Enter item");
+            return;
+        }
+        if (!FilesController.fileExists("data/items/" + args[1] + ".json"))
+        {
+            console.sendMessage("Item doesn't exists");
+            return;
+        }
+        ItemStack item = FilesController.readJsonFile("data/items/" + args[1], ItemData.class).toItem();
+        Player player = Bukkit.getPlayer(args[0]);
+        if (player == null)
+        {
+            console.sendMessage("Player doesn't exists");
+            return;
         }
         if (args.length >= 3)
-        {
-            if (!NumberUtils.isParsable(args[2]))
-            {
-                console.sendMessage("Incorrect number");
-                return;
-            }
-            int amount = Integer.parseInt(args[2]);
-            if (amount < 1)
-            {
-                player.sendMessage("Incorrect item amount");
-                return;
-            }
-            item.setAmount(amount);
-        }
+            item.setAmount(parseNumber(args[2], console));
+        if (item.getAmount() < 1)
+            return;
+        console.sendMessage("Added " + item.getAmount() + " items to " + player.getName());
         player.getInventory().addItem(item);
     }
 
@@ -105,5 +86,21 @@ public class CommandItem extends CustomCommand
     public String getCommand()
     {
         return "item";
+    }
+
+    int parseNumber(String text, CommandSender sender)
+    {
+        if (!NumberUtils.isParsable(text))
+        {
+            sender.sendMessage("Incorrect item amount");
+            return 0;
+        }
+        int amount = Integer.parseInt(text);
+        if (amount < 1)
+        {
+            sender.sendMessage("Incorrect item amount");
+            return 0;
+        }
+        return amount;
     }
 }

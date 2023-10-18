@@ -79,7 +79,7 @@ public class CommandMana extends CustomCommand
         }
         catch (Exception e)
         {
-            console.sendMessage("Incorect number");
+            console.sendMessage("Incorrect number");
             return;
         }
         switch (args[1].toLowerCase())
@@ -95,7 +95,7 @@ public class CommandMana extends CustomCommand
                 break;
 
             default:
-                console.sendMessage("Incorect option");
+                console.sendMessage("Incorrect option");
                 break;
         }
     }

@@ -40,24 +40,20 @@ public class CommandWorld extends CustomCommand
             console.sendMessage("Enter world name");
             return;
         }
-        Bukkit.getScheduler().runTask(Main.plugin, new Runnable()
+        Bukkit.getScheduler().runTask(Main.plugin, () ->
         {
-            @Override
-            public void run()
+            console.sendMessage("Generating world");
+            try
             {
-                console.sendMessage("Generating world");
-                try
-                {
-                    boolean isVoid = args.length >= 2 && args[1].equals("void");
-                    WorldController.getWorld("worlds/" + args[0], isVoid);
-                }
-                catch (Exception e)
-                {
-                    console.sendMessage("Incorrect world name");
-                    throw new RuntimeException(e);
-                }
-                console.sendMessage("World generation complete");
+                boolean isVoid = args.length >= 2 && args[1].equals("void");
+                WorldController.getWorld("worlds/" + args[0], isVoid);
             }
+            catch (Exception e)
+            {
+                console.sendMessage("Incorrect world name");
+                throw new RuntimeException(e);
+            }
+            console.sendMessage("World generation complete");
         });
     }
 
