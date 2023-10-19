@@ -8,6 +8,7 @@ import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.CustomCommand;
 import pl.majkus522.mrpg.common.classes.data.EntityData;
 import pl.majkus522.mrpg.common.classes.entity.Enemy;
+import pl.majkus522.mrpg.common.classes.entity.Npc;
 import pl.majkus522.mrpg.common.classes.entity.Summon;
 import pl.majkus522.mrpg.controllers.FilesController;
 
@@ -53,6 +54,11 @@ public class CommandEntity extends CustomCommand
                 Summon summon = new Summon(player.getLocation(), data, player);
                 world.addFreshEntity(summon);
                 break;
+
+            case "npc":
+                Npc npc = new Npc(player.getLocation(), data);
+                world.addFreshEntity(npc);
+                break;
         }
 
     }
@@ -71,6 +77,7 @@ public class CommandEntity extends CustomCommand
         {
             list.add("enemy");
             list.add("summon");
+            list.add("npc");
         }
         else if (args.length == 2)
         {

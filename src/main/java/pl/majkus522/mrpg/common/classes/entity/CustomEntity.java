@@ -31,8 +31,10 @@ public class CustomEntity extends PathfinderMob implements IStatusEffectTarget
         this.setCustomNameVisible(true);
         this.data = data;
         setMaxHealth();
-        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(data.str);
-        this.getAttribute(Attributes.ARMOR).setBaseValue(0);
+        if (this.getAttributes().hasAttribute(Attributes.ATTACK_DAMAGE))
+            this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(data.str);
+        if (this.getAttributes().hasAttribute(Attributes.ARMOR))
+            this.getAttribute(Attributes.ARMOR).setBaseValue(0);
         setSpeed();
         statusEffects = new ArrayList<>();
     }
@@ -101,9 +103,6 @@ public class CustomEntity extends PathfinderMob implements IStatusEffectTarget
     }
 
     @Override
-    protected void registerGoals() { }
-
-    @Override
     public void addEffect(StatusEffect effect)
     {
         if (hasEffect(effect))
@@ -123,6 +122,6 @@ public class CustomEntity extends PathfinderMob implements IStatusEffectTarget
     @Override
     public boolean hasEffect(StatusEffect effect)
     {
-        return statusEffects.stream().filter(p -> p.getClass() == effect.getClass()).collect(Collectors.toList()).size() > 0;
+        return statusEffects.stream().anyMatch(p -> p.getClass() == effect.getClass());
     }
 }
