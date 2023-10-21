@@ -10,7 +10,6 @@ import pl.majkus522.mrpg.common.enums.HttpMethod;
 import pl.majkus522.mrpg.controllers.ManaController;
 import pl.majkus522.mrpg.controllers.PlayersController;
 import pl.majkus522.mrpg.controllers.ScoreboardController;
-import pl.majkus522.mrpg.controllers.WorldController;
 
 import java.util.ArrayList;
 import java.util.Base64;
@@ -41,7 +40,6 @@ public class CommandLogin extends CustomCommand
         player.setGameMode(GameMode.SURVIVAL);
         if (player.isOp())
             player.setGameMode(GameMode.CREATIVE);
-        player.teleport(WorldController.getWorld("worlds/main", false).getSpawnLocation());
         Character character = new Character(player, request.getResultString());
         PlayersController.playerJoin(character);
         ScoreboardController.createScoreboard(character);

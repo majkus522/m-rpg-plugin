@@ -77,7 +77,10 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
             assignedSkills = new ArrayList<>(Arrays.asList(settings.skills));
             this.mana = settings.mana;
             player.setHealth(settings.health);
+            player.teleport(settings.position.toLocation());
         }
+        else
+            player.teleport(WorldController.getWorld("worlds/main", false).getSpawnLocation());
         while(assignedSkills.size() > Config.characterSkills)
             assignedSkills.remove(assignedSkills.size() - 1);
         while (assignedSkills.size() < Config.characterSkills)
@@ -101,7 +104,7 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
     {
         Bukkit.getScheduler().cancelTask(taskUpdate);
         update();
-        FilesController.writeJsonFile("settings/" + player.getName(), new PlayerSettings((int) player.getHealth(), mana, assignedSkills.toArray(new String[0])));
+        FilesController.writeJsonFile("settings/" + player.getName(), new PlayerSettings(player, mana, assignedSkills.toArray(new String[0])));
     }
 
     void update()
