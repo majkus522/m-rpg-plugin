@@ -18,7 +18,7 @@ import pl.majkus522.mrpg.common.classes.api.RequestSkill;
 import pl.majkus522.mrpg.common.classes.data.SkillData;
 import pl.majkus522.mrpg.common.classes.events.SkillToggleEvent;
 import pl.majkus522.mrpg.common.enums.HttpMethod;
-import pl.majkus522.mrpg.common.enums.SkillRarity;
+import pl.majkus522.mrpg.common.enums.Rarity;
 import pl.majkus522.mrpg.common.interfaces.IRequestResult;
 import pl.majkus522.mrpg.controllers.NBTController;
 import pl.majkus522.mrpg.controllers.PlayersController;
@@ -31,31 +31,31 @@ import java.util.List;
 public class SkillsGui extends CustomInventory
 {
     public int page;
-    public SkillRarity rarity;
+    public Rarity rarity;
     Player player;
 
     public SkillsGui(Player player)
     {
-        super(SkillsController.playerHasSkill(player, SkillRarity.unknown) ? 5 : 3, "Skills");
+        super(SkillsController.playerHasSkill(player, Rarity.unknown) ? 5 : 3, "Skills");
         fillEmpty();
-        if(SkillsController.playerHasSkill(player, SkillRarity.common))
-            setItem(1, 1, button(Material.WHITE_CONCRETE, SkillRarity.common));
-        if(SkillsController.playerHasSkill(player, SkillRarity.extra))
-            setItem(3, 1, button(Material.LIME_CONCRETE, SkillRarity.extra));
-        if(SkillsController.playerHasSkill(player, SkillRarity.unique))
-            setItem(5, 1, button(Material.BLUE_CONCRETE, SkillRarity.unique));
-        if(SkillsController.playerHasSkill(player, SkillRarity.ultimate))
-            setItem(7, 1, button(Material.MAGENTA_CONCRETE, SkillRarity.ultimate));
-        if(SkillsController.playerHasSkill(player, SkillRarity.unknown))
-            setItem(4, 3, button(Material.BLACK_CONCRETE, SkillRarity.unknown));
+        if(SkillsController.playerHasSkill(player, Rarity.common))
+            setItem(1, 1, button(Material.WHITE_CONCRETE, Rarity.common));
+        if(SkillsController.playerHasSkill(player, Rarity.extra))
+            setItem(3, 1, button(Material.LIME_CONCRETE, Rarity.extra));
+        if(SkillsController.playerHasSkill(player, Rarity.unique))
+            setItem(5, 1, button(Material.BLUE_CONCRETE, Rarity.unique));
+        if(SkillsController.playerHasSkill(player, Rarity.ultimate))
+            setItem(7, 1, button(Material.MAGENTA_CONCRETE, Rarity.ultimate));
+        if(SkillsController.playerHasSkill(player, Rarity.unknown))
+            setItem(4, 3, button(Material.BLACK_CONCRETE, Rarity.unknown));
     }
 
-    public SkillsGui(Player player, SkillRarity rarity)
+    public SkillsGui(Player player, Rarity rarity)
     {
         this(player, rarity, 0);
     }
 
-    public SkillsGui(Player player, SkillRarity rarity, int page)
+    public SkillsGui(Player player, Rarity rarity, int page)
     {
         super(6, "Skills - " + rarity.toPrettyString());
         this.player = player;
@@ -117,7 +117,7 @@ public class SkillsGui extends CustomInventory
                     player.openInventory(new SkillsGui(player).getInventory());
                 }
                 else
-                    player.openInventory(new SkillsGui(player, SkillRarity.fromString(part[1])).getInventory());
+                    player.openInventory(new SkillsGui(player, Rarity.fromString(part[1])).getInventory());
                 break;
 
             case "arrow":
@@ -155,7 +155,7 @@ public class SkillsGui extends CustomInventory
         }
     }
 
-    ItemStack button(Material material, SkillRarity rarity)
+    ItemStack button(Material material, Rarity rarity)
     {
         return super.button(material, rarity.toColoredString(), rarity.toString());
     }

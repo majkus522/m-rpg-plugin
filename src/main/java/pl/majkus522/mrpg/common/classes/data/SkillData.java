@@ -1,6 +1,6 @@
 package pl.majkus522.mrpg.common.classes.data;
 
-import pl.majkus522.mrpg.common.enums.SkillRarity;
+import pl.majkus522.mrpg.common.enums.Rarity;
 
 public class SkillData
 {
@@ -9,6 +9,6 @@ public class SkillData
     public boolean usable = false;
     public int cooldown = 0;
     public String description;
-    public SkillRarity rarity;
+    public Rarity rarity;
     public String[] evolution = new String[0];
 }

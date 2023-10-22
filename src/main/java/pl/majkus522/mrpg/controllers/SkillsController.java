@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.Character;
 import pl.majkus522.mrpg.common.classes.data.SkillData;
-import pl.majkus522.mrpg.common.enums.SkillRarity;
+import pl.majkus522.mrpg.common.enums.Rarity;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -61,7 +61,7 @@ public class SkillsController
         return character.skills.stream().filter(p -> p.skill.equals(skill) && p.status != Character.CharacterSkill.Status.remove).collect(Collectors.toList()).size() > 0;
     }
 
-    public static boolean playerHasSkill(Player player, SkillRarity rarity)
+    public static boolean playerHasSkill(Player player, Rarity rarity)
     {
         Character character = PlayersController.getCharacter(player);
         Gson gson = new Gson();

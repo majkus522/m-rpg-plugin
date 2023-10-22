@@ -13,6 +13,7 @@ public class PlayerStatus
     protected int exp;
     protected HashMap<String, Integer> stats;
     protected float money;
+    public String clazz = null;
 
     public void initStats(JsonObject obj)
     {

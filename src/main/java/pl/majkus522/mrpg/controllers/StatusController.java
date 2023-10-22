@@ -24,11 +24,13 @@ public class StatusController
             return;
         Character character = PlayersController.getCharacter(player);
         player.sendMessage(ChatColor.BLUE + "=-=-= " + ChatColor.GREEN + "Status: " + player.getName() + ChatColor.BLUE + " =-=-=");
+        player.sendMessage("Class: " + ClassController.getClassData(character.clazz).toPrettyString());
+        player.sendMessage(ChatColor.BLUE + "=-=-=-=-=-=-=-=-=-=-=");
         for (StatData element : Config.characterStats)
             createLine(element.display + ": " + character.getStat(element.label), element.description, player);
         if (character.statusEffects.size() > 0)
         {
-            player.sendMessage(ChatColor.BLUE + "=-=-=-=-=-=-=-=-=");
+            player.sendMessage(ChatColor.BLUE + "=-=-=-=-=-=-=-=-=-=-=");
             player.sendMessage("Status effects:");
             for (StatusEffect effect : character.statusEffects)
             {
@@ -76,7 +78,9 @@ public class StatusController
             round = -2;
         if (statusVision)
             round = 0;
-        sender.sendMessage(ChatColor.BLUE + "=-=-=-=-= " + ChatColor.GREEN + "Status: " + whose.getName() + ChatColor.BLUE + " =-=-=-=-=");
+        sender.sendMessage(ChatColor.BLUE + "=-=-= " + ChatColor.GREEN + "Status: " + whose.getName() + ChatColor.BLUE + " =-=-=");
+        sender.sendMessage("Class: " + ClassController.getClassData(status.clazz).toPrettyString());
+        sender.sendMessage(ChatColor.BLUE + "=-=-=-=-=-=-=-=-=-=-=");
         createLine("Level: " + round(status.getLevel(), round), "", sender);
         createLine("Money: " + (round == 0 ? status.getMoney() : round(status.getMoney(), round)), "", sender);
         for (StatData element : Config.characterStats)
@@ -84,12 +88,12 @@ public class StatusController
         Character character = PlayersController.getCharacter(whose);
         if (character.statusEffects.size() > 0)
         {
-            sender.sendMessage(ChatColor.BLUE + "=-=-=-=-=-=-=-=-=");
+            sender.sendMessage(ChatColor.BLUE + "=-=-=-=-=-=-=-=-=-=-=");
             sender.sendMessage("Status effects:");
             for (StatusEffect effect : character.statusEffects)
                 sender.sendMessage("    " + effect.getType().toColor() + effect.getTitle());
         }
-        sender.sendMessage(ChatColor.BLUE + "=-=-=-=-= " + ChatColor.GREEN + "Status: " + whose.getName() + ChatColor.BLUE + " =-=-=-=-=");
+        sender.sendMessage(ChatColor.BLUE + "=-=-= " + ChatColor.GREEN + "Status: " + whose.getName() + ChatColor.BLUE + " =-=-=");
     }
 
     static String round(double value, int decimalPlace)

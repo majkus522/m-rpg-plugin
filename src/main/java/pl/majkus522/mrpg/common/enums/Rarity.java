@@ -3,7 +3,7 @@ package pl.majkus522.mrpg.common.enums;
 import com.google.gson.annotations.SerializedName;
 import org.bukkit.ChatColor;
 
-public enum SkillRarity
+public enum Rarity
 {
     @SerializedName("common")
     common,
@@ -28,30 +28,30 @@ public enum SkillRarity
 
     public String toColoredString()
     {
-        ChatColor color = ChatColor.WHITE;
+        return getColor() + toPrettyString();
+    }
+
+    public ChatColor getColor()
+    {
         switch (this)
         {
             case extra:
-                color = ChatColor.DARK_GREEN;
-                break;
+                return ChatColor.DARK_GREEN;
 
             case unique:
-                color = ChatColor.BLUE;
-                break;
+                return ChatColor.BLUE;
 
             case ultimate:
-                color = ChatColor.DARK_PURPLE;
-                break;
+                return ChatColor.DARK_PURPLE;
 
             case unknown:
-                color = ChatColor.BLACK;
-                break;
+                return ChatColor.BLACK;
         }
-        return color + toPrettyString();
+        return ChatColor.WHITE;
     }
 
-    public static SkillRarity fromString(String input)
+    public static Rarity fromString(String input)
     {
-        return SkillRarity.valueOf(ChatColor.stripColor(input.toLowerCase()));
+        return Rarity.valueOf(ChatColor.stripColor(input.toLowerCase()));
     }
 }

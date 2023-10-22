@@ -3,7 +3,7 @@ package pl.majkus522.mrpg.commands;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import pl.majkus522.mrpg.common.classes.CustomCommand;
-import pl.majkus522.mrpg.common.enums.SkillRarity;
+import pl.majkus522.mrpg.common.enums.Rarity;
 import pl.majkus522.mrpg.controllers.PlayersController;
 import pl.majkus522.mrpg.guis.SkillsGui;
 
@@ -22,7 +22,7 @@ public class CommandSkills extends CustomCommand
         }
         if (args.length > 0)
         {
-            SkillRarity rarity = SkillRarity.fromString(args[0]);
+            Rarity rarity = Rarity.fromString(args[0]);
             if (rarity != null)
             {
                 player.openInventory(new SkillsGui(player, rarity).getInventory());
@@ -44,8 +44,8 @@ public class CommandSkills extends CustomCommand
         ArrayList<String> list = new ArrayList<>();
         if (args.length == 1)
         {
-            SkillRarity[] values = SkillRarity.values();
-            for (SkillRarity element : values)
+            Rarity[] values = Rarity.values();
+            for (Rarity element : values)
                 list.add(element.toString());
         }
         return list;
