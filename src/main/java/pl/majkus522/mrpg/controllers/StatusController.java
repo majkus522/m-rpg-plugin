@@ -62,7 +62,7 @@ public class StatusController
         PlayerStatus status;
         if(statusFake)
         {
-            HttpBuilder request = new HttpBuilder(HttpMethod.GET, "endpoints/fake-status/" + whose.getName()).setSessionHeaders(whose);
+            HttpBuilder request = new HttpBuilder(HttpMethod.GET, "fake-status/" + whose.getName()).setSessionHeaders(whose);
             if(!request.isOk())
             {
                 sender.sendMessage("Server error");

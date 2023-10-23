@@ -63,7 +63,7 @@ public class SkillsGui extends CustomInventory
         fillRow(5, ExtensionMethods.emptySlot(Material.GREEN_STAINED_GLASS_PANE));
         this.page = page;
         this.rarity = rarity;
-        HttpBuilder request = new HttpBuilder(HttpMethod.GET, "endpoints/skills/" + player.getName() + "?rarity[]=" + rarity.toString()).setSessionHeaders(player).setHeader("Items", (page * 45) + "-45");
+        HttpBuilder request = new HttpBuilder(HttpMethod.GET, "skills/" + player.getName() + "?rarity[]=" + rarity.toString()).setSessionHeaders(player).setHeader("Items", (page * 45) + "-45");
         if (!request.isOk())
         {
             inventory = new SkillsGui(player).getInventory();
@@ -80,7 +80,7 @@ public class SkillsGui extends CustomInventory
         }
         if(Integer.parseInt(request.getOutputHeader("Items-Count")) == 45)
         {
-            request = new HttpBuilder(HttpMethod.HEAD, "endpoints/skills/" + player.getName() + "?rarity[]=" + rarity.toString()).setSessionHeaders(player).setHeader("Items", ((page + 1) * 45) + "-45");
+            request = new HttpBuilder(HttpMethod.HEAD, "skills/" + player.getName() + "?rarity[]=" + rarity.toString()).setSessionHeaders(player).setHeader("Items", ((page + 1) * 45) + "-45");
             if(request.isOk())
                 setItem(8, 5, arrow(ArrowType.next));
         }
@@ -134,7 +134,7 @@ public class SkillsGui extends CustomInventory
             case "toggle":
                 ItemMeta meta = item.getItemMeta();
                 boolean enabled = !meta.getLore().get(0).contains("Enabled");
-                HttpBuilder request = new HttpBuilder(HttpMethod.PATCH, "endpoints/skills/" + player.getName() + "/" + part[1]).setSessionHeaders(player).setBody(Boolean.toString(enabled));
+                HttpBuilder request = new HttpBuilder(HttpMethod.PATCH, "skills/" + player.getName() + "/" + part[1]).setSessionHeaders(player).setBody(Boolean.toString(enabled));
                 if (!request.isOk())
                     throw new RuntimeException(new Exception(request.getError().message));
                 List<String> lore = meta.getLore();

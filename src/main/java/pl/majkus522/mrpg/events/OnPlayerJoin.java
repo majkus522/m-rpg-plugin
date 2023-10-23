@@ -22,7 +22,7 @@ public class OnPlayerJoin implements Listener
     {
         event.setJoinMessage("");
         Player player = event.getPlayer();
-        HttpBuilder request = new HttpBuilder(HttpMethod.HEAD, "endpoints/players/" + player.getName());
+        HttpBuilder request = new HttpBuilder(HttpMethod.HEAD, "players/" + player.getName());
         if(!request.isOk())
         {
             player.kickPlayer("Please first register on our webstie \n\n" + ChatColor.BLUE + "M-RPG.COM");

@@ -47,7 +47,7 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
     {
         this.player = player;
         this.session = session;
-        HttpBuilder request = new HttpBuilder(HttpMethod.GET, "endpoints/players/" + player.getName()).setHeader("Session-Key", session).setHeader("Session-Type", "game");
+        HttpBuilder request = new HttpBuilder(HttpMethod.GET, "players/" + player.getName()).setHeader("Session-Key", session).setHeader("Session-Type", "game");
         if(!request.isOk())
         {
             player.sendMessage("Server error");
@@ -64,7 +64,7 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
         this.mana = getMaxMana();
 
         skills = new ArrayList<CharacterSkill>();
-        request = new HttpBuilder(HttpMethod.GET, "endpoints/skills/" + player.getName()).setHeader("Session-Key", session).setHeader("Session-Type", "game").setHeader("Items", "0-999");
+        request = new HttpBuilder(HttpMethod.GET, "skills/" + player.getName()).setHeader("Session-Key", session).setHeader("Session-Type", "game").setHeader("Items", "0-999");
         if(request.isOk())
             for (IRequestResult element : request.getResultAll(RequestSkill.class))
                 skills.add(new CharacterSkill((RequestSkill) element));
