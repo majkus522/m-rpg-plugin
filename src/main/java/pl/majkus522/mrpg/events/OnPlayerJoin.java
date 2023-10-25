@@ -25,7 +25,7 @@ public class OnPlayerJoin implements Listener
         HttpBuilder request = new HttpBuilder(HttpMethod.HEAD, "players/" + player.getName());
         if(!request.isOk())
         {
-            player.kickPlayer("Please first register on our webstie \n\n" + ChatColor.BLUE + "M-RPG.COM");
+            player.kickPlayer("Please first register on our website \n\n" + ChatColor.BLUE + "M-RPG.COM");
             return;
         }
         for (PotionEffect effect : player.getActivePotionEffects())
@@ -33,14 +33,10 @@ public class OnPlayerJoin implements Listener
         player.setGameMode(GameMode.ADVENTURE);
         player.teleport(new Location(WorldController.getWorld("worlds/login", true), 0.5, 100, 0.5));
         player.sendTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "PLEASE LOGIN", "Type /login <password>", 5, 80, 5);
-        Bukkit.getScheduler().runTaskLater(Main.plugin, new Runnable()
+        Bukkit.getScheduler().runTaskLater(Main.plugin, () ->
         {
-            @Override
-            public void run()
-            {
-                if (!PlayersController.isPlayerLogged(player))
-                    player.kickPlayer("Login timeout");
-            }
+            if (!PlayersController.isPlayerLogged(player))
+                player.kickPlayer("Login timeout");
         }, 60 * 20L);
     }
 }

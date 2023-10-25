@@ -14,9 +14,9 @@ public class OnPlayerKillsEntity implements Listener
     @EventHandler
     public void onPlayerKills(EntityDeathEvent event)
     {
-        if (event.getEntity().getKiller() instanceof Player)
+        if (event.getEntity().getKiller() != null)
         {
-            Character character = PlayersController.getCharacter((Player)event.getEntity().getKiller());
+            Character character = PlayersController.getCharacter(event.getEntity().getKiller());
             if (event.getEntity() instanceof Player)
             {
                 Character dead = PlayersController.getCharacter((Player)event.getEntity());

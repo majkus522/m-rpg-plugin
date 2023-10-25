@@ -6,23 +6,16 @@ import org.bukkit.WorldCreator;
 import org.bukkit.generator.ChunkGenerator;
 import pl.majkus522.mrpg.Main;
 
-import javax.annotation.Nonnull;
-import java.util.Random;
-
 public class WorldController
 {
     static String[] worlds = new String[] {"login", "main"};
 
     public static void init()
     {
-        Bukkit.getScheduler().runTask(Main.plugin, new Runnable()
+        Bukkit.getScheduler().runTask(Main.plugin, () ->
         {
-            @Override
-            public void run()
-            {
-                for(String element : worlds)
-                    getWorld(element, false);
-            }
+            for(String element : worlds)
+                getWorld(element, false);
         });
     }
 
@@ -32,19 +25,9 @@ public class WorldController
         {
             WorldCreator creator = new WorldCreator(name.replace("worlds/", ""));
             if (isVoid)
-                creator.generator(new VoidChunkGenerator());
+                creator.generator(new ChunkGenerator() {});
             return Bukkit.getServer().createWorld(creator);
         }
         return Bukkit.getWorld(name);
-    }
-
-    public static class VoidChunkGenerator extends ChunkGenerator
-    {
-        @Override
-        @Nonnull
-        public ChunkData generateChunkData(@Nonnull World world, @Nonnull Random random, int x, int z, @Nonnull BiomeGrid biome)
-        {
-            return createChunkData(world);
-        }
     }
 }

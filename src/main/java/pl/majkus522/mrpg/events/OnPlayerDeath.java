@@ -14,16 +14,12 @@ public class OnPlayerDeath implements Listener
     public void onPlayerDeath(PlayerDeathEvent event)
     {
         event.setDeathMessage("");
-        Bukkit.getScheduler().runTask(Main.plugin, new Runnable()
+        Bukkit.getScheduler().runTask(Main.plugin, () ->
         {
-            @Override
-            public void run()
-            {
-                Player player = event.getEntity();
-                player.spigot().respawn();
-                player.sendMessage("You have died");
-                PlayersController.getCharacter(player).deathPenalty();
-            }
+            Player player = event.getEntity();
+            player.spigot().respawn();
+            player.sendMessage("You have died");
+            PlayersController.getCharacter(player).deathPenalty();
         });
     }
 }

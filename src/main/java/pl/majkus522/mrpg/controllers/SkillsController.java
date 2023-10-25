@@ -1,6 +1,5 @@
 package pl.majkus522.mrpg.controllers;
 
-import com.google.gson.Gson;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -19,6 +18,7 @@ public class SkillsController
         Character character = PlayersController.getCharacter(player);
         character.skills.add(new Character.CharacterSkill(skill, Character.CharacterSkill.Status.add));
         SkillData data = getSkillData(skill);
+        ArrayList<Player> players;
         switch (data.rarity)
         {
             case common:
@@ -26,7 +26,7 @@ public class SkillsController
                 break;
 
             case extra:
-                ArrayList<Player> players = ExtensionMethods.getPlayersInRange(player.getLocation(), 25);
+                players = ExtensionMethods.getPlayersInRange(player.getLocation(), 25);
                 players.remove(player);
                 player.sendMessage("You obtained " + ChatColor.GREEN + data.label + ChatColor.RESET + " skill");
                 ExtensionMethods.sendMessageToPlayers(players, player.getName() + " obtained " + ChatColor.GREEN + data.label + ChatColor.RESET + " skill");
@@ -63,20 +63,19 @@ public class SkillsController
     public static boolean playerHasSkill(Player player, String skill)
     {
         Character character = PlayersController.getCharacter(player);
-        return character.skills.stream().filter(p -> p.skill.equals(skill) && p.status != Character.CharacterSkill.Status.remove).collect(Collectors.toList()).size() > 0;
+        return character.skills.stream().anyMatch(p -> p.skill.equals(skill) && p.status != Character.CharacterSkill.Status.remove);
     }
 
     public static boolean playerHasSkill(Player player, Rarity rarity)
     {
         Character character = PlayersController.getCharacter(player);
-        Gson gson = new Gson();
-        return character.skills.stream().filter(p -> SkillsController.getSkillData(p.skill).rarity == rarity && p.status != Character.CharacterSkill.Status.remove).collect(Collectors.toList()).size() > 0;
+        return character.skills.stream().anyMatch(p -> SkillsController.getSkillData(p.skill).rarity == rarity && p.status != Character.CharacterSkill.Status.remove);
     }
 
     public static boolean playerHasSkillEnabled(Player player, String skill)
     {
         Character character = PlayersController.getCharacter(player);
-        return character.skills.stream().filter(p -> p.skill.equals(skill) && p.getToggle() && p.status != Character.CharacterSkill.Status.remove).collect(Collectors.toList()).size() > 0;
+        return character.skills.stream().anyMatch(p -> p.skill.equals(skill) && p.getToggle() && p.status != Character.CharacterSkill.Status.remove);
     }
 
     public static void evolveSkill(Player player, String skill)
@@ -93,7 +92,7 @@ public class SkillsController
         }
         if (!valid)
         {
-            player.sendMessage("You don't have requiered skills");
+            player.sendMessage("You don't have required skills");
             return;
         }
         if (data.evolution.length > 0)

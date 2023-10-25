@@ -3,10 +3,7 @@ package pl.majkus522.mrpg.controllers;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Score;
-import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.*;
 import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.Character;
 
@@ -19,18 +16,18 @@ public class ScoreboardController
     public static void createScoreboard(Character character)
     {
         Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-        Objective objective = scoreboard.registerNewObjective("scoreboard", "dummy");
+        Objective objective = scoreboard.registerNewObjective("scoreboard", Criteria.DUMMY, "dummy");
 
         objective.setDisplayName(ChatColor.AQUA + "M-RPG");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-        ArrayList<String> elements = new ArrayList<String>();
+        ArrayList<String> elements = new ArrayList<>();
         elements.add("Mana: " + character.getMana() + "/" + character.getMaxMana());
         elements.add("Money: " + character.getMoney() + "$");
         elements.add("Exp: " + character.getExp() + " / " + ExtensionMethods.levelExp(character.getLevel()));
         elements.add("Level: " + character.getLevel());
 
-        ArrayList<Integer> lengths = new ArrayList<Integer>();
+        ArrayList<Integer> lengths = new ArrayList<>();
         int index = 1;
         for (String line : elements)
         {
@@ -54,10 +51,10 @@ public class ScoreboardController
         length += 2;
         if (length % 2 == 1)
             length--;
-        String result = ChatColor.BLUE + "=";
+        StringBuilder result = new StringBuilder(ChatColor.BLUE + "=");
         for(int index = 0; index < (length / 2); index++)
-            result += "-=";
-        return result;
+            result.append("-=");
+        return result.toString();
     }
 
     static String createScore(String input)

@@ -28,7 +28,7 @@ public class StatusController
         player.sendMessage(ChatColor.BLUE + "=-=-=-=-=-=-=-=-=-=-=");
         for (StatData element : Config.characterStats)
             createLine(element.display + ": " + character.getStat(element.label), element.description, player);
-        if (character.statusEffects.size() > 0)
+        if (!character.statusEffects.isEmpty())
         {
             player.sendMessage(ChatColor.BLUE + "=-=-=-=-=-=-=-=-=-=-=");
             player.sendMessage("Status effects:");
@@ -69,7 +69,7 @@ public class StatusController
                 throw new RuntimeException(new Exception(request.getError().message));
             }
             status = (RequestFakeStatus)request.getResult(RequestFakeStatus.class);
-            status.initStats(new JsonParser().parse(request.content).getAsJsonObject());
+            status.initStats(JsonParser.parseString(request.content).getAsJsonObject());
         }
         else
             status = PlayersController.getCharacter(whose);
@@ -86,7 +86,7 @@ public class StatusController
         for (StatData element : Config.characterStats)
             createLine(element.display + ": " + round(status.getStat(element.label), round), element.description, sender);
         Character character = PlayersController.getCharacter(whose);
-        if (character.statusEffects.size() > 0)
+        if (!character.statusEffects.isEmpty())
         {
             sender.sendMessage(ChatColor.BLUE + "=-=-=-=-=-=-=-=-=-=-=");
             sender.sendMessage("Status effects:");

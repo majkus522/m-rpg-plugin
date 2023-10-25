@@ -18,14 +18,10 @@ public class OnChunkLoad implements Listener
             ManaController.generateMana(chunk);
         if (chunk.getWorld().getName().equals("login"))
             return;
-        Bukkit.getScheduler().runTaskTimer(Main.plugin, new Runnable()
+        Bukkit.getScheduler().runTaskTimer(Main.plugin, () ->
         {
-            @Override
-            public void run()
-            {
-                if (ManaController.getChunkMana(chunk) < ManaController.getChunkMaxMana(chunk))
-                    ManaController.addMana(chunk, (int)ManaController.getChunkManaRegen(chunk));
-            }
+            if (ManaController.getChunkMana(chunk) < ManaController.getChunkMaxMana(chunk))
+                ManaController.addMana(chunk, (int)ManaController.getChunkManaRegen(chunk));
         }, 0, 20 * 60 * 10);
     }
 }

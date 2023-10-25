@@ -1,6 +1,5 @@
 package pl.majkus522.mrpg.guis;
 
-import com.google.gson.Gson;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -69,7 +68,6 @@ public class SkillsGui extends CustomInventory
             inventory = new SkillsGui(player).getInventory();
             return;
         }
-        Gson gson = new Gson();
         int index = 0;
         for (IRequestResult skill : request.getResultAll(RequestSkill.class))
         {
@@ -179,7 +177,7 @@ public class SkillsGui extends CustomInventory
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(ChatColor.RESET + skill.label);
         lore.add("");
-        for (String line : Arrays.asList(ChatPaginator.wordWrap(skill.description, 35)))
+        for (String line : ChatPaginator.wordWrap(skill.description, 35))
             lore.add(ChatColor.RESET + "" + ChatColor.WHITE + line);
         meta.setLore(lore);
         item.setItemMeta(meta);
