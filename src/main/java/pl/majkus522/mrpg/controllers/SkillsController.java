@@ -55,6 +55,11 @@ public class SkillsController
         }
     }
 
+    public static Character.CharacterSkill getSkill(Player player, String skill)
+    {
+        return PlayersController.getCharacter(player).skills.stream().filter(p -> p.skill.equals(skill)).collect(Collectors.toList()).get(0);
+    }
+
     public static boolean playerHasSkill(Player player, String skill)
     {
         Character character = PlayersController.getCharacter(player);

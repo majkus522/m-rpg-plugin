@@ -432,6 +432,11 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
             this.status = status;
         }
 
+        public void setToggle(boolean value)
+        {
+            toggle = value ? 1 : 0;
+        }
+
         public enum Status
         {
             ok, add, remove

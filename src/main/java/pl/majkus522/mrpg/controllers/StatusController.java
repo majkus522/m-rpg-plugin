@@ -58,7 +58,7 @@ public class StatusController
         int senderLevel = -1;
         if(!statusVision)
             senderLevel = PlayersController.getCharacter(sender).getLevel();
-        boolean statusFake = statusVision ? false : SkillsController.playerHasSkill(whose, "statusFake");
+        boolean statusFake = !statusVision && SkillsController.playerHasSkillEnabled(whose, "statusFake");
         PlayerStatus status;
         if(statusFake)
         {
@@ -84,7 +84,7 @@ public class StatusController
         createLine("Level: " + round(status.getLevel(), round), "", sender);
         createLine("Money: " + (round == 0 ? status.getMoney() : round(status.getMoney(), round)), "", sender);
         for (StatData element : Config.characterStats)
-            createLine(element.display + ": " + status.getStat(element.label), element.description, sender);
+            createLine(element.display + ": " + round(status.getStat(element.label), round), element.description, sender);
         Character character = PlayersController.getCharacter(whose);
         if (character.statusEffects.size() > 0)
         {

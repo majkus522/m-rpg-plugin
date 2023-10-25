@@ -134,9 +134,7 @@ public class SkillsGui extends CustomInventory
             case "toggle":
                 ItemMeta meta = item.getItemMeta();
                 boolean enabled = !meta.getLore().get(0).contains("Enabled");
-                HttpBuilder request = new HttpBuilder(HttpMethod.PATCH, "skills/" + player.getName() + "/" + part[1]).setSessionHeaders(player).setBody(Boolean.toString(enabled));
-                if (!request.isOk())
-                    throw new RuntimeException(new Exception(request.getError().message));
+                SkillsController.getSkill(player, part[1]).setToggle(enabled);
                 List<String> lore = meta.getLore();
                 lore.set(0, enabled ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled"));
                 meta.setLore(lore);
