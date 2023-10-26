@@ -4,7 +4,6 @@ import net.minecraft.server.level.ServerLevel;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.craftbukkit.v1_20_R1.CraftWorld;
 import org.bukkit.entity.Player;
-import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.CustomCommand;
 import pl.majkus522.mrpg.common.classes.data.EntityData;
 import pl.majkus522.mrpg.common.classes.entity.Enemy;
@@ -83,7 +82,7 @@ public class CommandEntity extends CustomCommand
         {
             if (FilesController.fileExists("data/entities/" + args[0]))
             {
-                File[] files = ExtensionMethods.scanDir("data/entities/" + args[0] + "/");
+                File[] files = FilesController.scanDir("data/entities/" + args[0] + "/");
                 for (File file : files)
                     list.add(file.getName().replace(".json", ""));
             }

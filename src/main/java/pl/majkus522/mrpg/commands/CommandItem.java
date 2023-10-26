@@ -6,7 +6,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.CustomCommand;
 import pl.majkus522.mrpg.common.classes.data.ItemData;
 import pl.majkus522.mrpg.controllers.FilesController;
@@ -75,7 +74,7 @@ public class CommandItem extends CustomCommand
         ArrayList<String> list = new ArrayList<>();
         if (args.length == 1)
         {
-            File[] files = ExtensionMethods.scanDir("data/items/");
+            File[] files = FilesController.scanDir("data/items/");
             for (File file : files)
                 list.add(file.getName().replace(".json", ""));
         }

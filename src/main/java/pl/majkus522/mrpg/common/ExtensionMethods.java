@@ -8,8 +8,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.io.File;
-import java.io.FileFilter;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
@@ -27,17 +25,6 @@ public class ExtensionMethods
         meta.setDisplayName(" ");
         item.setItemMeta(meta);
         return item;
-    }
-
-    public static File[] scanDir(String url)
-    {
-        return new File(url).listFiles(new FileFilter()
-        {
-            public boolean accept(File f)
-            {
-                return f.isFile();
-            }
-        });
     }
 
     public static ArrayList<Player> getPlayersInRange(Location location, int range)
