@@ -26,8 +26,8 @@ public class Enemy extends CustomEntity
         this.goalSelector.addGoal(2, new RandomLookAroundGoal(this));
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1, true));
 
-        this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<Summon>(this, Summon.class, false));
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<Player>(this, Player.class, false));
+        this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, Summon.class, false));
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, false));
     }
 
     public void taunt(org.bukkit.entity.Player player)

@@ -187,7 +187,7 @@ public class SkillsGui extends CustomInventory
     ItemStack assign(int slot, String skill)
     {
         Character character = PlayersController.getCharacter(player);
-        String old = character.getAssagnedSkill(slot);
+        String old = character.getAssignedSkill(slot);
         ItemStack item;
         if (old == null)
         {

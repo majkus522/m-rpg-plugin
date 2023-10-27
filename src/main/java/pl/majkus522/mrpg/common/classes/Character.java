@@ -6,6 +6,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -54,7 +55,7 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
             throw new RuntimeException(new Exception(request.getError().message));
         }
         RequestPlayer data = (RequestPlayer)request.getResult(RequestPlayer.class);
-        initStats(new JsonParser().parse(request.content).getAsJsonObject());
+        initStats(JsonParser.parseString(request.content).getAsJsonObject());
         setMaxHealth();
         setSpeed();
         this.id = data.id;
@@ -63,7 +64,7 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
         this.money = data.money;
         this.mana = getMaxMana();
 
-        skills = new ArrayList<CharacterSkill>();
+        skills = new ArrayList<>();
         request = new HttpBuilder(HttpMethod.GET, "skills/" + player.getName()).setHeader("Session-Key", session).setHeader("Session-Type", "game").setHeader("Items", "0-999");
         if(request.isOk())
             for (IRequestResult element : request.getResultAll(RequestSkill.class))
@@ -87,16 +88,12 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
             assignedSkills.add(null);
         reassignSkills();
 
-        taskUpdate = Bukkit.getScheduler().runTaskTimerAsynchronously(Main.plugin, new Runnable()
+        taskUpdate = Bukkit.getScheduler().runTaskTimerAsynchronously(Main.plugin, () ->
         {
-            @Override
-            public void run()
-            {
-                if (changes)
-                    update();
-                if(getMaxMana() - mana > 0)
-                    ManaController.gatherMana(player, 5);
-            }
+            if (changes)
+                update();
+            if(getMaxMana() - mana > 0)
+                ManaController.gatherMana(player, 5);
         }, 20 * 60, 20 * 60).getTaskId();
     }
 
@@ -122,7 +119,7 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
             stmt.executeUpdate();
 
             List<CharacterSkill> toAdd = skills.stream().filter(p -> p.status == CharacterSkill.Status.add).collect(Collectors.toList());
-            if (toAdd.size() > 0)
+            if (!toAdd.isEmpty())
             {
                 String data = "";
                 boolean first = true;
@@ -145,7 +142,7 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
             }
 
             List<CharacterSkill> toRemove = skills.stream().filter(p -> p.status == CharacterSkill.Status.remove).collect(Collectors.toList());
-            if (toRemove.size() > 0)
+            if (!toRemove.isEmpty())
             {
                 query = "delete from `skills` where `player` = ? and (";
                 boolean first = true;
@@ -170,13 +167,14 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
 
     void setMaxHealth()
     {
-        player.setMaxHealth(getStat("vtl"));
+        player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(getStat("vtl"));
         player.setHealth(getStat("vtl"));
     }
 
+    @Override
     public void setSpeed()
     {
-        player.setWalkSpeed(Config.baseWalkSpeed * (1 + (getStat("agl") / 200)));
+        player.setWalkSpeed(Config.baseWalkSpeed * (1 + ((float) getStat("agl") / 200)));
     }
 
     @Override
@@ -283,14 +281,8 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
 
     public void displayMana()
     {
-        taskManaDisplay = Bukkit.getScheduler().runTaskTimer(Main.plugin, new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatColor.AQUA + "Mana: " + ManaController.getChunkMana(player.getLocation())));
-            }
-        }, 0, 5).getTaskId();
+        taskManaDisplay = Bukkit.getScheduler().runTaskTimer(Main.plugin, () ->
+                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatColor.AQUA + "Mana: " + ManaController.getChunkMana(player.getLocation()))), 0, 5).getTaskId();
     }
 
     public void hideMana()
@@ -321,8 +313,8 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
         if (mana < getMaxMana())
         {
             List<StatusEffect> list = statusEffects.stream().filter(p -> p instanceof ManaOverloadEffect).collect(Collectors.toList());
-            if (list.size() > 0)
-                ((ManaOverloadEffect)list.get(0)).end();
+            if (!list.isEmpty())
+                list.get(0).end();
         }
     }
 
@@ -341,7 +333,7 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
     }
 
     @Nullable
-    public String getAssagnedSkill(int slot)
+    public String getAssignedSkill(int slot)
     {
         return assignedSkills.get(slot);
     }
@@ -371,14 +363,8 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
         SkillData data = SkillsController.getSkillData(skill);
         int index = assignedSkills.indexOf(skill);
         player.getInventory().setItem(9 - Config.characterSkills + index, hotbarSkill(index, true));
-        Bukkit.getScheduler().runTaskLater(Main.plugin, new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                player.getInventory().setItem(9 - Config.characterSkills + index, hotbarSkill(index, false));
-            }
-        }, 20 * data.cooldown);
+        Bukkit.getScheduler().runTaskLater(Main.plugin, () ->
+                player.getInventory().setItem(9 - Config.characterSkills + index, hotbarSkill(index, false)), 20L * data.cooldown);
     }
 
     @Override
@@ -401,7 +387,7 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
     @Override
     public boolean hasEffect(StatusEffect effect)
     {
-        return statusEffects.stream().filter(p -> p.getClass() == effect.getClass()).collect(Collectors.toList()).size() > 0;
+        return statusEffects.stream().anyMatch(p -> p.getClass() == effect.getClass());
     }
 
     public static class CharacterSkill extends RequestSkill

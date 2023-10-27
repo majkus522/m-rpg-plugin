@@ -16,6 +16,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,9 +62,9 @@ public class HttpBuilder
     {
         try
         {
-            OutputStream writter = connection.getOutputStream();
-            byte[] input = body.getBytes("utf-8");
-            writter.write(input, 0, input.length);
+            OutputStream writer = connection.getOutputStream();
+            byte[] input = body.getBytes(StandardCharsets.UTF_8);
+            writer.write(input, 0, input.length);
         }
         catch (Exception e)
         {
@@ -153,21 +154,6 @@ public class HttpBuilder
         catch (Exception e)
         {
             throw new RuntimeException(e);
-        }
-    }
-
-    public class Box<T>
-    {
-        T t;
-
-        public Box(T t)
-        {
-            this.t = t;
-        }
-
-        public T get()
-        {
-            return t;
         }
     }
 }

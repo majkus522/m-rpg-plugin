@@ -27,7 +27,7 @@ public class CustomEntity extends PathfinderMob implements IStatusEffectTarget
     {
         super(data.getType(), ((CraftWorld)location.getWorld()).getHandle());
         this.setPos(location.getX(), location.getY(), location.getZ());
-        this.setCustomName((Component) Component.Serializer.fromJson("\"" + ChatColor.translateAlternateColorCodes('$', data.name) + "\""));
+        this.setCustomName(Component.Serializer.fromJson("\"" + ChatColor.translateAlternateColorCodes('$', data.name) + "\""));
         this.setCustomNameVisible(true);
         this.data = data;
         setMaxHealth();

@@ -5,10 +5,10 @@ import pl.majkus522.mrpg.common.enums.DamageType;
 
 public interface IStatusEffectTarget
 {
-    public void addEffect(StatusEffect effect);
-    public void removeEffect(StatusEffect effect);
-    public boolean hasEffect(StatusEffect effect);
-    public void setSpeed();
-    public void setSpeed(float value);
-    public void damage(double value, DamageType type);
+    void addEffect(StatusEffect effect);
+    void removeEffect(StatusEffect effect);
+    boolean hasEffect(StatusEffect effect);
+    void setSpeed();
+    void setSpeed(float value);
+    void damage(double value, DamageType type);
 }
