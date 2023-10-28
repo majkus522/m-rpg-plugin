@@ -30,7 +30,7 @@ public class CommandLogin extends CustomCommand
             player.sendMessage("Enter password");
             return;
         }
-        HttpBuilder request = new HttpBuilder(HttpMethod.GET, "players/" + player.getName() + "/logged").setHeader("Session-Type", "game").setHeader("Password", Base64.getEncoder().encodeToString(args[0].getBytes()));
+        HttpBuilder request = new HttpBuilder(HttpMethod.GET, "players/" + player.getName() + "/login").setHeader("Session-Type", "game").setHeader("Password", Base64.getEncoder().encodeToString(args[0].getBytes()));
         if(!request.isOk())
         {
             player.sendMessage(request.getError().message);
