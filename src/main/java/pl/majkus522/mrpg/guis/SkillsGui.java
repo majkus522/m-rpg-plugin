@@ -62,7 +62,7 @@ public class SkillsGui extends CustomInventory
         fillRow(5, ExtensionMethods.emptySlot(Material.GREEN_STAINED_GLASS_PANE));
         this.page = page;
         this.rarity = rarity;
-        HttpBuilder request = new HttpBuilder(HttpMethod.GET, "skills/" + player.getName() + "?rarity[]=" + rarity.toString()).setSessionHeaders(player).setHeader("Items", (page * 45) + "-45");
+        HttpBuilder request = new HttpBuilder(HttpMethod.GET, "skills/" + player.getName() + "?rarity[]=" + rarity).setSessionHeaders(player).setItemsHeaders((page * 45), 45);
         if (!request.isOk())
         {
             inventory = new SkillsGui(player).getInventory();
@@ -76,9 +76,9 @@ public class SkillsGui extends CustomInventory
             inventory.setItem(index, skill(data, apiSkill));
             index++;
         }
-        if(Integer.parseInt(request.getOutputHeader("Items-Count")) == 45)
+        if(Integer.parseInt(request.getOutputHeader("Result-Count")) == 45)
         {
-            request = new HttpBuilder(HttpMethod.HEAD, "skills/" + player.getName() + "?rarity[]=" + rarity.toString()).setSessionHeaders(player).setHeader("Items", ((page + 1) * 45) + "-45");
+            request = new HttpBuilder(HttpMethod.HEAD, "skills/" + player.getName() + "?rarity[]=" + rarity).setSessionHeaders(player).setItemsHeaders(((page + 1) * 45), 45);
             if(request.isOk())
                 setItem(8, 5, arrow(ArrowType.next));
         }

@@ -58,6 +58,13 @@ public class HttpBuilder
         return this;
     }
 
+    public HttpBuilder setItemsHeaders(int offset, int count)
+    {
+        setHeader("Items-Offset", Integer.toString(offset));
+        setHeader("Items-Count", Integer.toString(count));
+        return this;
+    }
+
     public HttpBuilder setBody(String body)
     {
         try
