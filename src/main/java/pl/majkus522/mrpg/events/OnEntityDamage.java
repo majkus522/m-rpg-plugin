@@ -29,8 +29,18 @@ public class OnEntityDamage implements Listener
                 return;
             }
             event.setDamage(damage);
-            if (((CraftEntity)event.getDamager()).getHandle() instanceof Enemy && ((LivingEntity)event.getEntity()).getHealth() - event.getDamage() < 0)
-                ((Enemy) ((CraftEntity)event.getDamager()).getHandle()).cancelTaunt();
+            if(((LivingEntity)event.getEntity()).getHealth() - event.getDamage() <= 0)
+            {
+                if (((CraftEntity)event.getDamager()).getHandle() instanceof Enemy)
+                {
+                    Enemy enemy = (Enemy) ((CraftEntity)event.getDamager()).getHandle();
+                    enemy.cancelTaunt();
+                    event.getEntity().sendMessage("You have been killed by " + enemy.getEntityName());
+                }
+                else if (event.getDamager() instanceof Player)
+                    event.getEntity().sendMessage("You have been killed by " + event.getDamager().getName());
+            }
+
             return;
         }
         Entity entityHandle = ((CraftEntity)event.getEntity()).getHandle();

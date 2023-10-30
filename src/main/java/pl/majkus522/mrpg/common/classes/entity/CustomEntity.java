@@ -124,4 +124,9 @@ public class CustomEntity extends PathfinderMob implements IStatusEffectTarget
     {
         return statusEffects.stream().anyMatch(p -> p.getClass() == effect.getClass());
     }
+
+    public String getEntityName()
+    {
+        return data.name;
+    }
 }

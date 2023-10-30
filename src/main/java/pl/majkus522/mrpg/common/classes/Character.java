@@ -185,8 +185,10 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
 
     public void deathPenalty()
     {
+        float moneyLost = (float)ExtensionMethods.round(money * 0.01f, 2);
+        player.sendMessage("You have lost " + exp + " EXP and " + moneyLost + "$");
         exp = 0;
-        money = (float)ExtensionMethods.round(money * 0.99f, 2);
+        money -= moneyLost;
         ScoreboardController.update(this);
     }
 
