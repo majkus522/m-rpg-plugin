@@ -14,6 +14,7 @@ public class OnPlayerKillsEntity implements Listener
     @EventHandler
     public void onPlayerKills(EntityDeathEvent event)
     {
+        event.setDroppedExp(0);
         if (event.getEntity().getKiller() != null)
         {
             Character character = PlayersController.getCharacter(event.getEntity().getKiller());
@@ -28,6 +29,8 @@ public class OnPlayerKillsEntity implements Listener
                 CustomEntity entity = (CustomEntity)((CraftEntity)event.getEntity()).getHandle();
                 character.addExp(entity.getExp(character.player));
             }
+            else
+                event.getDrops().clear();
         }
     }
 }
