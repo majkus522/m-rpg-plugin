@@ -15,6 +15,10 @@ public class SkillsController
 {
     public static void playerObtainSkill(Player player, String skill)
     {
+        playerObtainSkill(player, skill, true);
+    }
+    public static void playerObtainSkill(Player player, String skill, boolean message)
+    {
         Character character = PlayersController.getCharacter(player);
         character.skills.add(new Character.CharacterSkill(skill, Character.CharacterSkill.Status.add));
         SkillData data = getSkillData(skill);
@@ -22,34 +26,39 @@ public class SkillsController
         switch (data.rarity)
         {
             case common:
-                player.sendMessage("You obtained " + data.label + " skill");
+                if(message)
+                    player.sendMessage("You obtained " + data.label + " skill");
                 break;
 
             case extra:
                 players = ExtensionMethods.getPlayersInRange(player.getLocation(), 25);
                 players.remove(player);
-                player.sendMessage("You obtained " + ChatColor.GREEN + data.label + ChatColor.RESET + " skill");
+                if(message)
+                    player.sendMessage("You obtained " + ChatColor.GREEN + data.label + ChatColor.RESET + " skill");
                 ExtensionMethods.sendMessageToPlayers(players, player.getName() + " obtained " + ChatColor.GREEN + data.label + ChatColor.RESET + " skill");
                 break;
 
             case unique:
                 players = ExtensionMethods.getPlayersInRange(player.getLocation(), 150);
                 players.remove(player);
-                player.sendMessage("You obtained " + ChatColor.BLUE + data.label + ChatColor.RESET + " skill");
+                if(message)
+                    player.sendMessage("You obtained " + ChatColor.BLUE + data.label + ChatColor.RESET + " skill");
                 ExtensionMethods.sendMessageToPlayers(players, player.getName() + " obtained " + ChatColor.BLUE + data.label + ChatColor.RESET + " skill");
                 break;
 
             case ultimate:
                 players = (ArrayList<Player>) player.getWorld().getPlayers();
                 players.remove(player);
-                player.sendMessage("You obtained " + ChatColor.LIGHT_PURPLE + data.label + ChatColor.RESET + " skill");
+                if(message)
+                    player.sendMessage("You obtained " + ChatColor.LIGHT_PURPLE + data.label + ChatColor.RESET + " skill");
                 ExtensionMethods.sendMessageToPlayers(players, player.getName() + " obtained " + ChatColor.LIGHT_PURPLE + data.label + ChatColor.RESET + " skill");
                 break;
 
             case unknown:
                 players = (ArrayList<Player>) Bukkit.getOnlinePlayers();
                 players.remove(player);
-                player.sendMessage("You obtained " + ChatColor.BLACK + data.label + ChatColor.RESET + " skill");
+                if(message)
+                    player.sendMessage("You obtained " + ChatColor.BLACK + data.label + ChatColor.RESET + " skill");
                 ExtensionMethods.sendMessageToPlayers(players, "??? obtained " + ChatColor.BLACK + "???" + ChatColor.RESET + " skill");
                 break;
         }
@@ -81,27 +90,31 @@ public class SkillsController
     public static void evolveSkill(Player player, String skill)
     {
         SkillData data = SkillsController.getSkillData(skill);
-        boolean valid = true;
         for(String element : data.evolution)
         {
             if (!playerHasSkill(player, element))
             {
-                valid = false;
-                break;
+                player.sendMessage("You don't have required skills");
+                return;
             }
         }
-        if (!valid)
-        {
-            player.sendMessage("You don't have required skills");
-            return;
-        }
+        StringBuilder message = new StringBuilder();
+        boolean first = true;
         if (data.evolution.length > 0)
         {
             Character character = PlayersController.getCharacter(player);
             for(String element : data.evolution)
+            {
                 character.skills.stream().filter(p -> p.skill.equals(element)).collect(Collectors.toList()).get(0).status = Character.CharacterSkill.Status.remove;
+                SkillData elementData = SkillsController.getSkillData(element);
+                if (!first)
+                    message.append(", ");
+                message.append(elementData.rarity.getColor() + elementData.label + ChatColor.RESET);
+                first = false;
+            }
         }
-        playerObtainSkill(player, skill);
+        player.sendMessage((data.evolution.length == 1 ? "Skill " : "Skills ") + message + " evolved to " + data.rarity.getColor() + data.label);
+        playerObtainSkill(player, skill, false);
     }
 
     public static SkillData getSkillData(String skill)
