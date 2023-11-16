@@ -65,7 +65,7 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
         this.mana = getMaxMana();
 
         skills = new ArrayList<>();
-        request = new HttpBuilder(HttpMethod.GET, "skills/" + player.getName()).setHeader("Session-Key", session).setHeader("Session-Type", "game").setHeader("Items-Count", "999");
+        request = new HttpBuilder(HttpMethod.GET, "skills/" + player.getName()).setHeader("Session-Key", session).setHeader("Session-Type", "game").setHeader("Result-Count", "999");
         if(request.isOk())
             for (IRequestResult element : request.getResultAll(RequestSkill.class))
                 skills.add(new CharacterSkill((RequestSkill) element));
