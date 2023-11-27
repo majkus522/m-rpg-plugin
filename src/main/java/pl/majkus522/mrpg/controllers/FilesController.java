@@ -33,6 +33,12 @@ public class FilesController
     {
         try
         {
+            String[] split = file.split("/");
+            String dir = "";
+            for(int index = 0; index < split.length - 1; index++)
+                dir += split[index] + "/";
+            File f = new File(dir);
+            f.mkdirs();
             BufferedWriter writer = new BufferedWriter(new FileWriter(file + ".json"));
             writer.write(content);
             writer.close();
