@@ -63,6 +63,7 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
         this.exp = data.exp;
         this.money = data.money;
         this.mana = getMaxMana();
+        this.guild = data.guild;
 
         skills = new ArrayList<>();
         request = new HttpBuilder(HttpMethod.GET, "skills/" + player.getName()).setHeader("Session-Key", session).setHeader("Session-Type", "game").setHeader("Result-Count", "999");

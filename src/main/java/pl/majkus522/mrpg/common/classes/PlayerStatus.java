@@ -14,6 +14,7 @@ public class PlayerStatus
     protected HashMap<String, Integer> stats;
     protected float money;
     public String clazz = null;
+    public String guild;
 
     public void initStats(JsonObject obj)
     {

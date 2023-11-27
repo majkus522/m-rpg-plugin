@@ -6,6 +6,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
 import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.Character;
+import pl.majkus522.mrpg.common.classes.HttpBuilder;
+import pl.majkus522.mrpg.common.classes.api.RequestGuild;
+import pl.majkus522.mrpg.common.enums.HttpMethod;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,6 +25,11 @@ public class ScoreboardController
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         ArrayList<String> elements = new ArrayList<>();
+        if(character.guild != null)
+        {
+            RequestGuild guild = (RequestGuild)new HttpBuilder(HttpMethod.GET, "guilds/" + character.guild).getResult(RequestGuild.class);
+            elements.add("Guild: " + guild.name);
+        }
         elements.add("Mana: " + character.getMana() + "/" + character.getMaxMana());
         elements.add("Money: " + character.getMoney() + "$");
         elements.add("Exp: " + character.getExp() + " / " + ExtensionMethods.levelExp(character.getLevel()));
