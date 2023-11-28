@@ -77,8 +77,8 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
         {
             PlayerSettings settings = FilesController.readJsonFile("settings/" + player.getName(), PlayerSettings.class);
             assignedSkills = new ArrayList<>(Arrays.asList(settings.skills));
-            this.mana = settings.mana;
-            player.setHealth(settings.health);
+            this.mana = Math.min(settings.mana, getMaxMana());
+            player.setHealth(Math.min(settings.health, player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue()));
             player.teleport(settings.position.toLocation());
         }
         else
