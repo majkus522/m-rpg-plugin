@@ -14,6 +14,8 @@ public class OnPlayerDeath implements Listener
     public void onPlayerDeath(PlayerDeathEvent event)
     {
         event.setDeathMessage("");
+        event.setKeepInventory(true);
+        event.getDrops().clear();
         Bukkit.getScheduler().runTask(Main.plugin, () ->
         {
             Player player = event.getEntity();
