@@ -65,6 +65,11 @@ public class HttpBuilder
         return this;
     }
 
+    public HttpBuilder setBody(Object object)
+    {
+        return setBody(new Gson().toJson(object));
+    }
+
     public HttpBuilder setBody(String body)
     {
         try

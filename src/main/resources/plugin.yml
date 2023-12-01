@@ -46,3 +46,7 @@ commands:
   mana:
     description: Manipulate mana
     usage: /<command> <option>
+
+  guild:
+    description: Guild info
+    usage: /<command> <options>
