@@ -71,12 +71,6 @@ public class CommandGuild extends CustomCommand
                         player.sendMessage("You are not part of any guild");
                         return;
                     }
-                    RequestGuild requestGuild = (RequestGuild)new HttpBuilder(HttpMethod.GET, "guilds/" + character.guild).setSessionHeaders(player).getResult(RequestGuild.class);
-                    if(character.id != requestGuild.leader)
-                    {
-                        player.sendMessage("Only leader can delete guild");
-                        return;
-                    }
                     HttpBuilder requestDelete = new HttpBuilder(HttpMethod.DELETE, "guilds/" + character.guild).setSessionHeaders(player);
                     if (requestDelete.isOk())
                     {
