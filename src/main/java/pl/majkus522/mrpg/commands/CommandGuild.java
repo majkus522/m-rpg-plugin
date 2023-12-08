@@ -1,8 +1,12 @@
 package pl.majkus522.mrpg.commands;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.Character;
 import pl.majkus522.mrpg.common.classes.CustomCommand;
 import pl.majkus522.mrpg.common.classes.HttpBuilder;
@@ -33,7 +37,13 @@ public class CommandGuild extends CustomCommand
                 RequestGuild requestGuild = (RequestGuild)new HttpBuilder(HttpMethod.GET, "guilds/" + character.guild).setSessionHeaders(player).getResult(RequestGuild.class);
                 player.sendMessage("Guild name: " + requestGuild.name);
                 if (requestGuild.leader == character.id)
-                    player.sendMessage(ChatColor.GREEN + "/guild delete" + ChatColor.WHITE + " - delete guild");
+                {
+                    player.sendMessage(ChatColor.GREEN + "/guild add [player]" + ChatColor.WHITE + " - add player to your guild");
+                    player.sendMessage(ChatColor.GREEN + "/guild kick [player]" + ChatColor.WHITE + " - kick player from your guild");
+                }
+                player.sendMessage(ChatColor.GREEN + "/guild leave" + ChatColor.WHITE + " - leave your guild");
+                if (requestGuild.leader == character.id)
+                    player.sendMessage(ChatColor.GREEN + "/guild delete" + ChatColor.WHITE + " - delete your guild");
             }
         }
         else
@@ -65,6 +75,107 @@ public class CommandGuild extends CustomCommand
                         player.sendMessage(requestPost.getError().message);
                     break;
 
+                case "add":
+                    if(character.guild == null)
+                    {
+                        player.sendMessage("You are not part of any guild");
+                        return;
+                    }
+                    if(args.length < 2)
+                    {
+                        player.sendMessage("Enter player");
+                        return;
+                    }
+                    RequestGuild requestGuild = (RequestGuild)new HttpBuilder(HttpMethod.GET, "guilds/" + character.guild).setSessionHeaders(player).getResult(RequestGuild.class);
+                    if(character.id != requestGuild.leader)
+                    {
+                        player.sendMessage("You are not a leader of the guild");
+                        return;
+                    }
+                    Player added = Bukkit.getPlayer(args[1]);
+                    if(added == null || added.getLocation().distance(player.getLocation()) > 10)
+                    {
+                        player.sendMessage("Player is to far away");
+                        return;
+                    }
+                    HttpBuilder requestAdd = new HttpBuilder(HttpMethod.PATCH, "guilds/" + character.guild + "/add").setSessionHeaders(player).setBody(args[1]);
+                    if(requestAdd.isOk())
+                    {
+                        player.sendMessage("Player " + args[1] + " has been added to your guild");
+                        Character addedCharacter = PlayersController.getCharacter(added);
+                        addedCharacter.guild = requestGuild.slug;
+                        ScoreboardController.createScoreboard(addedCharacter);
+                        added.sendMessage("You have been added to " + requestGuild.name + " guild");
+                    }
+                    else
+                        player.sendMessage(requestAdd.getError().message);
+                    break;
+
+                case "kick":
+                    if(character.guild == null)
+                    {
+                        player.sendMessage("You are not part of any guild");
+                        return;
+                    }
+                    if(args.length < 2)
+                    {
+                        player.sendMessage("Enter player");
+                        return;
+                    }
+                    requestGuild = (RequestGuild)new HttpBuilder(HttpMethod.GET, "guilds/" + character.guild).setSessionHeaders(player).getResult(RequestGuild.class);
+                    if(character.id != requestGuild.leader)
+                    {
+                        player.sendMessage("You are not a leader of the guild");
+                        return;
+                    }
+                    HttpBuilder requestKick = new HttpBuilder(HttpMethod.PATCH, "guilds/" + character.guild + "/kick").setSessionHeaders(player).setBody(args[1]);
+                    if(requestKick.isOk())
+                    {
+                        player.sendMessage("Player " + args[1] + " has been kicked from your guild");
+                        Player kicked = Bukkit.getPlayer(args[1]);
+                        if(kicked != null)
+                        {
+                            Character kickedCharacter = PlayersController.getCharacter(kicked);
+                            kickedCharacter.guild = null;
+                            ScoreboardController.createScoreboard(kickedCharacter);
+                            kicked.sendMessage("You have been kicked from " + requestGuild.name + " guild");
+                        }
+                    }
+                    else
+                        player.sendMessage(requestKick.getError().message);
+                    break;
+
+                case "leave":
+                    if(character.guild == null)
+                    {
+                        player.sendMessage("You are not part of any guild");
+                        return;
+                    }
+                    HttpBuilder requestLeave = new HttpBuilder(HttpMethod.PATCH, "players/" + player.getName() + "/leave").setSessionHeaders(player);
+                    if(requestLeave.isOk())
+                    {
+                        player.sendMessage("You have left your guild");
+                        Character leaveCharacter = PlayersController.getCharacter(player);
+                        leaveCharacter.guild = null;
+                        ScoreboardController.createScoreboard(leaveCharacter);
+                    }
+                    else
+                        player.sendMessage(requestLeave.getError().message);
+                    break;
+
+                case "members":
+                    if(character.guild == null)
+                    {
+                        player.sendMessage("You are not part of any guild");
+                        return;
+                    }
+                    player.sendMessage("Guild members:");
+                    HttpBuilder requestMembers = new HttpBuilder(HttpMethod.GET, "guilds/" + character.guild + "/members").setSessionHeaders(player);
+                    JsonArray array = (JsonArray) JsonParser.parseString(requestMembers.getResultString());
+                    for(int index = 0; index < array.size(); index++)
+                        player.sendMessage(array.get(index).getAsString());
+                    break;
+
                 case "delete":
                     if(character.guild == null)
                     {
@@ -81,6 +192,10 @@ public class CommandGuild extends CustomCommand
                     else
                         player.sendMessage(requestDelete.getError().message);
                     break;
+
+                default:
+                    player.sendMessage("Unknown guild command option");
+                    break;
             }
         }
     }
@@ -94,7 +209,48 @@ public class CommandGuild extends CustomCommand
     @Override
     public List<String> autocomplete(Player player, String[] args)
     {
-        return new ArrayList<>();
+        ArrayList<String> placeholder = new ArrayList<>();
+        Character character = PlayersController.getCharacter(player);
+        if(args.length == 1)
+        {
+            if(character.guild == null)
+                placeholder.add("create");
+            else
+            {
+                RequestGuild requestGuild = (RequestGuild)new HttpBuilder(HttpMethod.GET, "guilds/" + character.guild).setSessionHeaders(player).getResult(RequestGuild.class);
+                if (requestGuild.leader == character.id)
+                {
+                    placeholder.add("add");
+                    placeholder.add("kick");
+                    placeholder.add("delete");
+                }
+                placeholder.add("leave");
+                placeholder.add("members");
+            }
+        }
+        else if(args.length == 2)
+        {
+            switch (args[0])
+            {
+                case "kick":
+                    HttpBuilder requestMembers = new HttpBuilder(HttpMethod.GET, "guilds/" + character.guild + "/members").setSessionHeaders(player);
+                    JsonArray array = (JsonArray) JsonParser.parseString(requestMembers.getResultString());
+                    for(int index = 0; index < array.size(); index++)
+                        placeholder.add(array.get(index).getAsString());
+                    placeholder.remove(player.getName());
+                    break;
+
+                case "add":
+                    for(Player element : ExtensionMethods.getPlayersInRange(player.getLocation(), 10))
+                        placeholder.add(element.getName());
+                    requestMembers = new HttpBuilder(HttpMethod.GET, "guilds/" + character.guild + "/members").setSessionHeaders(player);
+                    array = (JsonArray) JsonParser.parseString(requestMembers.getResultString());
+                    for(int index = 0; index < array.size(); index++)
+                        placeholder.remove(array.get(index).getAsString());
+                    break;
+            }
+        }
+        return placeholder;
     }
 
     @Override
