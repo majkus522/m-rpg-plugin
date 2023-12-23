@@ -40,6 +40,7 @@ public class CommandGuild extends CustomCommand
                 {
                     player.sendMessage(ChatColor.GREEN + "/guild add [player]" + ChatColor.WHITE + " - add player to your guild");
                     player.sendMessage(ChatColor.GREEN + "/guild kick [player]" + ChatColor.WHITE + " - kick player from your guild");
+                    player.sendMessage(ChatColor.GREEN + "/guild new_leader [player]" + ChatColor.WHITE + " - make player leader of your guild");
                 }
                 player.sendMessage(ChatColor.GREEN + "/guild leave" + ChatColor.WHITE + " - leave your guild");
                 if (requestGuild.leader == character.id)
@@ -193,6 +194,19 @@ public class CommandGuild extends CustomCommand
                         player.sendMessage(requestDelete.getError().message);
                     break;
 
+                case "new_leader":
+                    if(character.guild == null)
+                    {
+                        player.sendMessage("You are not part of any guild");
+                        return;
+                    }
+                    HttpBuilder requestNewLeader = new HttpBuilder(HttpMethod.PATCH, "guilds/" + character.guild).setSessionHeaders(player).setBody(new NewLeaderRequest(args[1]));
+                    if (requestNewLeader.isOk())
+                        player.sendMessage("Guild leader has been changed");
+                    else
+                        player.sendMessage(requestNewLeader.getError().message);
+                    break;
+
                 default:
                     player.sendMessage("Unknown guild command option");
                     break;
@@ -222,6 +236,7 @@ public class CommandGuild extends CustomCommand
                 {
                     placeholder.add("add");
                     placeholder.add("kick");
+                    placeholder.add("new_leader");
                     placeholder.add("delete");
                 }
                 placeholder.add("leave");
@@ -233,6 +248,7 @@ public class CommandGuild extends CustomCommand
             switch (args[0])
             {
                 case "kick":
+                case "new_leader":
                     HttpBuilder requestMembers = new HttpBuilder(HttpMethod.GET, "guilds/" + character.guild + "/members").setSessionHeaders(player);
                     JsonArray array = (JsonArray) JsonParser.parseString(requestMembers.getResultString());
                     for(int index = 0; index < array.size(); index++)
@@ -267,6 +283,16 @@ public class CommandGuild extends CustomCommand
         public CreateGuildRequest(String name, String leader)
         {
             this.name = name;
+            this.leader = leader;
+        }
+    }
+
+    static class NewLeaderRequest
+    {
+        public String leader;
+
+        public NewLeaderRequest(String leader)
+        {
             this.leader = leader;
         }
     }
