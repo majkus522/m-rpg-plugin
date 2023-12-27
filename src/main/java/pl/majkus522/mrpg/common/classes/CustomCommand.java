@@ -25,7 +25,7 @@ public abstract class CustomCommand implements CommandExecutor, TabCompleter
     public abstract void onTerminalExecute(ConsoleCommandSender console, String[] args);
 
     @Override
-    public List<String> onTabComplete(@Nonnull CommandSender sender, @Nonnull Command command, @Nonnull String string, String[] args)
+    public List<String> onTabComplete(@Nonnull CommandSender sender, @Nonnull Command command, @Nonnull String string, @Nonnull String[] args)
     {
         return autocomplete((Player)sender, args).stream().filter(p -> p.startsWith(args[args.length - 1])).collect(Collectors.toList());
     }

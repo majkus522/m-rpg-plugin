@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 
 public class ExtensionMethods
@@ -57,7 +58,7 @@ public class ExtensionMethods
     public static double round(double value, int decimalPlace)
     {
         BigDecimal bd = new BigDecimal(Double.toString(value));
-        bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+        bd = bd.setScale(decimalPlace, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
 

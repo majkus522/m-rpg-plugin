@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -56,12 +55,6 @@ public class FilesController
 
     public static File[] scanDir(String url)
     {
-        return new File(url).listFiles(new FileFilter()
-        {
-            public boolean accept(File f)
-            {
-                return f.isFile();
-            }
-        });
+        return new File(url).listFiles(File::isFile);
     }
 }

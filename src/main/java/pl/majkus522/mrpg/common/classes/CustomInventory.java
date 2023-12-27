@@ -64,7 +64,7 @@ public abstract class CustomInventory implements InventoryHolder
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         meta.addEnchant(Enchantment.DURABILITY, 1, true);
         item.setItemMeta(meta);
-        return NBTController.putNBTString(item, "gui-action", "arrow-" + type.toString());
+        return NBTController.putNBTString(item, "gui-action", "arrow-" + type);
     }
 
     protected ItemStack button(Material material, String label, String action)

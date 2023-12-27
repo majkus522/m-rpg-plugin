@@ -25,17 +25,13 @@ public abstract class StatusEffect
             ((Character)target).player.sendMessage("Status effect " + getType().toColor() + getTitle() + ChatColor.WHITE + " was inflicted on you");
         if (has)
             return;
-        task = Bukkit.getScheduler().runTaskTimer(Main.plugin, new Runnable()
+        task = Bukkit.getScheduler().runTaskTimer(Main.plugin, () ->
         {
-            @Override
-            public void run()
-            {
-                if (duration > 0)
-                    duration--;
-                if (duration == 0)
-                    end();
-                tick();
-            }
+            if (duration > 0)
+                duration--;
+            if (duration == 0)
+                end();
+            tick();
         }, 0, 20).getTaskId();
     }
 

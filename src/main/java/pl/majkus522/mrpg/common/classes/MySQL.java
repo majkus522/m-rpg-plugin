@@ -50,7 +50,7 @@ public class MySQL
         return connection;
     }
 
-    public class Config
+    public static class Config
     {
         public String host;
         public String database;

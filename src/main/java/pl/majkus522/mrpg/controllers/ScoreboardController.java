@@ -85,14 +85,14 @@ public class ScoreboardController
         {
             if (line.contains("Exp"))
             {
-                int value = scoreboard.getScores(line).stream().toList().get(0).getScore();
+                int value = new ArrayList<>(scoreboard.getScores(line)).get(0).getScore();
                 scoreboard.resetScores(line);
                 Score score = objective.getScore(createScore("Exp: " + character.getExp() + " / " + ExtensionMethods.levelExp(character.getLevel())));
                 score.setScore(value);
             }
             else if(line.contains("Level"))
             {
-                int value = scoreboard.getScores(line).stream().toList().get(0).getScore();
+                int value = new ArrayList<>(scoreboard.getScores(line)).get(0).getScore();
                 scoreboard.resetScores(line);
                 Score score = objective.getScore(createScore("Level: " + character.getLevel()));
                 score.setScore(value);
@@ -114,7 +114,7 @@ public class ScoreboardController
         {
             if (line.contains("Money"))
             {
-                int value = scoreboard.getScores(line).stream().toList().get(0).getScore();
+                int value = new ArrayList<>(scoreboard.getScores(line)).get(0).getScore();
                 scoreboard.resetScores(line);
                 Score score = objective.getScore(createScore("Money: " + character.getMoney() + "$"));
                 score.setScore(value);
@@ -137,7 +137,7 @@ public class ScoreboardController
         {
             if (line.contains("Mana"))
             {
-                int value = scoreboard.getScores(line).stream().toList().get(0).getScore();
+                int value = new ArrayList<>(scoreboard.getScores(line)).get(0).getScore();
                 scoreboard.resetScores(line);
                 Score score = objective.getScore(createScore("Mana: " + character.getMana() + "/" + character.getMaxMana()));
                 score.setScore(value);

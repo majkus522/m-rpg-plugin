@@ -24,7 +24,7 @@ import pl.majkus522.mrpg.controllers.PlayersController;
 import pl.majkus522.mrpg.controllers.SkillsController;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class SkillsGui extends CustomInventory
@@ -194,7 +194,7 @@ public class SkillsGui extends CustomInventory
             item = new ItemStack(Material.GRAY_DYE);
             ItemMeta meta = item.getItemMeta();
             meta.setDisplayName(ChatColor.RESET + "Empty slot");
-            meta.setLore(Arrays.asList(ChatColor.RESET + "" + ChatColor.GREEN + "Click to assign"));
+            meta.setLore(Collections.singletonList(ChatColor.RESET + "" + ChatColor.GREEN + "Click to assign"));
             item.setItemMeta(meta);
         }
         else
@@ -202,7 +202,7 @@ public class SkillsGui extends CustomInventory
             item = new ItemStack(Material.LIME_DYE);
             ItemMeta meta = item.getItemMeta();
             meta.setDisplayName(ChatColor.RESET + SkillsController.getSkillData(old).label);
-            meta.setLore(Arrays.asList(ChatColor.RESET + "" + ChatColor.GREEN + "Click to assign"));
+            meta.setLore(Collections.singletonList(ChatColor.RESET + "" + ChatColor.GREEN + "Click to assign"));
             item.setItemMeta(meta);
         }
         return NBTController.putNBTString(item, "gui-action", "slot-" + slot + "-" + skill);

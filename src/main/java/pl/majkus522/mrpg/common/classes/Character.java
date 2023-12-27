@@ -415,12 +415,6 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
             this.toggle = request.getToggle() ? 1 : 0;
         }
 
-        public CharacterSkill(RequestSkill request, Status status)
-        {
-            this(request);
-            this.status = status;
-        }
-
         public void setToggle(boolean value)
         {
             toggle = value ? 1 : 0;
