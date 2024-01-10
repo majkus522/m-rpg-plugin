@@ -34,7 +34,7 @@ public class CommandGuild extends CustomCommand
             }
             else
             {
-                RequestGuild requestGuild = (RequestGuild)new HttpBuilder(HttpMethod.GET, "guilds/" + character.guild).setSessionHeaders(player).getResult(RequestGuild.class);
+                RequestGuild requestGuild = (RequestGuild)new HttpBuilder(HttpMethod.GET, "guilds/" + character.guild).setSessionHeaders(character).getResult(RequestGuild.class);
                 player.sendMessage("Guild name: " + requestGuild.name);
                 if (requestGuild.leader == character.id)
                 {
@@ -65,11 +65,11 @@ public class CommandGuild extends CustomCommand
                     String name = "";
                     for(int index = 1; index < args.length; index++)
                         name += args[index] + " ";
-                    HttpBuilder requestPost = new HttpBuilder(HttpMethod.POST, "guilds/").setSessionHeaders(player).setBody(new CreateGuildRequest(name, player.getName()));
+                    HttpBuilder requestPost = new HttpBuilder(HttpMethod.POST, "guilds/").setSessionHeaders(character).setBody(new CreateGuildRequest(name, player.getName()));
                     if(requestPost.isOk())
                     {
                         player.sendMessage("Guild has been created");
-                        character.guild = ((RequestPlayer)new HttpBuilder(HttpMethod.GET, "players/" + player.getName()).setSessionHeaders(player).getResult(RequestPlayer.class)).guild;
+                        character.guild = ((RequestPlayer)new HttpBuilder(HttpMethod.GET, "players/" + player.getName()).setSessionHeaders(character).getResult(RequestPlayer.class)).guild;
                         ScoreboardController.createScoreboard(character);
                     }
                     else
@@ -87,7 +87,7 @@ public class CommandGuild extends CustomCommand
                         player.sendMessage("Enter player");
                         return;
                     }
-                    RequestGuild requestGuild = (RequestGuild)new HttpBuilder(HttpMethod.GET, "guilds/" + character.guild).setSessionHeaders(player).getResult(RequestGuild.class);
+                    RequestGuild requestGuild = (RequestGuild)new HttpBuilder(HttpMethod.GET, "guilds/" + character.guild).setSessionHeaders(character).getResult(RequestGuild.class);
                     if(character.id != requestGuild.leader)
                     {
                         player.sendMessage("You are not a leader of the guild");
@@ -99,7 +99,7 @@ public class CommandGuild extends CustomCommand
                         player.sendMessage("Player is to far away");
                         return;
                     }
-                    HttpBuilder requestAdd = new HttpBuilder(HttpMethod.PATCH, "guilds/" + character.guild + "/add").setSessionHeaders(player).setBody(args[1]);
+                    HttpBuilder requestAdd = new HttpBuilder(HttpMethod.PATCH, "guilds/" + character.guild + "/add").setSessionHeaders(character).setBody(args[1]);
                     if(requestAdd.isOk())
                     {
                         player.sendMessage("Player " + args[1] + " has been added to your guild");
@@ -123,13 +123,13 @@ public class CommandGuild extends CustomCommand
                         player.sendMessage("Enter player");
                         return;
                     }
-                    requestGuild = (RequestGuild)new HttpBuilder(HttpMethod.GET, "guilds/" + character.guild).setSessionHeaders(player).getResult(RequestGuild.class);
+                    requestGuild = (RequestGuild)new HttpBuilder(HttpMethod.GET, "guilds/" + character.guild).setSessionHeaders(character).getResult(RequestGuild.class);
                     if(character.id != requestGuild.leader)
                     {
                         player.sendMessage("You are not a leader of the guild");
                         return;
                     }
-                    HttpBuilder requestKick = new HttpBuilder(HttpMethod.PATCH, "guilds/" + character.guild + "/kick").setSessionHeaders(player).setBody(args[1]);
+                    HttpBuilder requestKick = new HttpBuilder(HttpMethod.PATCH, "guilds/" + character.guild + "/kick").setSessionHeaders(character).setBody(args[1]);
                     if(requestKick.isOk())
                     {
                         player.sendMessage("Player " + args[1] + " has been kicked from your guild");
@@ -152,7 +152,7 @@ public class CommandGuild extends CustomCommand
                         player.sendMessage("You are not part of any guild");
                         return;
                     }
-                    HttpBuilder requestLeave = new HttpBuilder(HttpMethod.PATCH, "players/" + player.getName() + "/leave").setSessionHeaders(player);
+                    HttpBuilder requestLeave = new HttpBuilder(HttpMethod.PATCH, "players/" + player.getName() + "/leave").setSessionHeaders(character);
                     if(requestLeave.isOk())
                     {
                         player.sendMessage("You have left your guild");
@@ -171,7 +171,7 @@ public class CommandGuild extends CustomCommand
                         return;
                     }
                     player.sendMessage("Guild members:");
-                    HttpBuilder requestMembers = new HttpBuilder(HttpMethod.GET, "guilds/" + character.guild + "/members").setSessionHeaders(player);
+                    HttpBuilder requestMembers = new HttpBuilder(HttpMethod.GET, "guilds/" + character.guild + "/members").setSessionHeaders(character);
                     JsonArray array = (JsonArray) JsonParser.parseString(requestMembers.getResultString());
                     for(int index = 0; index < array.size(); index++)
                         player.sendMessage(array.get(index).getAsString());
@@ -183,7 +183,7 @@ public class CommandGuild extends CustomCommand
                         player.sendMessage("You are not part of any guild");
                         return;
                     }
-                    HttpBuilder requestDelete = new HttpBuilder(HttpMethod.DELETE, "guilds/" + character.guild).setSessionHeaders(player);
+                    HttpBuilder requestDelete = new HttpBuilder(HttpMethod.DELETE, "guilds/" + character.guild).setSessionHeaders(character);
                     if (requestDelete.isOk())
                     {
                         player.sendMessage("Guild has been deleted");
@@ -200,7 +200,7 @@ public class CommandGuild extends CustomCommand
                         player.sendMessage("You are not part of any guild");
                         return;
                     }
-                    HttpBuilder requestNewLeader = new HttpBuilder(HttpMethod.PATCH, "guilds/" + character.guild).setSessionHeaders(player).setBody(new NewLeaderRequest(args[1]));
+                    HttpBuilder requestNewLeader = new HttpBuilder(HttpMethod.PATCH, "guilds/" + character.guild).setSessionHeaders(character).setBody(new NewLeaderRequest(args[1]));
                     if (requestNewLeader.isOk())
                         player.sendMessage("Guild leader has been changed");
                     else
@@ -231,7 +231,7 @@ public class CommandGuild extends CustomCommand
                 placeholder.add("create");
             else
             {
-                RequestGuild requestGuild = (RequestGuild)new HttpBuilder(HttpMethod.GET, "guilds/" + character.guild).setSessionHeaders(player).getResult(RequestGuild.class);
+                RequestGuild requestGuild = (RequestGuild)new HttpBuilder(HttpMethod.GET, "guilds/" + character.guild).setSessionHeaders(character).getResult(RequestGuild.class);
                 if (requestGuild.leader == character.id)
                 {
                     placeholder.add("add");
@@ -249,7 +249,7 @@ public class CommandGuild extends CustomCommand
             {
                 case "kick":
                 case "new_leader":
-                    HttpBuilder requestMembers = new HttpBuilder(HttpMethod.GET, "guilds/" + character.guild + "/members").setSessionHeaders(player);
+                    HttpBuilder requestMembers = new HttpBuilder(HttpMethod.GET, "guilds/" + character.guild + "/members").setSessionHeaders(character);
                     JsonArray array = (JsonArray) JsonParser.parseString(requestMembers.getResultString());
                     for(int index = 0; index < array.size(); index++)
                         placeholder.add(array.get(index).getAsString());
@@ -259,7 +259,7 @@ public class CommandGuild extends CustomCommand
                 case "add":
                     for(Player element : ExtensionMethods.getPlayersInRange(player.getLocation(), 10))
                         placeholder.add(element.getName());
-                    requestMembers = new HttpBuilder(HttpMethod.GET, "guilds/" + character.guild + "/members").setSessionHeaders(player);
+                    requestMembers = new HttpBuilder(HttpMethod.GET, "guilds/" + character.guild + "/members").setSessionHeaders(character);
                     array = (JsonArray) JsonParser.parseString(requestMembers.getResultString());
                     for(int index = 0; index < array.size(); index++)
                         placeholder.remove(array.get(index).getAsString());

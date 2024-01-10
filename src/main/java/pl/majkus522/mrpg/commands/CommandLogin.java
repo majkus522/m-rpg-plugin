@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import pl.majkus522.mrpg.common.classes.Character;
 import pl.majkus522.mrpg.common.classes.CustomCommand;
 import pl.majkus522.mrpg.common.classes.HttpBuilder;
+import pl.majkus522.mrpg.common.classes.api.RequestLogin;
 import pl.majkus522.mrpg.common.enums.HttpMethod;
 import pl.majkus522.mrpg.controllers.ManaController;
 import pl.majkus522.mrpg.controllers.PlayersController;
@@ -40,7 +41,7 @@ public class CommandLogin extends CustomCommand
         player.setGameMode(GameMode.SURVIVAL);
         if (player.isOp())
             player.setGameMode(GameMode.CREATIVE);
-        Character character = new Character(player, request.getResultString());
+        Character character = new Character(player, (RequestLogin) request.getResult(RequestLogin.class));
         PlayersController.playerJoin(character);
         ScoreboardController.createScoreboard(character);
         ManaController.displayMana(player);

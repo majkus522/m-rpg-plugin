@@ -13,6 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import pl.majkus522.mrpg.Config;
 import pl.majkus522.mrpg.Main;
 import pl.majkus522.mrpg.common.ExtensionMethods;
+import pl.majkus522.mrpg.common.classes.api.RequestLogin;
 import pl.majkus522.mrpg.common.classes.api.RequestPlayer;
 import pl.majkus522.mrpg.common.classes.api.RequestSkill;
 import pl.majkus522.mrpg.common.classes.data.SkillData;
@@ -44,11 +45,12 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
     int taskUpdate;
     public ArrayList<StatusEffect> statusEffects;
 
-    public Character(Player player, String session)
+    public Character(Player player, RequestLogin session)
     {
         this.player = player;
-        this.session = session;
-        HttpBuilder request = new HttpBuilder(HttpMethod.GET, "players/" + player.getName()).setHeader("Session-Key", session).setHeader("Session-Type", "game");
+        this.session = session.key;
+        this.id = session.id;
+        HttpBuilder request = new HttpBuilder(HttpMethod.GET, "players/" + player.getName()).setHeader("Session-Key", this.session).setHeader("Session-ID", Integer.toString(id));
         if(!request.isOk())
         {
             player.sendMessage("Server error");
@@ -66,7 +68,7 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
         this.guild = data.guild;
 
         skills = new ArrayList<>();
-        request = new HttpBuilder(HttpMethod.GET, "skills/" + player.getName()).setHeader("Session-Key", session).setHeader("Session-Type", "game").setHeader("Result-Count", "999");
+        request = new HttpBuilder(HttpMethod.GET, "skills/" + player.getName()).setHeader("Session-Key", this.session).setHeader("Session-ID", Integer.toString(id)).setHeader("Result-Count", "999");
         if(request.isOk())
             for (IRequestResult element : request.getResultAll(RequestSkill.class))
                 skills.add(new CharacterSkill((RequestSkill) element));
