@@ -183,7 +183,20 @@ public class CommandGuild extends CustomCommand
                         player.sendMessage("You are not part of any guild");
                         return;
                     }
-                    HttpBuilder requestDelete = new HttpBuilder(HttpMethod.DELETE, "guilds/" + character.guild).setSessionHeaders(character);
+                    String guild = character.guild;
+                    requestMembers = new HttpBuilder(HttpMethod.GET, "guilds/" + guild + "/members").setSessionHeaders(character);
+                    array = (JsonArray) JsonParser.parseString(requestMembers.getResultString());
+                    for(int index = 0; index < array.size(); index++)
+                    {
+                        Player member = Bukkit.getPlayer(array.get(index).getAsString());
+                        if(member != null)
+                        {
+                            Character memberCharacter = PlayersController.getCharacter(member);
+                            memberCharacter.guild = null;
+                            ScoreboardController.createScoreboard(memberCharacter);
+                        }
+                    }
+                    HttpBuilder requestDelete = new HttpBuilder(HttpMethod.DELETE, "guilds/" + guild).setSessionHeaders(character);
                     if (requestDelete.isOk())
                     {
                         player.sendMessage("Guild has been deleted");
