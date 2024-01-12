@@ -11,8 +11,11 @@ import pl.majkus522.mrpg.common.classes.Character;
 import pl.majkus522.mrpg.common.classes.CustomCommand;
 import pl.majkus522.mrpg.common.classes.HttpBuilder;
 import pl.majkus522.mrpg.common.classes.api.RequestGuild;
+import pl.majkus522.mrpg.common.classes.api.RequestGuildMember;
 import pl.majkus522.mrpg.common.classes.api.RequestPlayer;
+import pl.majkus522.mrpg.common.enums.GuildMemberType;
 import pl.majkus522.mrpg.common.enums.HttpMethod;
+import pl.majkus522.mrpg.common.interfaces.IRequestResult;
 import pl.majkus522.mrpg.controllers.PlayersController;
 import pl.majkus522.mrpg.controllers.ScoreboardController;
 
@@ -152,7 +155,7 @@ public class CommandGuild extends CustomCommand
                         player.sendMessage("You are not part of any guild");
                         return;
                     }
-                    HttpBuilder requestLeave = new HttpBuilder(HttpMethod.PATCH, "players/" + player.getName() + "/leave").setSessionHeaders(character);
+                    HttpBuilder requestLeave = new HttpBuilder(HttpMethod.PATCH, "guilds/" + character.guild + "/kick").setSessionHeaders(character).setBody(player.getName());
                     if(requestLeave.isOk())
                     {
                         player.sendMessage("You have left your guild");
@@ -171,10 +174,15 @@ public class CommandGuild extends CustomCommand
                         return;
                     }
                     player.sendMessage("Guild members:");
-                    HttpBuilder requestMembers = new HttpBuilder(HttpMethod.GET, "guilds/" + character.guild + "/members").setSessionHeaders(character);
-                    JsonArray array = (JsonArray) JsonParser.parseString(requestMembers.getResultString());
-                    for(int index = 0; index < array.size(); index++)
-                        player.sendMessage(array.get(index).getAsString());
+                    List<IRequestResult> members = new HttpBuilder(HttpMethod.GET, "guilds/" + character.guild + "/members").setSessionHeaders(character).getResultAll(RequestGuildMember.class);
+                    for(IRequestResult element : members)
+                    {
+                        RequestGuildMember member = (RequestGuildMember) element;
+                        String message = member.username;
+                        if(member.type != GuildMemberType.member)
+                            message += ChatColor.GREEN + " (" + member.type.toPrettyString() + ")";
+                        player.sendMessage(message);
+                    }
                     break;
 
                 case "delete":
@@ -184,8 +192,8 @@ public class CommandGuild extends CustomCommand
                         return;
                     }
                     String guild = character.guild;
-                    requestMembers = new HttpBuilder(HttpMethod.GET, "guilds/" + guild + "/members").setSessionHeaders(character);
-                    array = (JsonArray) JsonParser.parseString(requestMembers.getResultString());
+                    HttpBuilder requestMembers = new HttpBuilder(HttpMethod.GET, "guilds/" + guild + "/members").setSessionHeaders(character);
+                    JsonArray array = (JsonArray) JsonParser.parseString(requestMembers.getResultString());
                     for(int index = 0; index < array.size(); index++)
                     {
                         Player member = Bukkit.getPlayer(array.get(index).getAsString());
