@@ -15,6 +15,10 @@ public class PlayerStatus
     protected float money;
     public String clazz = null;
     public String guild;
+    public String helmet;
+    public String chestplate;
+    public String leggings;
+    public String boots;
 
     public void initStats(JsonObject obj)
     {

@@ -16,6 +16,7 @@ import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.api.RequestLogin;
 import pl.majkus522.mrpg.common.classes.api.RequestPlayer;
 import pl.majkus522.mrpg.common.classes.api.RequestSkill;
+import pl.majkus522.mrpg.common.classes.data.EquipmentData;
 import pl.majkus522.mrpg.common.classes.data.SkillData;
 import pl.majkus522.mrpg.common.classes.effects.ManaOverloadEffect;
 import pl.majkus522.mrpg.common.classes.effects.StatusEffect;
@@ -67,6 +68,19 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
         this.mana = getMaxMana();
         this.guild = data.guild;
 
+        this.helmet = data.helmet;
+        this.chestplate = data.chestplate;
+        this.leggings = data.leggings;
+        this.boots = data.boots;
+        if(data.helmet != null)
+            player.getInventory().setHelmet(FilesController.readJsonFile("data/equipment/" + data.helmet, EquipmentData.class).toItem(data.helmet));
+        if(data.chestplate != null)
+            player.getInventory().setChestplate(FilesController.readJsonFile("data/equipment/" + data.chestplate, EquipmentData.class).toItem(data.chestplate));
+        if(data.leggings != null)
+            player.getInventory().setLeggings(FilesController.readJsonFile("data/equipment/" + data.leggings, EquipmentData.class).toItem(data.leggings));
+        if(data.boots != null)
+            player.getInventory().setBoots(FilesController.readJsonFile("data/equipment/" + data.boots, EquipmentData.class).toItem(data.boots));
+
         skills = new ArrayList<>();
         request = new HttpBuilder(HttpMethod.GET, "skills/" + player.getName()).setHeader("Session-Key", this.session).setHeader("Session-ID", Integer.toString(id)).setHeader("Result-Count", "999");
         if(request.isOk())
@@ -111,14 +125,18 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
     {
         try
         {
-            String query = "update `players` set `money` = ?, `level` = ?, `exp` = ?";
+            String query = "update `players` set `money` = ?, `level` = ?, `exp` = ?, `helmet` = ?, `chestplate` = ?, `leggings` = ?, `boots` = ?";
             for (Map.Entry<String, Integer> element : stats.entrySet())
                 query += ", `" + element.getKey() + "` = " + element.getValue();
             PreparedStatement stmt = MySQL.getConnection().prepareStatement(query + " where `username` = ?");
             stmt.setFloat(1, money);
             stmt.setInt(2, level);
             stmt.setInt(3, exp);
-            stmt.setString(4, player.getName());
+            stmt.setString(4, helmet);
+            stmt.setString(5, chestplate);
+            stmt.setString(6, leggings);
+            stmt.setString(7, boots);
+            stmt.setString(8, player.getName());
             stmt.executeUpdate();
 
             List<CharacterSkill> toAdd = skills.stream().filter(p -> p.status == CharacterSkill.Status.add).collect(Collectors.toList());
