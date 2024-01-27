@@ -59,8 +59,6 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
         }
         RequestPlayer data = (RequestPlayer)request.getResult(RequestPlayer.class);
         initStats(JsonParser.parseString(request.content).getAsJsonObject());
-        setMaxHealth();
-        setSpeed();
         this.id = data.id;
         this.level = data.level;
         this.exp = data.exp;
@@ -80,6 +78,8 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
             player.getInventory().setLeggings(FilesController.readJsonFile("data/equipment/" + data.leggings, EquipmentData.class).toItem(data.leggings));
         if(data.boots != null)
             player.getInventory().setBoots(FilesController.readJsonFile("data/equipment/" + data.boots, EquipmentData.class).toItem(data.boots));
+        setMaxHealth();
+        setSpeed();
 
         skills = new ArrayList<>();
         request = new HttpBuilder(HttpMethod.GET, "skills/" + player.getName()).setHeader("Session-Key", this.session).setHeader("Session-ID", Integer.toString(id)).setHeader("Result-Count", "999");
@@ -262,7 +262,11 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
     @Override
     public int getStat(String label)
     {
-        return stats.get(label);
+        int extra = 0;
+        for(ItemStack item : player.getInventory().getArmorContents())
+            if(NBTController.hasNBTTag(item, label))
+                extra += NBTController.getNBTInt(item, label);
+        return stats.get(label) + extra;
     }
 
     public void setStat(String label, int value)

@@ -20,6 +20,20 @@ public class NBTController
         return CraftItemStack.asNMSCopy(item).getOrCreateTag().getString(key);
     }
 
+    public static ItemStack putNBTInt(ItemStack item, String key, int value)
+    {
+        net.minecraft.world.item.ItemStack nmsCopy = CraftItemStack.asNMSCopy(item);
+        CompoundTag tag = nmsCopy.getOrCreateTag();
+        tag.putInt(key, value);
+        nmsCopy.setTag(tag);
+        return CraftItemStack.asBukkitCopy(nmsCopy);
+    }
+
+    public static int getNBTInt(ItemStack item, String key)
+    {
+        return CraftItemStack.asNMSCopy(item).getOrCreateTag().getInt(key);
+    }
+
     public static boolean hasNBTTag(ItemStack item, String key)
     {
         return CraftItemStack.asNMSCopy(item).getOrCreateTag().contains(key);
