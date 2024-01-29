@@ -33,7 +33,7 @@ public final class Main extends JavaPlugin
         {
             registerEvent(new OnPlayerJoin());
             registerEvent(new OnPlayerLeave());
-            registerEvent(new OnItemTake());
+            registerEvent(new OnInventoryClick());
             registerEvent(new OnPlayerDeath());
             registerEvent(new OnPlayerRightClickEntity());
             registerEvent(new OnPlayerChat());

@@ -21,6 +21,7 @@ import pl.majkus522.mrpg.common.classes.data.SkillData;
 import pl.majkus522.mrpg.common.classes.effects.ManaOverloadEffect;
 import pl.majkus522.mrpg.common.classes.effects.StatusEffect;
 import pl.majkus522.mrpg.common.enums.DamageType;
+import pl.majkus522.mrpg.common.enums.EquipmentSlot;
 import pl.majkus522.mrpg.common.enums.HttpMethod;
 import pl.majkus522.mrpg.common.interfaces.IRequestResult;
 import pl.majkus522.mrpg.common.interfaces.IStatusEffectTarget;
@@ -45,9 +46,11 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
     int taskManaDisplay;
     int taskUpdate;
     public ArrayList<StatusEffect> statusEffects;
+    public ItemStack[] equipment;
 
     public Character(Player player, RequestLogin session)
     {
+        equipment = new ItemStack[4];
         this.player = player;
         this.session = session.key;
         this.id = session.id;
@@ -66,18 +69,10 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
         this.mana = getMaxMana();
         this.guild = data.guild;
 
-        this.helmet = data.helmet;
-        this.chestplate = data.chestplate;
-        this.leggings = data.leggings;
-        this.boots = data.boots;
-        if(data.helmet != null)
-            player.getInventory().setHelmet(FilesController.readJsonFile("data/equipment/" + data.helmet, EquipmentData.class).toItem(data.helmet));
-        if(data.chestplate != null)
-            player.getInventory().setChestplate(FilesController.readJsonFile("data/equipment/" + data.chestplate, EquipmentData.class).toItem(data.chestplate));
-        if(data.leggings != null)
-            player.getInventory().setLeggings(FilesController.readJsonFile("data/equipment/" + data.leggings, EquipmentData.class).toItem(data.leggings));
-        if(data.boots != null)
-            player.getInventory().setBoots(FilesController.readJsonFile("data/equipment/" + data.boots, EquipmentData.class).toItem(data.boots));
+        equip(EquipmentSlot.helmet, data.helmet);
+        equip(EquipmentSlot.chestplate, data.chestplate);
+        equip(EquipmentSlot.leggings, data.leggings);
+        equip(EquipmentSlot.boots, data.boots);
         setMaxHealth();
         setSpeed();
 
@@ -132,10 +127,10 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
             stmt.setFloat(1, money);
             stmt.setInt(2, level);
             stmt.setInt(3, exp);
-            stmt.setString(4, helmet);
-            stmt.setString(5, chestplate);
-            stmt.setString(6, leggings);
-            stmt.setString(7, boots);
+            stmt.setString(4, NBTController.getNBTString(equipment[0], "armorId"));
+            stmt.setString(5, NBTController.getNBTString(equipment[1], "armorId"));
+            stmt.setString(6, NBTController.getNBTString(equipment[2], "armorId"));
+            stmt.setString(7, NBTController.getNBTString(equipment[3], "armorId"));
             stmt.setString(8, player.getName());
             stmt.executeUpdate();
 
@@ -415,6 +410,18 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
     public boolean hasEffect(StatusEffect effect)
     {
         return statusEffects.stream().anyMatch(p -> p.getClass() == effect.getClass());
+    }
+
+    public void equip(EquipmentSlot slot, ItemStack item)
+    {
+        if(item == null)
+            item = new ItemStack(Material.AIR);
+        equipment[slot.toIndex()] = item;
+    }
+
+    public void equip(EquipmentSlot slot, String item)
+    {
+        equip(slot, item == null || item.length() == 0 ? null : FilesController.readJsonFile("data/equipment/" + item, EquipmentData.class).toItem(item));
     }
 
     public static class CharacterSkill extends RequestSkill

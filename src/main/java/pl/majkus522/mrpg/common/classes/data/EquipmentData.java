@@ -34,6 +34,6 @@ public class EquipmentData extends ItemData
         if(bonusStats != null)
             for (Map.Entry<String, Integer> element : bonusStats.entrySet())
                 item = NBTController.putNBTInt(item, element.getKey(), element.getValue());
-        return NBTController.putNBTString(item, "id", id);
+        return NBTController.putNBTString(item, "armorId", id);
     }
 }

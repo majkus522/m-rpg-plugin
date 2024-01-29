@@ -11,6 +11,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import pl.majkus522.mrpg.common.classes.events.SkillUseEvent;
 import pl.majkus522.mrpg.controllers.NBTController;
+import pl.majkus522.mrpg.controllers.PlayersController;
 
 public class OnItemClicked implements Listener
 {
@@ -41,6 +42,8 @@ public class OnItemClicked implements Listener
                             break;
                     }
                 }
+                else if(NBTController.hasNBTTag(item, "armorId"))
+                    PlayersController.getCharacter(event.getPlayer()).equip(pl.majkus522.mrpg.common.enums.EquipmentSlot.fromMaterial(item.getType()), item);
             }
         }
     }
