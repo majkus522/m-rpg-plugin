@@ -117,6 +117,11 @@ public class SkillsController
         playerObtainSkill(player, skill, false);
     }
 
+    public static void removeSkill(Player player, String skill)
+    {
+        PlayersController.getCharacter(player).skills.stream().filter(p -> p.skill.equals(skill)).collect(Collectors.toList()).get(0).status = Character.CharacterSkill.Status.remove;
+    }
+
     public static SkillData getSkillData(String skill)
     {
         return FilesController.readJsonFile("data/skills/" + skill, SkillData.class);
