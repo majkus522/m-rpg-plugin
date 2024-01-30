@@ -7,6 +7,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import pl.majkus522.mrpg.common.classes.CustomCommand;
+import pl.majkus522.mrpg.common.classes.data.EquipmentData;
 import pl.majkus522.mrpg.common.classes.data.ItemData;
 import pl.majkus522.mrpg.controllers.FilesController;
 
@@ -21,16 +22,21 @@ public class CommandItem extends CustomCommand
     {
         if(args.length == 0)
         {
+            player.sendMessage("Enter item type");
+            return;
+        }
+        else if(args.length == 1)
+        {
             player.sendMessage("Enter item");
             return;
         }
-        if (!FilesController.fileExists("data/items/" + args[0] + ".json"))
+        if (!(FilesController.fileExists("data/" + args[0] + "/" + args[1] + ".json")))
         {
             player.sendMessage("Item doesn't exists");
             return;
         }
-        ItemStack item = FilesController.readJsonFile("data/items/" + args[0], ItemData.class).toItem();
-        if (args.length >= 2)
+        ItemStack item = getItem(args[0], args[1]);
+        if (args.length >= 3)
             item.setAmount(parseNumber(args[1], player));
         player.getInventory().addItem(item);
     }
@@ -45,22 +51,27 @@ public class CommandItem extends CustomCommand
         }
         else if(args.length == 1)
         {
+            console.sendMessage("Enter item type");
+            return;
+        }
+        else if(args.length == 2)
+        {
             console.sendMessage("Enter item");
             return;
         }
-        if (!FilesController.fileExists("data/items/" + args[1] + ".json"))
+        if (!FilesController.fileExists("data/" + args[1] + "/" + args[2] + ".json"))
         {
             console.sendMessage("Item doesn't exists");
             return;
         }
-        ItemStack item = FilesController.readJsonFile("data/items/" + args[1], ItemData.class).toItem();
+        ItemStack item = getItem(args[1], args[2]);
         Player player = Bukkit.getPlayer(args[0]);
         if (player == null)
         {
             console.sendMessage("Player doesn't exists");
             return;
         }
-        if (args.length >= 3)
+        if (args.length >= 4)
             item.setAmount(parseNumber(args[2], console));
         if (item.getAmount() < 1)
             return;
@@ -74,7 +85,12 @@ public class CommandItem extends CustomCommand
         ArrayList<String> list = new ArrayList<>();
         if (args.length == 1)
         {
-            File[] files = FilesController.scanDir("data/items/");
+            list.add("items");
+            list.add("equipment");
+        }
+        else if (args.length == 2)
+        {
+            File[] files = FilesController.scanDir("data/" + args[0] + "/");
             for (File file : files)
                 list.add(file.getName().replace(".json", ""));
         }
@@ -101,5 +117,18 @@ public class CommandItem extends CustomCommand
             return 0;
         }
         return amount;
+    }
+
+    ItemStack getItem(String type, String item)
+    {
+        switch (type)
+        {
+            case "items":
+                return FilesController.readJsonFile("data/items/" + item, ItemData.class).toItem();
+
+            case "equipment":
+                return FilesController.readJsonFile("data/equipment/" + item, EquipmentData.class).toItem(item);
+        }
+        return null;
     }
 }
