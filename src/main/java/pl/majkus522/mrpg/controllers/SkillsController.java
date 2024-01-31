@@ -84,7 +84,7 @@ public class SkillsController
     public static boolean playerHasSkillEnabled(Player player, String skill)
     {
         Character character = PlayersController.getCharacter(player);
-        return character.skills.stream().anyMatch(p -> p.skill.equals(skill) && p.getToggle() && p.status != Character.CharacterSkill.Status.remove);
+        return character.skills.stream().anyMatch(p -> p.skill.equals(skill) && p.toggle && p.status != Character.CharacterSkill.Status.remove);
     }
 
     public static void evolveSkill(Player player, String skill)

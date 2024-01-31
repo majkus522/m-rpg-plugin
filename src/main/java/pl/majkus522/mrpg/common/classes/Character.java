@@ -23,6 +23,7 @@ import pl.majkus522.mrpg.common.classes.effects.StatusEffect;
 import pl.majkus522.mrpg.common.enums.DamageType;
 import pl.majkus522.mrpg.common.enums.EquipmentSlot;
 import pl.majkus522.mrpg.common.enums.HttpMethod;
+import pl.majkus522.mrpg.common.enums.Rarity;
 import pl.majkus522.mrpg.common.interfaces.IRequestResult;
 import pl.majkus522.mrpg.common.interfaces.IStatusEffectTarget;
 import pl.majkus522.mrpg.controllers.*;
@@ -424,14 +425,18 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
         equip(slot, item == null || item.length() == 0 ? null : FilesController.readJsonFile("data/equipment/" + item, EquipmentData.class).toItem(item));
     }
 
-    public static class CharacterSkill extends RequestSkill
+    public static class CharacterSkill
     {
         public Status status = Status.ok;
+        public String skill;
+        public boolean toggle;
+        public Rarity rarity;
 
         public CharacterSkill(String skill)
         {
             this.skill = skill;
-            this.toggle = 0;
+            this.toggle = false;
+            rarity = FilesController.readJsonFile("data/skills/" + skill, SkillData.class).rarity;
         }
 
         public CharacterSkill(String skill, Status status)
@@ -442,13 +447,8 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
 
         public CharacterSkill(RequestSkill request)
         {
-            this.skill = request.skill;
-            this.toggle = request.getToggle() ? 1 : 0;
-        }
-
-        public void setToggle(boolean value)
-        {
-            toggle = value ? 1 : 0;
+            this(request.skill);
+            this.toggle = request.getToggle();
         }
 
         public enum Status

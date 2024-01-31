@@ -13,12 +13,10 @@ import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.Character;
 import pl.majkus522.mrpg.common.classes.CustomInventory;
 import pl.majkus522.mrpg.common.classes.HttpBuilder;
-import pl.majkus522.mrpg.common.classes.api.RequestSkill;
 import pl.majkus522.mrpg.common.classes.data.SkillData;
 import pl.majkus522.mrpg.common.classes.events.SkillToggleEvent;
 import pl.majkus522.mrpg.common.enums.HttpMethod;
 import pl.majkus522.mrpg.common.enums.Rarity;
-import pl.majkus522.mrpg.common.interfaces.IRequestResult;
 import pl.majkus522.mrpg.controllers.NBTController;
 import pl.majkus522.mrpg.controllers.PlayersController;
 import pl.majkus522.mrpg.controllers.SkillsController;
@@ -26,6 +24,7 @@ import pl.majkus522.mrpg.controllers.SkillsController;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SkillsGui extends CustomInventory
 {
@@ -62,26 +61,24 @@ public class SkillsGui extends CustomInventory
         fillRow(5, ExtensionMethods.emptySlot(Material.GREEN_STAINED_GLASS_PANE));
         this.page = page;
         this.rarity = rarity;
-        HttpBuilder request = new HttpBuilder(HttpMethod.GET, "skills/" + player.getName() + "?rarity[]=" + rarity).setSessionHeaders(player).setItemsHeaders((page * 45), 45);
-        if (!request.isOk())
+        List<Character.CharacterSkill> skills = PlayersController.getCharacter(player).skills.stream().filter(p -> p.rarity == rarity).collect(Collectors.toList());
+        skills = skills.subList(page * 45, skills.size());
+        if (skills.isEmpty())
         {
             inventory = new SkillsGui(player).getInventory();
             return;
         }
         int index = 0;
-        for (IRequestResult skill : request.getResultAll(RequestSkill.class))
+        for (Character.CharacterSkill skill : skills)
         {
-            RequestSkill apiSkill = (RequestSkill) skill;
-            SkillData data = SkillsController.getSkillData(apiSkill.skill);
-            inventory.setItem(index, skill(data, apiSkill));
+            SkillData data = SkillsController.getSkillData(skill.skill);
+            inventory.setItem(index, skill(data, skill));
             index++;
+            if(index >= 45)
+                break;
         }
-        if(Integer.parseInt(request.getOutputHeader("Return-Count")) == 45)
-        {
-            request = new HttpBuilder(HttpMethod.HEAD, "skills/" + player.getName() + "?rarity[]=" + rarity).setSessionHeaders(player).setItemsHeaders(((page + 1) * 45), 45);
-            if(request.isOk())
-                setItem(8, 5, arrow(ArrowType.next));
-        }
+        if(skills.size() > 45)
+            setItem(8, 5, arrow(ArrowType.next));
         if(page != 0)
             setItem(0, 5, arrow(ArrowType.previous));
         setItem(4, 5, arrow(ArrowType.back));
@@ -132,7 +129,8 @@ public class SkillsGui extends CustomInventory
             case "toggle":
                 ItemMeta meta = item.getItemMeta();
                 boolean enabled = !meta.getLore().get(0).contains("Enabled");
-                SkillsController.getSkill(player, part[1]).setToggle(enabled);
+                SkillsController.getSkill(player, part[1]).toggle = enabled;
+                new HttpBuilder(HttpMethod.PATCH, "skills/" + player.getName() + "/" + part[1]).setSessionHeaders(player).setBody(enabled ? "true" : "false").getCode();
                 List<String> lore = meta.getLore();
                 lore.set(0, enabled ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled"));
                 meta.setLore(lore);
@@ -156,13 +154,13 @@ public class SkillsGui extends CustomInventory
         return super.button(material, rarity.toColoredString(), rarity.toString());
     }
 
-    ItemStack skill(SkillData skill, RequestSkill apiSkill)
+    ItemStack skill(SkillData skill, Character.CharacterSkill apiSkill)
     {
         ItemStack item = new ItemStack(Material.EMERALD);
         ArrayList<String> lore = new ArrayList<>();
         if (skill.toggle)
         {
-            lore.add((apiSkill.getToggle() ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled")));
+            lore.add((apiSkill.toggle ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled")));
             item = NBTController.putNBTString(item, "gui-action", "toggle-" + apiSkill.skill);
         }
         else if (skill.usable)
