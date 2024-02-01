@@ -3,6 +3,7 @@ package pl.majkus522.mrpg.controllers;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import pl.majkus522.mrpg.Config;
 import pl.majkus522.mrpg.common.ExtensionMethods;
 import pl.majkus522.mrpg.common.classes.Character;
 import pl.majkus522.mrpg.common.classes.data.SkillData;
@@ -119,7 +120,21 @@ public class SkillsController
 
     public static void removeSkill(Player player, String skill)
     {
-        PlayersController.getCharacter(player).skills.stream().filter(p -> p.skill.equals(skill)).collect(Collectors.toList()).get(0).status = Character.CharacterSkill.Status.remove;
+        Character character = PlayersController.getCharacter(player);
+        character.skills.stream().filter(p -> p.skill.equals(skill)).collect(Collectors.toList()).get(0).status = Character.CharacterSkill.Status.remove;
+        if(character.isSkillAssigned(skill))
+        {
+            for(int index = 0; index < Config.characterSkills; index++)
+            {
+                if(character.getAssignedSkill(index) == null)
+                    continue;
+                if(character.getAssignedSkill(index).equals(skill))
+                {
+                    character.assignSkill(null, index);
+                    return;
+                }
+            }
+        }
     }
 
     public static SkillData getSkillData(String skill)

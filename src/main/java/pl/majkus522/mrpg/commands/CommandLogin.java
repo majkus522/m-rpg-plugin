@@ -45,6 +45,7 @@ public class CommandLogin extends CustomCommand
         PlayersController.playerJoin(character);
         ScoreboardController.createScoreboard(character);
         ManaController.displayMana(player);
+        character.reassignSkills();
     }
 
     @Override

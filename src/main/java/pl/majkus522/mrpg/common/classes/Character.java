@@ -99,7 +99,6 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
             assignedSkills.remove(assignedSkills.size() - 1);
         while (assignedSkills.size() < Config.characterSkills)
             assignedSkills.add(null);
-        reassignSkills();
 
         taskUpdate = Bukkit.getScheduler().runTaskTimerAsynchronously(Main.plugin, () ->
         {
@@ -373,7 +372,7 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
         return false;
     }
 
-    void reassignSkills()
+    public void reassignSkills()
     {
         for (int index = 0; index < assignedSkills.size(); index++)
         {
@@ -460,6 +459,8 @@ public class Character extends PlayerStatus implements IStatusEffectTarget
     ItemStack hotbarSkill(int slot, boolean cooldown)
     {
         Material material = Material.GRAY_DYE;
+        if(!SkillsController.playerHasSkill(player, assignedSkills.get(slot)))
+            assignedSkills.set(slot, null);
         if (cooldown)
             material = Material.RED_DYE;
         else if (assignedSkills.get(slot) != null)
