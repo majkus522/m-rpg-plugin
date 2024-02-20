@@ -12,7 +12,7 @@ import pl.majkus522.mrpg.common.classes.CustomCommand;
 import pl.majkus522.mrpg.common.classes.HttpBuilder;
 import pl.majkus522.mrpg.common.classes.api.RequestGuild;
 import pl.majkus522.mrpg.common.classes.api.RequestGuildMember;
-import pl.majkus522.mrpg.common.classes.api.RequestPlayer;
+import pl.majkus522.mrpg.common.classes.api.RequestPOST;
 import pl.majkus522.mrpg.common.enums.GuildMemberType;
 import pl.majkus522.mrpg.common.enums.HttpMethod;
 import pl.majkus522.mrpg.common.interfaces.IRequestResult;
@@ -46,6 +46,7 @@ public class CommandGuild extends CustomCommand
                     player.sendMessage(ChatColor.GREEN + "/guild new_leader [player]" + ChatColor.WHITE + " - make player leader of your guild");
                 }
                 player.sendMessage(ChatColor.GREEN + "/guild leave" + ChatColor.WHITE + " - leave your guild");
+                player.sendMessage(ChatColor.GREEN + "/guild members" + ChatColor.WHITE + " - show guild members");
                 if (requestGuild.leader == character.id)
                     player.sendMessage(ChatColor.GREEN + "/guild delete" + ChatColor.WHITE + " - delete your guild");
             }
@@ -72,7 +73,7 @@ public class CommandGuild extends CustomCommand
                     if(requestPost.isOk())
                     {
                         player.sendMessage("Guild has been created");
-                        character.guild = ((RequestPlayer)new HttpBuilder(HttpMethod.GET, "players/" + player.getName()).setSessionHeaders(character).getResult(RequestPlayer.class)).guild;
+                        character.guild = ((RequestPOST)requestPost.getResult(RequestPOST.class)).slug;
                         ScoreboardController.createScoreboard(character);
                     }
                     else
