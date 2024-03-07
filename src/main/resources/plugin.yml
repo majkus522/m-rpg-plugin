@@ -50,3 +50,6 @@ commands:
   guild:
     description: Guild info
     usage: /<command> <options>
+
+  test:
+    usage: /<command>
