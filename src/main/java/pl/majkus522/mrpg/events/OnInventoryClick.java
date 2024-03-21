@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
@@ -19,6 +20,8 @@ public class OnInventoryClick implements Listener
     @EventHandler
     public void onItemTake(InventoryClickEvent event)
     {
+        if(event.getAction() == InventoryAction.NOTHING)
+            return;
         if(event.getClickedInventory() == null)
             return;
         if(event.getClickedInventory().getHolder() == null)
