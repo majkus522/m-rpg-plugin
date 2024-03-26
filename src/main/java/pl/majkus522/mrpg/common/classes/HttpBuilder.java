@@ -27,6 +27,7 @@ public class HttpBuilder
     HttpURLConnection connection;
     HttpMethod method;
     public String content;
+    Player player = null;
 
     public HttpBuilder(HttpMethod method, String url)
     {
@@ -60,6 +61,7 @@ public class HttpBuilder
     {
         setHeader("Session-Key", character.session);
         setHeader("Session-ID", Integer.toString(character.id));
+        player = character.player;
         return this;
     }
 
@@ -142,6 +144,7 @@ public class HttpBuilder
     {
         try
         {
+            checkSession();
             StringBuilder response = new StringBuilder();
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String inputLine;
@@ -160,6 +163,7 @@ public class HttpBuilder
     {
         try
         {
+            checkSession();
             StringBuilder response = new StringBuilder();
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
             String inputLine;
@@ -172,5 +176,11 @@ public class HttpBuilder
         {
             throw new RuntimeException(e);
         }
+    }
+
+    void checkSession()
+    {
+        if(getCode() == 401)
+            player.kickPlayer("Your session has ended.\nPlease login again.");
     }
 }
